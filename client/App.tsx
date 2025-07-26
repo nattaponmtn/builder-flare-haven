@@ -33,6 +33,7 @@ const App = () => (
               <Route path="/work-orders" element={<WorkOrders />} />
               <Route path="/work-orders/:id" element={<WorkOrderDetail />} />
               <Route path="/qr-scanner" element={<QRScanner />} />
+              <Route path="/create-work-order" element={<CreateWorkOrderFromQR />} />
               <Route
                 path="/assets"
                 element={
