@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { 
+import {
   QrCode,
   Camera,
   CheckCircle,
@@ -9,6 +9,7 @@ import {
   Clock,
   Wrench,
   MapPin,
+  Calendar,
   Settings,
   Flashlight,
   RotateCcw,
@@ -46,7 +47,7 @@ const equipmentDatabase = {
     name: "ปั๊มน้ำไฟฟ้า Mitsubishi 5HP",
     type: "ปั๊มน้ำ",
     location: "จุดควบคุมน้ำ B",
-    status: "ต้องการบำรุง���ักษา",
+    status: "ต้องการบำรุงรักษา",
     lastMaintenance: "20/12/2566",
     nextMaintenance: "15/01/2567",
     pendingTasks: 1,
@@ -59,7 +60,7 @@ const equipmentDatabase = {
         "ตรวจสอบการรั่วซึมของน้ำมัน",
         "ทำความสะอาดใบพัดและท่อดูด",
         "ตรวจสอบความตึงของสายพาน",
-        "ตรวจสอบการทำงานของมอเตอร์"
+        "���รวจสอบการทำงานของมอเตอร์"
       ]
     }
   },
@@ -131,7 +132,7 @@ export function QRScanner() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "ใช้งานได้":
+      case "ใช้งาน��ด้":
         return "bg-success text-success-foreground";
       case "ต้องการบำรุงรักษา":
         return "bg-warning text-warning-foreground";
