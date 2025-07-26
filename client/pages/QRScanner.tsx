@@ -23,7 +23,7 @@ import {
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
-// Mock equipment data that QR codes can identify
+// Mock equipment database สำหรับทดสอบการค้นหาหลากหลายกรณี
 const equipmentDatabase = {
   "TRACT-001": {
     id: "TRACT-001",
@@ -31,31 +31,62 @@ const equipmentDatabase = {
     type: "รถแทรกเตอร์",
     location: "ไร่ A",
     status: "ใช้งานได้",
+    brand: "Kubota",
+    model: "M7060",
     lastMaintenance: "05/01/2567",
     nextMaintenance: "20/01/2567",
     pendingTasks: 2,
+    searchKeywords: ["รถแทรกเตอร์", "kubota", "m7060", "ไร่", "a"],
     pmTemplate: {
       id: "PM-TRACTOR-WEEKLY",
       name: "การบำรุงรักษารถแทรกเตอร์ประจำสัปดาห์",
       estimatedTime: "2 ชั่วโมง",
       tasks: [
         "ตรวจสอบระดับน้ำมันเครื่อง",
-        "ตรวจสอบระดับน้ำในหม้อน้ำ", 
+        "ตรวจสอบระดับน้ำในหม้อน้ำ",
         "ตรวจสอบแรงดันลมยาง",
-        "ทำความสะอาดไส้กรอ���อากาศ",
+        "ทำความสะอาดไส้กรองอากาศ",
+        "ตรวจสอบการทำงานของไฟส่องสว่าง"
+      ]
+    }
+  },
+  "TRACT-002": {
+    id: "TRACT-002",
+    name: "รถแทรกเตอร์ Massey Ferguson 4707",
+    type: "รถแทรกเตอร์",
+    location: "ไร่ B",
+    status: "ต้องการบำรุงรักษา",
+    brand: "Massey Ferguson",
+    model: "4707",
+    lastMaintenance: "01/01/2567",
+    nextMaintenance: "เกินกำหนดแล้ว",
+    pendingTasks: 3,
+    searchKeywords: ["รถแทรกเตอร์", "massey", "ferguson", "4707", "ไร่", "b"],
+    pmTemplate: {
+      id: "PM-TRACTOR-WEEKLY",
+      name: "การบำรุงรักษารถแทรกเตอร์ประจำสัปดาห์",
+      estimatedTime: "2 ชั่วโมง",
+      tasks: [
+        "ตรวจสอบระดับน้ำมันเครื��อง",
+        "ตรวจสอบระดับน้ำในหม้อน้ำ",
+        "ตรวจสอบแรงดันลมยาง",
+        "ทำความสะอาดไส้กรองอากาศ",
         "ตรวจสอบการทำงานของไฟส่องสว่าง"
       ]
     }
   },
   "PUMP-002": {
-    id: "PUMP-002", 
+    id: "PUMP-002",
     name: "ปั๊มน้ำไฟฟ้า Mitsubishi 5HP",
     type: "ปั๊มน้ำ",
     location: "จุดควบคุมน้ำ B",
     status: "ต้องการบำรุงรักษา",
+    brand: "Mitsubishi",
+    model: "5HP",
     lastMaintenance: "20/12/2566",
     nextMaintenance: "15/01/2567",
     pendingTasks: 1,
+    searchKeywords: ["ปั๊มน้ำ", "mitsubishi", "5hp", "จุดควบคุม", "น้ำ"],
     pmTemplate: {
       id: "PM-PUMP-MONTHLY",
       name: "การบำรุงรักษาปั๊มน้ำประจำเดือน",
@@ -69,15 +100,43 @@ const equipmentDatabase = {
       ]
     }
   },
+  "PUMP-003": {
+    id: "PUMP-003",
+    name: "ปั๊มน้ำไฟฟ้า Grundfos CR5-8",
+    type: "ปั๊มน้ำ",
+    location: "จุดควบคุมน้ำ A",
+    status: "ใช้งานได้",
+    brand: "Grundfos",
+    model: "CR5-8",
+    lastMaintenance: "15/01/2567",
+    nextMaintenance: "15/02/2567",
+    pendingTasks: 0,
+    searchKeywords: ["ปั๊มน้ำ", "grundfos", "cr5", "จุดควบคุม", "น้ำ"],
+    pmTemplate: {
+      id: "PM-PUMP-MONTHLY",
+      name: "การบำรุงรักษาปั๊มน้ำประจำเดือน",
+      estimatedTime: "1.5 ชั่วโมง",
+      tasks: [
+        "ตรวจสอบการสั่นสะเทือนของปั๊ม",
+        "ตรวจสอบการรั่วซึมของน้ำมัน",
+        "ทำความสะอาดใบพัดและท่อดูด",
+        "ตรวจสอบ���วามตึงของสายพาน",
+        "ตรวจสอบการทำงานของมอเตอร์"
+      ]
+    }
+  },
   "HARV-003": {
     id: "HARV-003",
     name: "เครื่องเก็บเกี่ยว John Deere S660",
-    type: "เครื่องเก็บเกี่ยว", 
+    type: "เครื่องเก็บเกี่ยว",
     location: "โรงเก็บอุปกรณ์",
     status: "ชำรุด",
+    brand: "John Deere",
+    model: "S660",
     lastMaintenance: "28/12/2566",
     nextMaintenance: "เกินกำหนดแล้ว",
     pendingTasks: 5,
+    searchKeywords: ["เครื่องเก็บเกี่ยว", "john", "deere", "s660", "โรงเก็บ"],
     pmTemplate: {
       id: "PM-HARVESTER-DAILY",
       name: "การตรวจสอบเครื่องเก็บเกี่ยวประจำวัน",
@@ -86,8 +145,32 @@ const equipmentDatabase = {
         "ตรวจสอบใบมีดตัดและทำความสะอาด",
         "ตรวจสอบเข็มขัดลำเลียง",
         "ตรวจสอบระบบไฮดรอลิก",
-        "ทำความสะอาดเครื่องแยกเมล็ด",
+        "ทำความสะอาดเครื่องแยกเม���็ด",
         "ตรวจสอบระบบเบรกและพวงมาลัย"
+      ]
+    }
+  },
+  "SPRAY-004": {
+    id: "SPRAY-004",
+    name: "เครื่องพ่นยา Amazone UX 3200",
+    type: "เครื่องพ่นยา",
+    location: "โรงเก็บอุปกรณ์",
+    status: "ใช้งานได้",
+    brand: "Amazone",
+    model: "UX 3200",
+    lastMaintenance: "10/01/2567",
+    nextMaintenance: "25/01/2567",
+    pendingTasks: 1,
+    searchKeywords: ["เครื่องพ่นยา", "amazone", "ux", "3200", "โรงเก็บ"],
+    pmTemplate: {
+      id: "PM-SPRAYER-WEEKLY",
+      name: "การบำรุงรักษาเครื่องพ่นยาประจำสัปดาห์",
+      estimatedTime: "1 ชั่วโมง",
+      tasks: [
+        "ทำความสะอาดถังยาและท่อพ่น",
+        "ตรวจสอบหัวพ่นและการทำงาน",
+        "ตรวจสอบระบบปั๊มและแรงดัน",
+        "ทำความสะอาดไส้กรองยา"
       ]
     }
   }
@@ -141,7 +224,7 @@ export function QRScanner() {
         return "bg-success text-success-foreground";
       case "ต้องการบำรุงรักษา":
         return "bg-warning text-warning-foreground";
-      case "ชำรุ���":
+      case "ชำรุด":
         return "bg-destructive text-destructive-foreground";
       default:
         return "bg-secondary text-secondary-foreground";
@@ -168,7 +251,7 @@ export function QRScanner() {
         <div className="space-y-2 pt-2">
           <h1 className="text-2xl sm:text-3xl font-bold">สแกน QR Code</h1>
           <p className="text-muted-foreground text-sm sm:text-base">
-            สแกน QR code บนอุปกรณ์เพื่อเริ่มงานบำรุงรักษา
+            สแกน QR code บนอุปกรณ์เพื่อเริ่���งานบำรุงรักษา
           </p>
         </div>
 
