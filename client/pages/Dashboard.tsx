@@ -42,7 +42,7 @@ export function Dashboard() {
     {
       title: "ช่างที่ใช้งานได้",
       value: "6",
-      change: "พร้อมใช้งา��ทั้งหมด",
+      change: "พร้อมใช้งานทั้งหมด",
       trend: "stable",
       icon: Users,
       color: "text-primary"
@@ -52,27 +52,27 @@ export function Dashboard() {
   const recentWorkOrders = [
     {
       id: "WO-2024-001",
-      title: "Tractor Engine Maintenance",
-      status: "In Progress",
-      priority: "High",
-      assignee: "John Doe",
-      dueDate: "2024-01-15"
+      title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
+      status: "กำลังดำเนินการ",
+      priority: "สูง",
+      assignee: "สมชาย รักงาน",
+      dueDate: "15/01/2567"
     },
     {
-      id: "WO-2024-002", 
-      title: "Irrigation System Check",
-      status: "Pending",
-      priority: "Medium",
-      assignee: "Jane Smith",
-      dueDate: "2024-01-16"
+      id: "WO-2024-002",
+      title: "ตรวจสอบระบบน้ำ",
+      status: "รอดำเนินการ",
+      priority: "ปานกลาง",
+      assignee: "สมหญิง ใจดี",
+      dueDate: "16/01/2567"
     },
     {
       id: "WO-2024-003",
-      title: "Harvester Belt Replacement",
-      status: "Overdue",
-      priority: "Critical",
-      assignee: "Mike Johnson",
-      dueDate: "2024-01-14"
+      title: "เปลี่ยนเข็มขัดเครื่องเก็บเกี่ยว",
+      status: "เกินกำหนด",
+      priority: "วิกฤติ",
+      assignee: "สมศักดิ์ ช่างเก่ง",
+      dueDate: "14/01/2567"
     }
   ];
 
