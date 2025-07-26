@@ -24,7 +24,7 @@ import { useState } from "react";
 const workOrderData = {
   "WO-2024-001": {
     id: "WO-2024-001",
-    title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
+    title: "บำรุงรักษาเค���ื่องยนต์รถแทรกเตอร์",
     description: "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
     status: "กำลังดำเนินการ",
     priority: "สูง",
@@ -49,7 +49,7 @@ const workOrderData = {
       },
       {
         id: 2,
-        description: "เปลี่ยนไส้กรองน้ำมันเครื่อง",
+        description: "เปลี่ยนไส้กรองน้ำมันเครื���อง",
         isCompleted: true,
         actualValue: "เปลี่ยนไส้กรองแล้วด้วยชิ้นส่วน #OF-4553",
         completedAt: "13/01/2567 10:15",
@@ -65,7 +65,7 @@ const workOrderData = {
       },
       {
         id: 4,
-        description: "ตรวจสอบการสึกหรอของใ��",
+        description: "ตรวจสอบการสึกหรอของใส",
         isCompleted: false,
         actualValue: "",
         completedAt: null,
@@ -83,7 +83,7 @@ const workOrderData = {
     parts: [
       { name: "ไส้กรองน้ำมันเครื่อง", partNumber: "OF-4553", quantity: 1, used: true },
       { name: "น้ำมันเครื่อง 15W-40", partNumber: "EO-1540", quantity: 8, used: false },
-      { name: "ไส้กรองไฮดรอลิก", partNumber: "HF-2021", quantity: 1, used: false }
+      { name: "ไส้กรองไฮดรอ��ิก", partNumber: "HF-2021", quantity: 1, used: false }
     ],
     attachments: [
       { name: "รูปก่อนบำรุงรักษา.jpg", type: "image", uploadedAt: "13/01/2567 09:00" },
@@ -175,12 +175,12 @@ export function WorkOrderDetail() {
             </div>
           </div>
           <div className="card-elevated rounded-xl p-4 text-center">
-            <div className="text-sm text-muted-foreground">Progress</div>
+            <div className="text-sm text-muted-foreground">ความคืบหน้า</div>
             <div className="text-lg font-bold">{progressPercent}%</div>
           </div>
           <div className="card-elevated rounded-xl p-4 text-center">
-            <div className="text-sm text-muted-foreground">Time</div>
-            <div className="text-lg font-bold">{workOrder.actualHours}h</div>
+            <div className="text-sm text-muted-foreground">เวลา</div>
+            <div className="text-lg font-bold">{workOrder.actualHours} ชม.</div>
           </div>
         </div>
 
