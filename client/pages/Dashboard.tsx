@@ -16,33 +16,33 @@ import { Link } from "react-router-dom";
 export function Dashboard() {
   const metrics = [
     {
-      title: "Overdue Tasks",
+      title: "งานค้างส่ง",
       value: "12",
-      change: "+3 from yesterday",
+      change: "+3 จากเมื่อวาน",
       trend: "up",
       icon: AlertTriangle,
       color: "text-destructive"
     },
     {
-      title: "Completed Today",
+      title: "เสร็จวันนี้",
       value: "8",
-      change: "+2 from yesterday",
+      change: "+2 จากเมื่อวาน",
       trend: "up",
       icon: CheckCircle,
       color: "text-success"
     },
     {
-      title: "In Progress",
+      title: "กำลังดำเนินการ",
       value: "15",
-      change: "No change",
+      change: "ไม่มีการเปลี่ยนแปลง",
       trend: "stable",
       icon: Clock,
       color: "text-warning"
     },
     {
-      title: "Active Technicians",
+      title: "ช่างที่ใช้งานได้",
       value: "6",
-      change: "All available",
+      change: "พร้อมใช้งา��ทั้งหมด",
       trend: "stable",
       icon: Users,
       color: "text-primary"
