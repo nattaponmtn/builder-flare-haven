@@ -41,23 +41,23 @@ const workOrderData = {
     tasks: [
       {
         id: 1,
-        description: "Check engine oil level and quality",
+        description: "ตรวจสอบระดับและคุณภาพน้ำมันเครื่อง",
         isCompleted: true,
-        actualValue: "Oil level normal, color good",
-        completedAt: "2024-01-13 09:30",
+        actualValue: "ระดับน้ำมันปกติ สีดี",
+        completedAt: "13/01/2567 09:30",
         isCritical: false
       },
       {
         id: 2,
-        description: "Replace oil filter",
+        description: "เปลี่ยนไส้กรองน้ำมันเครื่อง",
         isCompleted: true,
-        actualValue: "Filter replaced with part #OF-4553",
-        completedAt: "2024-01-13 10:15",
+        actualValue: "เปลี่ยนไส้กรองแล้วด้วยชิ้นส่วน #OF-4553",
+        completedAt: "13/01/2567 10:15",
         isCritical: true
       },
       {
         id: 3,
-        description: "Check hydraulic fluid levels",
+        description: "ตรวจสอบระดับน้ำมันไฮดรอลิก",
         isCompleted: false,
         actualValue: "",
         completedAt: null,
@@ -65,7 +65,7 @@ const workOrderData = {
       },
       {
         id: 4,
-        description: "Inspect tracks for wear",
+        description: "ตรวจสอบการสึกหรอของใส",
         isCompleted: false,
         actualValue: "",
         completedAt: null,
@@ -73,7 +73,7 @@ const workOrderData = {
       },
       {
         id: 5,
-        description: "Test all hydraulic functions",
+        description: "ทดสอบการทำงานของระบบไฮดรอลิกทั้งหมด",
         isCompleted: false,
         actualValue: "",
         completedAt: null,
