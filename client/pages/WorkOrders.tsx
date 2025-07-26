@@ -20,7 +20,7 @@ const workOrders = [
     id: "WO-2024-001",
     title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
     description: "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D",
-    status: "กำ���ังดำเนินการ",
+    status: "กำลังดำเนินการ",
     priority: "สูง",
     assignee: "สมชาย รักงาน",
     asset: "CAT-320D-001",
@@ -45,7 +45,7 @@ const workOrders = [
   {
     id: "WO-2024-003",
     title: "เปลี่ยนเข็มขัดเครื่องเก็บเกี่ยว",
-    description: "เปลี่ยนเข็มขัดลำเลียงที่สึกหรอของเครื่องเก็บเกี่ยว",
+    description: "เปลี่ยนเข็มขัดลำเลียงที่สึกหรอของเครื่��งเก็บเกี่ยว",
     status: "เกินกำหนด",
     priority: "วิกฤติ",
     assignee: "สมศักดิ์ ช่างเก่ง",
@@ -217,13 +217,13 @@ export function WorkOrders() {
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-3 border-t border-border/50">
                     <div className="text-xs sm:text-sm text-muted-foreground">
-                      {wo.type} • Est. {wo.estimatedHours}h
+                      {wo.type} • ประมาณ {wo.estimatedHours} ชม.
                     </div>
                     <Link to={`/work-orders/${wo.id}`}>
-                    <Button variant="outline" size="sm" className="text-xs sm:text-sm">
-                      View Details
-                    </Button>
-                  </Link>
+                      <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+                        ดูรายละเอียด
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
