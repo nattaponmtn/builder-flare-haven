@@ -25,7 +25,7 @@ const workOrderData = {
   "WO-2024-001": {
     id: "WO-2024-001",
     title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
-    description: "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
+    description: "ตรวจสอบบำรุงรักษาตามก���หนดสำหรับรถขุด CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
     status: "กำลังดำเนินการ",
     priority: "สูง",
     assignee: "สมชาย รักงาน",
@@ -51,7 +51,7 @@ const workOrderData = {
         id: 2,
         description: "เปลี่ยนไส้กรองน้ำมันเครื่อง",
         isCompleted: true,
-        actualValue: "เปลี่ยนไส้กรองแล้วด้วยชิ้นส่วน #OF-4553",
+        actualValue: "เปลี่ยนไส้กรองแล้วด้วยชิ้นส��วน #OF-4553",
         completedAt: "13/01/2567 10:15",
         isCritical: true
       },
@@ -103,9 +103,9 @@ export function WorkOrderDetail() {
     return (
       <div className="min-h-screen">
         <div className="p-4 text-center">
-          <h1 className="text-2xl font-bold">Work Order Not Found</h1>
+          <h1 className="text-2xl font-bold">ไม่พบใบสั่งงาน</h1>
           <Link to="/work-orders">
-            <Button className="mt-4">Back to Work Orders</Button>
+            <Button className="mt-4">กลับสู่ใบสั่งงาน</Button>
           </Link>
         </div>
       </div>
