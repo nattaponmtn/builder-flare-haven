@@ -34,7 +34,7 @@ export function Dashboard() {
     {
       title: "กำลังดำเนินการ",
       value: "15",
-      change: "ไม่มีการเปลี่ยนแปลง",
+      change: "ไม่มีกา���เปลี่ยนแปลง",
       trend: "stable",
       icon: Clock,
       color: "text-warning"
@@ -81,8 +81,8 @@ export function Dashboard() {
       <div className="p-3 sm:p-4 pb-20 md:pb-4 space-y-5 max-w-7xl mx-auto">
         {/* Header */}
         <div className="space-y-2 pt-2">
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground text-sm sm:text-base">Welcome back! Here's your maintenance overview</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">หน้าหลัก</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">ยินดีต้อนรับ! นี่คือภาพรวมการบำรุงรักษาของคุณ</p>
         </div>
 
         {/* Quick Actions */}
