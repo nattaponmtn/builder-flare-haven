@@ -10,7 +10,11 @@
   */
   :root {
     --background: 0 0% 100%;
-    --background-gradient: linear-gradient(135deg, hsl(220, 15%, 97%) 0%, hsl(217, 20%, 96%) 100%);
+    --background-gradient: linear-gradient(
+      135deg,
+      hsl(220, 15%, 97%) 0%,
+      hsl(217, 20%, 96%) 100%
+    );
     --foreground: 220 13% 13%;
 
     --card: 0 0% 100%;
@@ -65,7 +69,11 @@
 
   .dark {
     --background: 220 13% 9%;
-    --background-gradient: linear-gradient(135deg, hsl(220, 15%, 8%) 0%, hsl(217, 20%, 12%) 100%);
+    --background-gradient: linear-gradient(
+      135deg,
+      hsl(220, 15%, 8%) 0%,
+      hsl(217, 20%, 12%) 100%
+    );
     --foreground: 0 0% 95%;
 
     --card: 220 13% 12%;
@@ -124,12 +132,16 @@
 @layer components {
   .card-elevated {
     @apply bg-card/95 backdrop-blur-sm border shadow-lg hover:shadow-xl transition-all duration-300;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.08),
+      0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
   .card-elevated:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow:
+      0 8px 30px rgba(0, 0, 0, 0.12),
+      0 2px 6px rgba(0, 0, 0, 0.08);
   }
 
   .metric-card {

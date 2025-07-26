@@ -2,11 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { 
+import {
   ArrowLeft,
-  Clock, 
-  User, 
-  MapPin, 
+  Clock,
+  User,
+  MapPin,
   Calendar,
   CheckCircle,
   AlertTriangle,
@@ -15,7 +15,7 @@ import {
   Settings,
   Wrench,
   Timer,
-  Edit3
+  Edit3,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -25,7 +25,8 @@ const workOrderData = {
   "WO-2024-001": {
     id: "WO-2024-001",
     title: "บำรุงรักษาเค���ื่องยนต์รถแทรกเตอร์",
-    description: "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
+    description:
+      "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
     status: "กำลังดำเนินการ",
     priority: "สูง",
     assignee: "สมชาย รักงาน",
@@ -45,7 +46,7 @@ const workOrderData = {
         isCompleted: true,
         actualValue: "ระดับน้ำมันปกติ สีดี",
         completedAt: "13/01/2567 09:30",
-        isCritical: false
+        isCritical: false,
       },
       {
         id: 2,
@@ -53,7 +54,7 @@ const workOrderData = {
         isCompleted: true,
         actualValue: "เปลี่ยนไส้กรองแล้วด้วยชิ้นส่วน #OF-4553",
         completedAt: "13/01/2567 10:15",
-        isCritical: true
+        isCritical: true,
       },
       {
         id: 3,
@@ -61,7 +62,7 @@ const workOrderData = {
         isCompleted: false,
         actualValue: "",
         completedAt: null,
-        isCritical: false
+        isCritical: false,
       },
       {
         id: 4,
@@ -69,7 +70,7 @@ const workOrderData = {
         isCompleted: false,
         actualValue: "",
         completedAt: null,
-        isCritical: true
+        isCritical: true,
       },
       {
         id: 5,
@@ -77,28 +78,51 @@ const workOrderData = {
         isCompleted: false,
         actualValue: "",
         completedAt: null,
-        isCritical: false
-      }
+        isCritical: false,
+      },
     ],
     parts: [
-      { name: "ไส้กรองน้ำมันเครื่อง", partNumber: "OF-4553", quantity: 1, used: true },
-      { name: "น้ำมันเครื่อง 15W-40", partNumber: "EO-1540", quantity: 8, used: false },
-      { name: "ไส้กรองไฮดรอ��ิก", partNumber: "HF-2021", quantity: 1, used: false }
+      {
+        name: "ไส้กรองน้ำมันเครื่อง",
+        partNumber: "OF-4553",
+        quantity: 1,
+        used: true,
+      },
+      {
+        name: "น้ำมันเครื่อง 15W-40",
+        partNumber: "EO-1540",
+        quantity: 8,
+        used: false,
+      },
+      {
+        name: "ไส้กรองไฮดรอ��ิก",
+        partNumber: "HF-2021",
+        quantity: 1,
+        used: false,
+      },
     ],
     attachments: [
-      { name: "รูปก่อนบำรุงรักษา.jpg", type: "image", uploadedAt: "13/01/2567 09:00" },
-      { name: "รายงานวิเคราะห์น้ำมัน.pdf", type: "document", uploadedAt: "10/01/2567 14:30" }
-    ]
-  }
+      {
+        name: "รูปก่อนบำรุงรักษา.jpg",
+        type: "image",
+        uploadedAt: "13/01/2567 09:00",
+      },
+      {
+        name: "รายงานวิเคราะห์น้ำมัน.pdf",
+        type: "document",
+        uploadedAt: "10/01/2567 14:30",
+      },
+    ],
+  },
 };
 
 export function WorkOrderDetail() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("details");
   const [taskNote, setTaskNote] = useState("");
-  
+
   const workOrder = workOrderData[id as keyof typeof workOrderData];
-  
+
   if (!workOrder) {
     return (
       <div className="min-h-screen">
@@ -112,7 +136,9 @@ export function WorkOrderDetail() {
     );
   }
 
-  const completedTasks = workOrder.tasks.filter(task => task.isCompleted).length;
+  const completedTasks = workOrder.tasks.filter(
+    (task) => task.isCompleted,
+  ).length;
   const totalTasks = workOrder.tasks.length;
   const progressPercent = Math.round((completedTasks / totalTasks) * 100);
 
@@ -153,7 +179,9 @@ export function WorkOrderDetail() {
             </Button>
           </Link>
           <div className="min-w-0 flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold truncate">{workOrder.title}</h1>
+            <h1 className="text-xl sm:text-2xl font-bold truncate">
+              {workOrder.title}
+            </h1>
             <p className="text-sm text-muted-foreground">{workOrder.id}</p>
           </div>
           <Button size="sm" className="shrink-0">
@@ -165,12 +193,16 @@ export function WorkOrderDetail() {
         {/* Status Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="card-elevated rounded-xl p-4 text-center">
-            <div className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(workOrder.status)}`}>
+            <div
+              className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(workOrder.status)}`}
+            >
               {workOrder.status}
             </div>
           </div>
           <div className="card-elevated rounded-xl p-4 text-center">
-            <div className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(workOrder.priority)}`}>
+            <div
+              className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(workOrder.priority)}`}
+            >
               {workOrder.priority}
             </div>
           </div>
@@ -191,7 +223,7 @@ export function WorkOrderDetail() {
               { id: "details", label: "Details", icon: FileText },
               { id: "tasks", label: "Tasks", icon: CheckCircle },
               { id: "parts", label: "Parts", icon: Settings },
-              { id: "attachments", label: "Files", icon: Camera }
+              { id: "attachments", label: "Files", icon: Camera },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -253,7 +285,9 @@ export function WorkOrderDetail() {
             {/* Description */}
             <div className="card-elevated rounded-xl p-5">
               <h3 className="font-semibold mb-3">Description</h3>
-              <p className="text-muted-foreground leading-relaxed">{workOrder.description}</p>
+              <p className="text-muted-foreground leading-relaxed">
+                {workOrder.description}
+              </p>
             </div>
           </div>
         )}
@@ -261,7 +295,10 @@ export function WorkOrderDetail() {
         {activeTab === "tasks" && (
           <div className="space-y-3">
             {workOrder.tasks.map((task) => (
-              <div key={task.id} className={`card-elevated rounded-xl p-4 ${task.isCritical ? 'border-l-4 border-l-warning' : ''}`}>
+              <div
+                key={task.id}
+                className={`card-elevated rounded-xl p-4 ${task.isCritical ? "border-l-4 border-l-warning" : ""}`}
+              >
                 <div className="flex items-start gap-3">
                   <div className="pt-1">
                     {task.isCompleted ? (
@@ -272,7 +309,9 @@ export function WorkOrderDetail() {
                   </div>
                   <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between gap-2">
-                      <h4 className={`font-medium ${task.isCompleted ? 'line-through text-muted-foreground' : ''}`}>
+                      <h4
+                        className={`font-medium ${task.isCompleted ? "line-through text-muted-foreground" : ""}`}
+                      >
                         {task.description}
                       </h4>
                       {task.isCritical && (
@@ -281,11 +320,15 @@ export function WorkOrderDetail() {
                         </Badge>
                       )}
                     </div>
-                    
+
                     {task.isCompleted ? (
                       <div className="space-y-1">
-                        <p className="text-sm text-success">✓ {task.actualValue}</p>
-                        <p className="text-xs text-muted-foreground">Completed: {task.completedAt}</p>
+                        <p className="text-sm text-success">
+                          ✓ {task.actualValue}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Completed: {task.completedAt}
+                        </p>
                       </div>
                     ) : (
                       <div className="space-y-2">
@@ -301,9 +344,7 @@ export function WorkOrderDetail() {
                             <Camera className="h-4 w-4 mr-2" />
                             Photo
                           </Button>
-                          <Button size="sm">
-                            Mark Complete
-                          </Button>
+                          <Button size="sm">Mark Complete</Button>
                         </div>
                       </div>
                     )}
@@ -321,12 +362,16 @@ export function WorkOrderDetail() {
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
                     <h4 className="font-medium">{part.name}</h4>
-                    <p className="text-sm text-muted-foreground">Part #: {part.partNumber}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Part #: {part.partNumber}
+                    </p>
                     <p className="text-sm">Quantity: {part.quantity}</p>
                   </div>
                   <div className="text-right">
                     {part.used ? (
-                      <Badge className="bg-success text-success-foreground">Used</Badge>
+                      <Badge className="bg-success text-success-foreground">
+                        Used
+                      </Badge>
                     ) : (
                       <Badge variant="outline">Reserved</Badge>
                     )}
@@ -351,9 +396,13 @@ export function WorkOrderDetail() {
                   </div>
                   <div className="flex-1">
                     <h4 className="font-medium">{file.name}</h4>
-                    <p className="text-sm text-muted-foreground">Uploaded: {file.uploadedAt}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Uploaded: {file.uploadedAt}
+                    </p>
                   </div>
-                  <Button variant="outline" size="sm">View</Button>
+                  <Button variant="outline" size="sm">
+                    View
+                  </Button>
                 </div>
               </div>
             ))}
@@ -366,9 +415,7 @@ export function WorkOrderDetail() {
 
         {/* Action Buttons */}
         <div className="flex gap-3 pt-4">
-          <Button className="flex-1">
-            Update Status
-          </Button>
+          <Button className="flex-1">Update Status</Button>
           <Button variant="outline" className="flex-1">
             Add Time
           </Button>

@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  ClipboardList, 
-  Package, 
+import {
+  LayoutDashboard,
+  ClipboardList,
+  Package,
   Settings,
   QrCode,
   Menu,
-  X
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -40,14 +40,19 @@ export function MobileNav() {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsMenuOpen(false)} />
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsMenuOpen(false)}
+        />
       )}
 
       {/* Mobile Side Menu */}
-      <nav className={cn(
-        "fixed top-0 left-0 h-full w-80 glass-nav transform transition-transform duration-300 z-50 md:hidden",
-        isMenuOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
+      <nav
+        className={cn(
+          "fixed top-0 left-0 h-full w-80 glass-nav transform transition-transform duration-300 z-50 md:hidden",
+          isMenuOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
         <div className="p-6">
           <h2 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-8">
             CMMS Mobile Pro
@@ -65,7 +70,7 @@ export function MobileNav() {
                     "flex items-center space-x-3 p-4 rounded-xl transition-all duration-200",
                     isActive
                       ? "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-lg"
-                      : "hover:bg-muted/50 hover:scale-105"
+                      : "hover:bg-muted/50 hover:scale-105",
                   )}
                 >
                   <Icon size={20} />
@@ -95,7 +100,7 @@ export function MobileNav() {
                     "flex items-center space-x-3 p-4 rounded-xl transition-all duration-200",
                     isActive
                       ? "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-lg"
-                      : "hover:bg-muted/50 hover:scale-105"
+                      : "hover:bg-muted/50 hover:scale-105",
                   )}
                 >
                   <Icon size={20} />
@@ -121,11 +126,13 @@ export function MobileNav() {
                   "flex flex-col items-center p-3 rounded-xl transition-all duration-200 min-w-0 flex-1",
                   isActive
                     ? "text-primary bg-primary/10 scale-105"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
                 )}
               >
                 <Icon size={18} />
-                <span className="text-xs mt-1 truncate font-medium">{item.label.split(' ')[0]}</span>
+                <span className="text-xs mt-1 truncate font-medium">
+                  {item.label.split(" ")[0]}
+                </span>
               </Link>
             );
           })}

@@ -2,17 +2,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { 
+import {
   ArrowLeft,
-  Clock, 
-  User, 
-  MapPin, 
+  Clock,
+  User,
+  MapPin,
   Calendar,
   CheckCircle,
   Settings,
   Wrench,
   Save,
-  Send
+  Send,
 } from "lucide-react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -21,15 +21,15 @@ import { useState } from "react";
 const currentUser = {
   id: "USER-001",
   name: "สมชาย รักงาน",
-  role: "ช่างบำรุงรักษา"
+  role: "ช่างบำรุงรักษา",
 };
 
 export function CreateWorkOrderFromQR() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const equipmentId = searchParams.get('equipment');
-  const pmTemplateId = searchParams.get('template');
-  
+  const equipmentId = searchParams.get("equipment");
+  const pmTemplateId = searchParams.get("template");
+
   const [notes, setNotes] = useState("");
   const [priority, setPriority] = useState("ปานกลาง");
   const [estimatedHours, setEstimatedHours] = useState("");
@@ -40,7 +40,7 @@ export function CreateWorkOrderFromQR() {
     name: "รถแทรกเตอร์ Kubota M7060",
     type: "รถแทรกเตอร์",
     location: "ไร่ A",
-    status: "ใช้งานได้"
+    status: "ใช้งานได้",
   };
 
   const pmTemplate = {
@@ -53,13 +53,17 @@ export function CreateWorkOrderFromQR() {
       { id: 2, description: "ตรวจสอบระดับน้ำในหม้อน้ำ", isCritical: true },
       { id: 3, description: "ตรวจสอบแรงดันลมยาง", isCritical: false },
       { id: 4, description: "ทำความสะอาดไส้กรองอากาศ", isCritical: false },
-      { id: 5, description: "ตรวจสอบการทำงานของไฟส่องสว่าง", isCritical: false }
+      {
+        id: 5,
+        description: "ตรวจสอบการทำงานของไฟส่องสว่าง",
+        isCritical: false,
+      },
     ],
     parts: [
       { name: "น้ำมันเครื่อง 15W-40", quantity: 1, unit: "ลิตร" },
       { name: "ไส้กรองอากาศ", quantity: 1, unit: "ชิ้น" },
-      { name: "น้ำกลั่น", quantity: 2, unit: "ลิตร" }
-    ]
+      { name: "น้ำกลั่น", quantity: 2, unit: "ลิตร" },
+    ],
   };
 
   const handleCreateWorkOrder = () => {
@@ -76,14 +80,16 @@ export function CreateWorkOrderFromQR() {
       location: equipment.location,
       pmTemplateId: pmTemplate.id,
       estimatedHours: estimatedHours || "2",
-      createdAt: new Date().toLocaleDateString('th-TH'),
-      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('th-TH'), // 7 days from now
-      tasks: pmTemplate.tasks.map(task => ({
+      createdAt: new Date().toLocaleDateString("th-TH"),
+      dueDate: new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000,
+      ).toLocaleDateString("th-TH"), // 7 days from now
+      tasks: pmTemplate.tasks.map((task) => ({
         ...task,
         isCompleted: false,
         actualValue: "",
-        completedAt: null
-      }))
+        completedAt: null,
+      })),
     };
 
     // Simulate navigation to the created work order
@@ -114,8 +120,12 @@ export function CreateWorkOrderFromQR() {
             </Button>
           </Link>
           <div className="min-w-0 flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold">สร้างใบสั่งงานจาก QR Scan</h1>
-            <p className="text-sm text-muted-foreground">สร้างงานบำรุงรักษาจากการสแกน QR code</p>
+            <h1 className="text-xl sm:text-2xl font-bold">
+              สร้างใบสั่งงานจาก QR Scan
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              สร้างงานบำรุงรักษาจากการสแกน QR code
+            </p>
           </div>
         </div>
 
@@ -156,13 +166,18 @@ export function CreateWorkOrderFromQR() {
               <h4 className="font-medium">{pmTemplate.name}</h4>
               <Badge variant="outline">{pmTemplate.estimatedTime}</Badge>
             </div>
-            <p className="text-sm text-muted-foreground">{pmTemplate.description}</p>
-            
+            <p className="text-sm text-muted-foreground">
+              {pmTemplate.description}
+            </p>
+
             <div className="space-y-3">
               <h5 className="font-medium text-sm">รายการตรวจสอบ:</h5>
               <div className="space-y-2">
                 {pmTemplate.tasks.map((task) => (
-                  <div key={task.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+                  <div
+                    key={task.id}
+                    className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg"
+                  >
                     <CheckCircle className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm flex-1">{task.description}</span>
                     {task.isCritical && (
@@ -179,9 +194,14 @@ export function CreateWorkOrderFromQR() {
               <h5 className="font-medium text-sm">อะไหล่ที่ต้องใช้:</h5>
               <div className="space-y-2">
                 {pmTemplate.parts.map((part, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg text-sm">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-muted/30 rounded-lg text-sm"
+                  >
                     <span>{part.name}</span>
-                    <span className="text-muted-foreground">{part.quantity} {part.unit}</span>
+                    <span className="text-muted-foreground">
+                      {part.quantity} {part.unit}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -195,7 +215,7 @@ export function CreateWorkOrderFromQR() {
             <Settings className="h-5 w-5" />
             รายละเอียดใบสั่งงาน
           </h3>
-          
+
           <div className="space-y-4">
             {/* Priority Selection */}
             <div className="space-y-2">
@@ -206,7 +226,7 @@ export function CreateWorkOrderFromQR() {
                     key={level}
                     onClick={() => setPriority(level)}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      priority === level 
+                      priority === level
                         ? getPriorityColor(level)
                         : "bg-muted text-muted-foreground hover:bg-muted/80"
                     }`}
@@ -219,7 +239,9 @@ export function CreateWorkOrderFromQR() {
 
             {/* Estimated Hours */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">เวลาที่ประมาณการ (ชั่วโมง)</label>
+              <label className="text-sm font-medium">
+                เวลาที่ประมาณการ (ชั่วโมง)
+              </label>
               <input
                 type="number"
                 value={estimatedHours}
@@ -249,7 +271,9 @@ export function CreateWorkOrderFromQR() {
                 <User className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <div className="font-medium">{currentUser.name}</div>
-                  <div className="text-sm text-muted-foreground">{currentUser.role}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {currentUser.role}
+                  </div>
                 </div>
               </div>
             </div>
@@ -258,7 +282,10 @@ export function CreateWorkOrderFromQR() {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Button onClick={handleCreateWorkOrder} className="bg-gradient-to-r from-primary to-primary/90">
+          <Button
+            onClick={handleCreateWorkOrder}
+            className="bg-gradient-to-r from-primary to-primary/90"
+          >
             <Send className="h-4 w-4 mr-2" />
             สร้างใบสั่งงาน
           </Button>

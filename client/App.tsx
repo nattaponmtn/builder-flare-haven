@@ -33,7 +33,10 @@ const App = () => (
               <Route path="/work-orders" element={<WorkOrders />} />
               <Route path="/work-orders/:id" element={<WorkOrderDetail />} />
               <Route path="/qr-scanner" element={<QRScanner />} />
-              <Route path="/create-work-order" element={<CreateWorkOrderFromQR />} />
+              <Route
+                path="/create-work-order"
+                element={<CreateWorkOrderFromQR />}
+              />
               <Route
                 path="/assets"
                 element={
@@ -45,7 +48,7 @@ const App = () => (
                       "Asset maintenance history",
                       "QR code assignment and management",
                       "Asset performance analytics",
-                      "Location tracking and mapping"
+                      "Location tracking and mapping",
                     ]}
                   />
                 }
@@ -62,7 +65,7 @@ const App = () => (
                       "Frequency-based task planning",
                       "Team workload distribution",
                       "Automated scheduling suggestions",
-                      "Schedule conflict resolution"
+                      "Schedule conflict resolution",
                     ]}
                   />
                 }
@@ -78,7 +81,7 @@ const App = () => (
                       "Low stock alerts and notifications",
                       "Parts usage analytics",
                       "Supplier management",
-                      "Automated reorder suggestions"
+                      "Automated reorder suggestions",
                     ]}
                   />
                 }
@@ -94,7 +97,7 @@ const App = () => (
                       "Company and location setup",
                       "Notification preferences",
                       "Data sync settings",
-                      "Security and access controls"
+                      "Security and access controls",
                     ]}
                   />
                 }
