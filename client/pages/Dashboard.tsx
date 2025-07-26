@@ -148,7 +148,8 @@ export function Dashboard() {
           </div>
           <div className="p-4 sm:p-6 space-y-3">
             {recentWorkOrders.map((wo, index) => (
-              <div key={wo.id} className={`group cursor-pointer p-4 rounded-lg border hover:border-primary/50 transition-all duration-200 ${index === 0 ? 'bg-gradient-to-r from-primary/5 to-transparent' : 'hover:bg-muted/30'}`}>
+              <Link key={wo.id} to={`/work-orders/${wo.id}`}>
+                <div className={`group cursor-pointer p-4 rounded-lg border hover:border-primary/50 transition-all duration-200 ${index === 0 ? 'bg-gradient-to-r from-primary/5 to-transparent' : 'hover:bg-muted/30'}`}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
@@ -178,7 +179,8 @@ export function Dashboard() {
                     {wo.status}
                   </Badge>
                 </div>
-              </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
