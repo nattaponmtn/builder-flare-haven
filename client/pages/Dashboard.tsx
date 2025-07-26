@@ -34,7 +34,7 @@ export function Dashboard() {
     {
       title: "กำลังดำเนินการ",
       value: "15",
-      change: "ไม่มีกา���เปลี่ยนแปลง",
+      change: "ไม่มีการเปลี่ยนแปลง",
       trend: "stable",
       icon: Clock,
       color: "text-warning"
@@ -90,25 +90,25 @@ export function Dashboard() {
           <Link to="/qr-scanner" className="group">
             <div className="card-elevated rounded-xl p-4 h-24 flex flex-col items-center justify-center space-y-2 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
               <QrCode size={20} className="sm:w-6 sm:h-6" />
-              <span className="text-xs sm:text-sm font-medium">Scan QR</span>
+              <span className="text-xs sm:text-sm font-medium">สแกน QR</span>
             </div>
           </Link>
           <Link to="/work-orders" className="group">
             <div className="card-elevated rounded-xl p-4 h-24 flex flex-col items-center justify-center space-y-2 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
               <Wrench size={20} className="sm:w-6 sm:h-6" />
-              <span className="text-xs sm:text-sm font-medium">Work Orders</span>
+              <span className="text-xs sm:text-sm font-medium">ใบสั่งงาน</span>
             </div>
           </Link>
           <Link to="/assets" className="group">
             <div className="card-elevated rounded-xl p-4 h-24 flex flex-col items-center justify-center space-y-2 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
               <TrendingUp size={20} className="sm:w-6 sm:h-6" />
-              <span className="text-xs sm:text-sm font-medium">Assets</span>
+              <span className="text-xs sm:text-sm font-medium">อุปกรณ์</span>
             </div>
           </Link>
           <Link to="/schedule" className="group">
             <div className="card-elevated rounded-xl p-4 h-24 flex flex-col items-center justify-center space-y-2 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
               <Calendar size={20} className="sm:w-6 sm:h-6" />
-              <span className="text-xs sm:text-sm font-medium">Schedule</span>
+              <span className="text-xs sm:text-sm font-medium">ตารางงาน</span>
             </div>
           </Link>
         </div>
