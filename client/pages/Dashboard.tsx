@@ -24,7 +24,7 @@ export function Dashboard() {
       color: "text-destructive"
     },
     {
-      title: "เสร็จวันนี้",
+      title: "เสร็จวั���นี้",
       value: "8",
       change: "+2 จากเมื่อวาน",
       trend: "up",
@@ -138,10 +138,10 @@ export function Dashboard() {
         <div className="card-elevated rounded-xl overflow-hidden">
           <div className="p-4 sm:p-6 border-b bg-gradient-to-r from-primary/5 to-transparent">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg sm:text-xl font-semibold">Recent Work Orders</h2>
+              <h2 className="text-lg sm:text-xl font-semibold">ใบสั่งงานล่าสุด</h2>
               <Link to="/work-orders">
                 <Button variant="outline" size="sm" className="text-xs sm:text-sm">
-                  View All
+                  ดูทั้งหมด
                 </Button>
               </Link>
             </div>
