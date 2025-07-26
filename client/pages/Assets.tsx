@@ -2,9 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Search, 
-  Filter, 
+import {
+  Search,
+  Filter,
   Plus,
   Settings,
   MapPin,
@@ -19,7 +19,7 @@ import {
   Download,
   BarChart3,
   Package,
-  Cog
+  Cog,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -55,12 +55,22 @@ const assetsDatabase = [
       power: "70 แรงม้า",
       fuelType: "ดีเซล",
       weight: "3500 กก.",
-      transmission: "เกียร์ออโต้"
+      transmission: "เกียร์ออโต้",
     },
     maintenanceHistory: [
-      { date: "05/01/2567", type: "ป้องกัน", description: "เปลี่ยนน้ำมันเครื่อง", technician: "สมชาย" },
-      { date: "20/12/2566", type: "แก้ไข", description: "ซ่อมระบบไฮดรอลิก", technician: "สมหญิง" }
-    ]
+      {
+        date: "05/01/2567",
+        type: "ป้องกัน",
+        description: "เปลี่ยนน้ำมันเครื่อง",
+        technician: "สมชาย",
+      },
+      {
+        date: "20/12/2566",
+        type: "แก้ไข",
+        description: "ซ่อมระบบไฮดรอลิก",
+        technician: "สมหญิง",
+      },
+    ],
   },
   {
     id: "TRACT-002",
@@ -91,8 +101,8 @@ const assetsDatabase = [
       power: "85 แรงม้า",
       fuelType: "ดีเซล",
       weight: "4200 กก.",
-      transmission: "เกียร์ธรรมดา"
-    }
+      transmission: "เกียร์ธรรมดา",
+    },
   },
   {
     id: "PUMP-002",
@@ -123,8 +133,8 @@ const assetsDatabase = [
       power: "5 แรงม้า",
       voltage: "220V",
       flow: "150 ลิตร/นาที",
-      head: "35 เมตร"
-    }
+      head: "35 เมตร",
+    },
   },
   {
     id: "PUMP-003",
@@ -155,8 +165,8 @@ const assetsDatabase = [
       power: "3.5 แรงม้า",
       voltage: "380V",
       flow: "200 ลิตร/นาที",
-      head: "45 เมตร"
-    }
+      head: "45 เมตร",
+    },
   },
   {
     id: "HARV-003",
@@ -187,8 +197,8 @@ const assetsDatabase = [
       power: "250 แรงม้า",
       fuelType: "ดีเซล",
       cuttingWidth: "6.1 เมตร",
-      grainTank: "10,000 ลิตร"
-    }
+      grainTank: "10,000 ลิตร",
+    },
   },
   {
     id: "SPRAY-004",
@@ -219,56 +229,81 @@ const assetsDatabase = [
       tankCapacity: "3200 ลิตร",
       sprayWidth: "24 เมตร",
       pumpType: "เซนตริฟิวกัล",
-      pressure: "20 บาร์"
-    }
-  }
+      pressure: "20 บาร์",
+    },
+  },
 ];
 
 export function Assets() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ทั้งหมด');
-  const [typeFilter, setTypeFilter] = useState('ทั้งหมด');
-  const [locationFilter, setLocationFilter] = useState('ทั้งหมด');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ทั้งหมด");
+  const [typeFilter, setTypeFilter] = useState("ทั้งหมด");
+  const [locationFilter, setLocationFilter] = useState("ทั้งหมด");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   // ระบบกรองและค้นหาที่ครอบคลุม
   const filteredAssets = useMemo(() => {
-    return assetsDatabase.filter(asset => {
-      const matchesSearch = !searchTerm || 
-        asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        asset.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        asset.tagId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        asset.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        asset.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        asset.serialNumber.toLowerCase().includes(searchTerm.toLowerCase());
+    return assetsDatabase
+      .filter((asset) => {
+        const matchesSearch =
+          !searchTerm ||
+          asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset.tagId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset.serialNumber.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesStatus = statusFilter === 'ทั้งหมด' || asset.status === statusFilter;
-      const matchesType = typeFilter === 'ทั้งหมด' || asset.equipmentType === typeFilter;
-      const matchesLocation = locationFilter === 'ทั้งหมด' || asset.location === locationFilter;
+        const matchesStatus =
+          statusFilter === "ทั้งหมด" || asset.status === statusFilter;
+        const matchesType =
+          typeFilter === "ทั้งหมด" || asset.equipmentType === typeFilter;
+        const matchesLocation =
+          locationFilter === "ทั้งหมด" || asset.location === locationFilter;
 
-      return matchesSearch && matchesStatus && matchesType && matchesLocation;
-    }).sort((a, b) => {
-      // เรียงตามสถานะ - ชำรุดก่อน, ต้องบำรุง, ใช้งานได้
-      const statusOrder = { "ชำรุด": 0, "ต้องการบำรุงรักษา": 1, "ใช้งานได้": 2 };
-      return statusOrder[a.status as keyof typeof statusOrder] - statusOrder[b.status as keyof typeof statusOrder];
-    });
+        return matchesSearch && matchesStatus && matchesType && matchesLocation;
+      })
+      .sort((a, b) => {
+        // เรียงตามสถานะ - ชำรุดก่อน, ต้องบำรุง, ใช้งานได้
+        const statusOrder = { ชำรุด: 0, ต้องการบำรุงรักษา: 1, ใช้งานได้: 2 };
+        return (
+          statusOrder[a.status as keyof typeof statusOrder] -
+          statusOrder[b.status as keyof typeof statusOrder]
+        );
+      });
   }, [searchTerm, statusFilter, typeFilter, locationFilter]);
 
   // สถิติสรุป
   const assetStats = useMemo(() => {
     const total = assetsDatabase.length;
-    const working = assetsDatabase.filter(a => a.status === 'ใช้งานได้').length;
-    const needMaintenance = assetsDatabase.filter(a => a.status === 'ต้องการบำรุงรักษา').length;
-    const broken = assetsDatabase.filter(a => a.status === 'ชำรุด').length;
+    const working = assetsDatabase.filter(
+      (a) => a.status === "ใช้งานได้",
+    ).length;
+    const needMaintenance = assetsDatabase.filter(
+      (a) => a.status === "ต้องการบำรุงรักษา",
+    ).length;
+    const broken = assetsDatabase.filter((a) => a.status === "ชำรุด").length;
     const totalValue = assetsDatabase.reduce((sum, a) => sum + a.cost, 0);
-    const pendingTasks = assetsDatabase.reduce((sum, a) => sum + a.pendingTasks, 0);
+    const pendingTasks = assetsDatabase.reduce(
+      (sum, a) => sum + a.pendingTasks,
+      0,
+    );
 
-    return { total, working, needMaintenance, broken, totalValue, pendingTasks };
+    return {
+      total,
+      working,
+      needMaintenance,
+      broken,
+      totalValue,
+      pendingTasks,
+    };
   }, []);
 
   // ตัวเลือกกรอง
-  const equipmentTypes = [...new Set(assetsDatabase.map(a => a.equipmentType))];
-  const locations = [...new Set(assetsDatabase.map(a => a.location))];
+  const equipmentTypes = [
+    ...new Set(assetsDatabase.map((a) => a.equipmentType)),
+  ];
+  const locations = [...new Set(assetsDatabase.map((a) => a.location))];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -337,30 +372,52 @@ export function Assets() {
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-primary">{assetStats.total}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">อุปกรณ์ทั้งหมด</div>
+            <div className="text-lg sm:text-xl font-bold text-primary">
+              {assetStats.total}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              อุปกรณ์ทั้งหมด
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-success">{assetStats.working}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">ใช้งานได้</div>
+            <div className="text-lg sm:text-xl font-bold text-success">
+              {assetStats.working}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              ใช้งานได้
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-warning">{assetStats.needMaintenance}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">ต้องบำรุง</div>
+            <div className="text-lg sm:text-xl font-bold text-warning">
+              {assetStats.needMaintenance}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              ต้องบำรุง
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-destructive">{assetStats.broken}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">ชำรุด</div>
+            <div className="text-lg sm:text-xl font-bold text-destructive">
+              {assetStats.broken}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              ชำรุด
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-warning">{assetStats.pendingTasks}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">งานค้าง</div>
+            <div className="text-lg sm:text-xl font-bold text-warning">
+              {assetStats.pendingTasks}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              งานค้าง
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
             <div className="text-sm sm:text-base font-bold text-primary">
               ฿{(assetStats.totalValue / 1000000).toFixed(1)}M
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">มูลค่ารวม</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              มูลค่ารวม
+            </div>
           </div>
         </div>
 
@@ -377,7 +434,7 @@ export function Assets() {
               />
             </div>
             <div className="flex gap-2">
-              <select 
+              <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-3 py-2 bg-background/50 border rounded-md text-sm shadow-sm min-w-32"
@@ -387,46 +444,50 @@ export function Assets() {
                 <option value="ต้องการบำรุงรักษา">ต้องบำรุงรักษา</option>
                 <option value="ชำรุด">ชำรุด</option>
               </select>
-              <select 
+              <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
                 className="px-3 py-2 bg-background/50 border rounded-md text-sm shadow-sm min-w-32"
               >
                 <option value="ทั้งหมด">ประเภททั้งหมด</option>
-                {equipmentTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
+                {equipmentTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
                 ))}
               </select>
-              <select 
+              <select
                 value={locationFilter}
                 onChange={(e) => setLocationFilter(e.target.value)}
                 className="px-3 py-2 bg-background/50 border rounded-md text-sm shadow-sm min-w-32"
               >
                 <option value="ทั้งหมด">สถานที่ทั้งหมด</option>
-                {locations.map(location => (
-                  <option key={location} value={location}>{location}</option>
+                {locations.map((location) => (
+                  <option key={location} value={location}>
+                    {location}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
               แสดง {filteredAssets.length} จาก {assetStats.total} รายการ
             </p>
             <div className="flex gap-1">
               <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
+                variant={viewMode === "list" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode('list')}
+                onClick={() => setViewMode("list")}
                 className="px-3"
               >
                 รายการ
               </Button>
               <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                variant={viewMode === "grid" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode('grid')}
+                onClick={() => setViewMode("grid")}
                 className="px-3"
               >
                 ตาราง
@@ -438,14 +499,22 @@ export function Assets() {
         {/* Assets List */}
         <div className="space-y-3">
           {filteredAssets.map((asset) => (
-            <div key={asset.id} className={`card-elevated rounded-xl overflow-hidden ${
-              asset.status === 'ชำรุด' ? 'ring-2 ring-destructive/20' : 
-              asset.status === 'ต้องการบำรุงรักษา' ? 'ring-2 ring-warning/20' : ''
-            } ${
-              asset.status === 'ชำรุด' ? 'border-l-4 border-l-destructive' :
-              asset.status === 'ต้องการบำรุงรักษา' ? 'border-l-4 border-l-warning' :
-              'border-l-4 border-l-success'
-            }`}>
+            <div
+              key={asset.id}
+              className={`card-elevated rounded-xl overflow-hidden ${
+                asset.status === "ชำรุด"
+                  ? "ring-2 ring-destructive/20"
+                  : asset.status === "ต้องการบำรุงรักษา"
+                    ? "ring-2 ring-warning/20"
+                    : ""
+              } ${
+                asset.status === "ชำรุด"
+                  ? "border-l-4 border-l-destructive"
+                  : asset.status === "ต้องการบำรุงรักษา"
+                    ? "border-l-4 border-l-warning"
+                    : "border-l-4 border-l-success"
+              }`}
+            >
               <div className="p-4 sm:p-5">
                 <div className="space-y-4">
                   {/* Header */}
@@ -453,15 +522,23 @@ export function Assets() {
                     <div className="space-y-2 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         {getStatusIcon(asset.status)}
-                        <h3 className="font-semibold text-sm sm:text-base">{asset.name}</h3>
-                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(asset.status)}`}>
+                        <h3 className="font-semibold text-sm sm:text-base">
+                          {asset.name}
+                        </h3>
+                        <div
+                          className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(asset.status)}`}
+                        >
                           {asset.status}
                         </div>
                       </div>
                       <div className="flex items-center gap-4 text-xs sm:text-sm text-muted-foreground">
                         <span className="font-mono">{asset.id}</span>
-                        <span>{asset.brand} {asset.model}</span>
-                        <span className={getConditionColor(asset.condition)}>สภาพ: {asset.condition}</span>
+                        <span>
+                          {asset.brand} {asset.model}
+                        </span>
+                        <span className={getConditionColor(asset.condition)}>
+                          สภาพ: {asset.condition}
+                        </span>
                       </div>
                     </div>
                     <div className="flex gap-2 shrink-0">
@@ -485,17 +562,27 @@ export function Assets() {
                     </div>
                     <div className="p-2 bg-muted/30 rounded-lg">
                       <div className="text-muted-foreground">ชั่วโมงทำงาน</div>
-                      <div className="font-medium">{asset.operatingHours.toLocaleString()} ชม.</div>
+                      <div className="font-medium">
+                        {asset.operatingHours.toLocaleString()} ชม.
+                      </div>
                     </div>
                     <div className="p-2 bg-muted/30 rounded-lg">
-                      <div className="text-muted-foreground">บำรุงรักษาล่าสุด</div>
+                      <div className="text-muted-foreground">
+                        บำรุงรักษาล่าสุด
+                      </div>
                       <div className="font-medium">{asset.lastMaintenance}</div>
                     </div>
                     <div className="p-2 bg-muted/30 rounded-lg">
-                      <div className="text-muted-foreground">บำรุงรักษาครั้งต่อไป</div>
-                      <div className={`font-medium ${
-                        asset.nextMaintenance === 'เกินกำหนดแล้ว' ? 'text-destructive' : ''
-                      }`}>
+                      <div className="text-muted-foreground">
+                        บำรุงรักษาครั้งต่อไป
+                      </div>
+                      <div
+                        className={`font-medium ${
+                          asset.nextMaintenance === "เกินกำหนดแล้ว"
+                            ? "text-destructive"
+                            : ""
+                        }`}
+                      >
                         {asset.nextMaintenance}
                       </div>
                     </div>
@@ -505,31 +592,43 @@ export function Assets() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs sm:text-sm">
                     <div className="p-2 bg-muted/30 rounded-lg text-center">
                       <div className="text-muted-foreground">Uptime</div>
-                      <div className={`font-bold ${
-                        asset.uptime >= 95 ? 'text-success' :
-                        asset.uptime >= 85 ? 'text-warning' : 'text-destructive'
-                      }`}>
+                      <div
+                        className={`font-bold ${
+                          asset.uptime >= 95
+                            ? "text-success"
+                            : asset.uptime >= 85
+                              ? "text-warning"
+                              : "text-destructive"
+                        }`}
+                      >
                         {asset.uptime}%
                       </div>
                     </div>
                     <div className="p-2 bg-muted/30 rounded-lg text-center">
                       <div className="text-muted-foreground">งานค้าง</div>
-                      <div className={`font-bold ${asset.pendingTasks > 0 ? 'text-warning' : 'text-success'}`}>
+                      <div
+                        className={`font-bold ${asset.pendingTasks > 0 ? "text-warning" : "text-success"}`}
+                      >
                         {asset.pendingTasks}
                       </div>
                     </div>
                     <div className="p-2 bg-muted/30 rounded-lg text-center">
-                      <div className="text-muted-foreground">ใบสั่งงานทั้งหมด</div>
+                      <div className="text-muted-foreground">
+                        ใบสั่งงานทั้งหมด
+                      </div>
                       <div className="font-medium">{asset.totalWorkOrders}</div>
                     </div>
                     <div className="p-2 bg-muted/30 rounded-lg text-center">
                       <div className="text-muted-foreground">มูลค่า</div>
-                      <div className="font-medium">฿{(asset.cost / 1000000).toFixed(1)}M</div>
+                      <div className="font-medium">
+                        ฿{(asset.cost / 1000000).toFixed(1)}M
+                      </div>
                     </div>
                   </div>
 
                   {/* Alerts */}
-                  {(asset.pendingTasks > 0 || asset.nextMaintenance === 'เกินกำหนดแล้ว') && (
+                  {(asset.pendingTasks > 0 ||
+                    asset.nextMaintenance === "เกินกำหนดแล้ว") && (
                     <div className="flex flex-wrap gap-2">
                       {asset.pendingTasks > 0 && (
                         <div className="inline-flex items-center gap-1 px-2 py-1 bg-warning/10 text-warning border border-warning/20 rounded text-xs">
@@ -537,7 +636,7 @@ export function Assets() {
                           มีงานค้างอยู่ {asset.pendingTasks} งาน
                         </div>
                       )}
-                      {asset.nextMaintenance === 'เกินกำหนดแล้ว' && (
+                      {asset.nextMaintenance === "เกินกำหนดแล้ว" && (
                         <div className="inline-flex items-center gap-1 px-2 py-1 bg-destructive/10 text-destructive border border-destructive/20 rounded text-xs">
                           <Clock className="h-3 w-3" />
                           เกินกำหนดบำรุงรักษา

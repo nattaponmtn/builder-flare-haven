@@ -2,9 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Search, 
-  Filter, 
+import {
+  Search,
+  Filter,
   Plus,
   Package,
   AlertTriangle,
@@ -20,7 +20,7 @@ import {
   BarChart3,
   DollarSign,
   Archive,
-  Star
+  Star,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -60,15 +60,25 @@ const partsDatabase = [
       dimensions: "10x8x5 ซม.",
       weight: "250 กรัม",
       material: "กระดาษกรอง",
-      efficiency: "99.5%"
+      efficiency: "99.5%",
     },
     usageHistory: [
-      { date: "10/01/2567", quantity: 2, workOrder: "WO-2024-001", asset: "TRACT-001" },
-      { date: "05/01/2567", quantity: 1, workOrder: "WO-2024-005", asset: "TRACT-002" }
-    ]
+      {
+        date: "10/01/2567",
+        quantity: 2,
+        workOrder: "WO-2024-001",
+        asset: "TRACT-001",
+      },
+      {
+        date: "05/01/2567",
+        quantity: 1,
+        workOrder: "WO-2024-005",
+        asset: "TRACT-002",
+      },
+    ],
   },
   {
-    id: "PT-002", 
+    id: "PT-002",
     partNumber: "EO-1540",
     name: "น้ำมันเครื่อง 15W-40",
     category: "น้ำมัน",
@@ -100,8 +110,8 @@ const partsDatabase = [
       viscosity: "15W-40",
       type: "Mineral",
       capacity: "20 ลิตร/ถัง",
-      standard: "API CF-4"
-    }
+      standard: "API CF-4",
+    },
   },
   {
     id: "PT-003",
@@ -136,8 +146,8 @@ const partsDatabase = [
       filtration: "10 micron",
       flow: "200 LPM",
       pressure: "350 bar",
-      material: "Synthetic media"
-    }
+      material: "Synthetic media",
+    },
   },
   {
     id: "PT-004",
@@ -172,8 +182,8 @@ const partsDatabase = [
       length: "2.5 เมตร",
       width: "15 ซม.",
       material: "ยางสังเคราะห์",
-      strength: "500 N/mm"
-    }
+      strength: "500 N/mm",
+    },
   },
   {
     id: "PT-005",
@@ -208,8 +218,8 @@ const partsDatabase = [
       sprayAngle: "110°",
       orificeSize: "02",
       pressure: "3-6 bar",
-      flowRate: "0.95 L/min"
-    }
+      flowRate: "0.95 L/min",
+    },
   },
   {
     id: "PT-006",
@@ -244,8 +254,8 @@ const partsDatabase = [
       diameter: "150 mm",
       material: "สแตนเลส 316",
       stages: "1",
-      efficiency: "85%"
-    }
+      efficiency: "85%",
+    },
   },
   {
     id: "PT-007",
@@ -280,8 +290,8 @@ const partsDatabase = [
       innerDiameter: "25 mm",
       outerDiameter: "40 mm",
       width: "7 mm",
-      material: "NBR"
-    }
+      material: "NBR",
+    },
   },
   {
     id: "PT-008",
@@ -316,55 +326,72 @@ const partsDatabase = [
       friction: "Semi-metallic",
       temperature: "400°C max",
       thickness: "15 mm",
-      area: "120 cm²"
-    }
-  }
+      area: "120 cm²",
+    },
+  },
 ];
 
 export function Parts() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ทั้งหมด');
-  const [categoryFilter, setCategoryFilter] = useState('ทั้งหมด');
-  const [supplierFilter, setSupplierFilter] = useState('ทั้งหมด');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ทั้งหมด");
+  const [categoryFilter, setCategoryFilter] = useState("ทั้งหมด");
+  const [supplierFilter, setSupplierFilter] = useState("ทั้งหมด");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   // ระบบกรองและค้นหาที่ครอบคลุม
   const filteredParts = useMemo(() => {
-    return partsDatabase.filter(part => {
-      const matchesSearch = !searchTerm || 
-        part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        part.partNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        part.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        part.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        part.category.toLowerCase().includes(searchTerm.toLowerCase());
+    return partsDatabase
+      .filter((part) => {
+        const matchesSearch =
+          !searchTerm ||
+          part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          part.partNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          part.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          part.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          part.category.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesStatus = statusFilter === 'ทั้งหมด' || part.status === statusFilter;
-      const matchesCategory = categoryFilter === 'ทั้งหมด' || part.category === categoryFilter;
-      const matchesSupplier = supplierFilter === 'ทั้งหมด' || part.supplier === supplierFilter;
+        const matchesStatus =
+          statusFilter === "ทั้งหมด" || part.status === statusFilter;
+        const matchesCategory =
+          categoryFilter === "ทั้งหมด" || part.category === categoryFilter;
+        const matchesSupplier =
+          supplierFilter === "ทั้งหมด" || part.supplier === supplierFilter;
 
-      return matchesSearch && matchesStatus && matchesCategory && matchesSupplier;
-    }).sort((a, b) => {
-      // เรียงตามสถานะ - หมดสต็อกก่อน, สต็อกต่ำ, มีสต็อก
-      const statusOrder = { "หมดสต็อก": 0, "สต็อกต่ำ": 1, "มีสต็อก": 2 };
-      return statusOrder[a.status as keyof typeof statusOrder] - statusOrder[b.status as keyof typeof statusOrder];
-    });
+        return (
+          matchesSearch && matchesStatus && matchesCategory && matchesSupplier
+        );
+      })
+      .sort((a, b) => {
+        // เรียงตามสถานะ - หมดสต็อกก่อน, สต็อกต่ำ, มีสต็อก
+        const statusOrder = { หมดสต็อก: 0, สต็อกต่ำ: 1, มีสต็อก: 2 };
+        return (
+          statusOrder[a.status as keyof typeof statusOrder] -
+          statusOrder[b.status as keyof typeof statusOrder]
+        );
+      });
   }, [searchTerm, statusFilter, categoryFilter, supplierFilter]);
 
   // สถิติสรุป
   const partsStats = useMemo(() => {
     const total = partsDatabase.length;
-    const inStock = partsDatabase.filter(p => p.status === 'มีสต็อก').length;
-    const lowStock = partsDatabase.filter(p => p.status === 'สต็อกต่ำ').length;
-    const outOfStock = partsDatabase.filter(p => p.status === 'หมดสต็อก').length;
+    const inStock = partsDatabase.filter((p) => p.status === "มีสต็อก").length;
+    const lowStock = partsDatabase.filter(
+      (p) => p.status === "สต็อกต่ำ",
+    ).length;
+    const outOfStock = partsDatabase.filter(
+      (p) => p.status === "หมดสต็อก",
+    ).length;
     const totalValue = partsDatabase.reduce((sum, p) => sum + p.totalValue, 0);
-    const criticalParts = partsDatabase.filter(p => p.tags.includes('critical')).length;
+    const criticalParts = partsDatabase.filter((p) =>
+      p.tags.includes("critical"),
+    ).length;
 
     return { total, inStock, lowStock, outOfStock, totalValue, criticalParts };
   }, []);
 
   // ตัวเลือกกรอง
-  const categories = [...new Set(partsDatabase.map(p => p.category))];
-  const suppliers = [...new Set(partsDatabase.map(p => p.supplier))];
+  const categories = [...new Set(partsDatabase.map((p) => p.category))];
+  const suppliers = [...new Set(partsDatabase.map((p) => p.supplier))];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -396,7 +423,12 @@ export function Parts() {
     const percentage = (part.stockQuantity / part.maxStockLevel) * 100;
     return {
       percentage,
-      color: percentage <= 30 ? 'bg-destructive' : percentage <= 50 ? 'bg-warning' : 'bg-success'
+      color:
+        percentage <= 30
+          ? "bg-destructive"
+          : percentage <= 50
+            ? "bg-warning"
+            : "bg-success",
     };
   };
 
@@ -430,30 +462,52 @@ export function Parts() {
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-primary">{partsStats.total}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">รายการทั้งหมด</div>
+            <div className="text-lg sm:text-xl font-bold text-primary">
+              {partsStats.total}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              รายการทั้งหมด
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-success">{partsStats.inStock}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">มีสต็อก</div>
+            <div className="text-lg sm:text-xl font-bold text-success">
+              {partsStats.inStock}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              มีสต็อก
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-warning">{partsStats.lowStock}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">สต็อกต่ำ</div>
+            <div className="text-lg sm:text-xl font-bold text-warning">
+              {partsStats.lowStock}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              สต็อกต่ำ
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-destructive">{partsStats.outOfStock}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">หมดสต็อก</div>
+            <div className="text-lg sm:text-xl font-bold text-destructive">
+              {partsStats.outOfStock}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              หมดสต็อก
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg sm:text-xl font-bold text-warning">{partsStats.criticalParts}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">อะไหล่สำคัญ</div>
+            <div className="text-lg sm:text-xl font-bold text-warning">
+              {partsStats.criticalParts}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              อะไหล่สำคัญ
+            </div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
             <div className="text-sm sm:text-base font-bold text-primary">
               ฿{(partsStats.totalValue / 1000000).toFixed(1)}M
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">มูลค่าสต็อก</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              มูลค่าสต็อก
+            </div>
           </div>
         </div>
 
@@ -470,7 +524,7 @@ export function Parts() {
               />
             </div>
             <div className="flex gap-2 flex-wrap">
-              <select 
+              <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-3 py-2 bg-background/50 border rounded-md text-sm shadow-sm min-w-32"
@@ -480,46 +534,50 @@ export function Parts() {
                 <option value="สต็อกต่ำ">สต็อกต่ำ</option>
                 <option value="หมดสต็อก">หมดสต็อก</option>
               </select>
-              <select 
+              <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
                 className="px-3 py-2 bg-background/50 border rounded-md text-sm shadow-sm min-w-32"
               >
                 <option value="ทั้งหมด">หมวดหมู่ทั้งหมด</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
                 ))}
               </select>
-              <select 
+              <select
                 value={supplierFilter}
                 onChange={(e) => setSupplierFilter(e.target.value)}
                 className="px-3 py-2 bg-background/50 border rounded-md text-sm shadow-sm min-w-32"
               >
                 <option value="ทั้งหมด">ผู้จำหน่ายทั้งหมด</option>
-                {suppliers.map(supplier => (
-                  <option key={supplier} value={supplier}>{supplier.split(' ')[1]}</option>
+                {suppliers.map((supplier) => (
+                  <option key={supplier} value={supplier}>
+                    {supplier.split(" ")[1]}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
               แสดง {filteredParts.length} จาก {partsStats.total} รายการ
             </p>
             <div className="flex gap-1">
               <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
+                variant={viewMode === "list" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode('list')}
+                onClick={() => setViewMode("list")}
                 className="px-3"
               >
                 รายการ
               </Button>
               <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                variant={viewMode === "grid" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode('grid')}
+                onClick={() => setViewMode("grid")}
                 className="px-3"
               >
                 ตาราง
@@ -536,7 +594,8 @@ export function Parts() {
               <div>
                 <h3 className="font-semibold text-warning">แจ้งเตือนสต็อก</h3>
                 <p className="text-sm text-muted-foreground">
-                  มีอะไหล่ {partsStats.lowStock} รายการที่สต็อกต่ำ และ {partsStats.outOfStock} รายการที่หมดสต็อก
+                  มีอะไหล่ {partsStats.lowStock} รายการที่สต็อกต่ำ และ{" "}
+                  {partsStats.outOfStock} รายการที่หมดสต็อก
                 </p>
               </div>
               <Button variant="outline" size="sm" className="ml-auto">
@@ -551,14 +610,22 @@ export function Parts() {
           {filteredParts.map((part) => {
             const stockLevel = getStockLevel(part);
             return (
-              <div key={part.id} className={`card-elevated rounded-xl overflow-hidden ${
-                part.status === 'หมดสต็อก' ? 'ring-2 ring-destructive/20' : 
-                part.status === 'สต็อกต่ำ' ? 'ring-2 ring-warning/20' : ''
-              } ${
-                part.status === 'หมดสต็อก' ? 'border-l-4 border-l-destructive' :
-                part.status === 'สต็อกต่ำ' ? 'border-l-4 border-l-warning' :
-                'border-l-4 border-l-success'
-              }`}>
+              <div
+                key={part.id}
+                className={`card-elevated rounded-xl overflow-hidden ${
+                  part.status === "หมดสต็อก"
+                    ? "ring-2 ring-destructive/20"
+                    : part.status === "สต็อกต่ำ"
+                      ? "ring-2 ring-warning/20"
+                      : ""
+                } ${
+                  part.status === "หมดสต็อก"
+                    ? "border-l-4 border-l-destructive"
+                    : part.status === "สต็อกต่ำ"
+                      ? "border-l-4 border-l-warning"
+                      : "border-l-4 border-l-success"
+                }`}
+              >
                 <div className="p-4 sm:p-5">
                   <div className="space-y-4">
                     {/* Header */}
@@ -566,11 +633,15 @@ export function Parts() {
                       <div className="space-y-2 flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           {getStatusIcon(part.status)}
-                          <h3 className="font-semibold text-sm sm:text-base">{part.name}</h3>
-                          <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(part.status)}`}>
+                          <h3 className="font-semibold text-sm sm:text-base">
+                            {part.name}
+                          </h3>
+                          <div
+                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(part.status)}`}
+                          >
                             {part.status}
                           </div>
-                          {part.tags.includes('critical') && (
+                          {part.tags.includes("critical") && (
                             <Badge variant="destructive" className="text-xs">
                               <Star className="h-3 w-3 mr-1" />
                               สำคัญ
@@ -599,13 +670,15 @@ export function Parts() {
                     {/* Stock Level Bar */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
-                        <span>สต็อกปัจจุบัน: {part.stockQuantity} {part.unit}</span>
+                        <span>
+                          สต็อกปัจจุบัน: {part.stockQuantity} {part.unit}
+                        </span>
                         <span className="text-muted-foreground">
                           {stockLevel.percentage.toFixed(0)}% ของสต็อกสูงสุด
                         </span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
-                        <div 
+                        <div
                           className={`h-2 rounded-full transition-all ${stockLevel.color}`}
                           style={{ width: `${stockLevel.percentage}%` }}
                         ></div>
@@ -620,15 +693,23 @@ export function Parts() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs sm:text-sm">
                       <div className="p-2 bg-muted/30 rounded-lg">
                         <div className="text-muted-foreground">ราคา/หน่วย</div>
-                        <div className="font-medium">฿{part.unitPrice.toLocaleString()}</div>
+                        <div className="font-medium">
+                          ฿{part.unitPrice.toLocaleString()}
+                        </div>
                       </div>
                       <div className="p-2 bg-muted/30 rounded-lg">
                         <div className="text-muted-foreground">มูลค่าสต็อก</div>
-                        <div className="font-medium">฿{part.totalValue.toLocaleString()}</div>
+                        <div className="font-medium">
+                          ฿{part.totalValue.toLocaleString()}
+                        </div>
                       </div>
                       <div className="p-2 bg-muted/30 rounded-lg">
-                        <div className="text-muted-foreground">ใช้งาน/เดือน</div>
-                        <div className="font-medium">{part.monthlyUsage} {part.unit}</div>
+                        <div className="text-muted-foreground">
+                          ใช้งาน/เดือน
+                        </div>
+                        <div className="font-medium">
+                          {part.monthlyUsage} {part.unit}
+                        </div>
                       </div>
                       <div className="p-2 bg-muted/30 rounded-lg">
                         <div className="text-muted-foreground">Lead Time</div>
@@ -639,22 +720,32 @@ export function Parts() {
                     {/* Location and Supplier */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
                       <div className="p-2 bg-muted/30 rounded-lg">
-                        <div className="text-muted-foreground">ตำแหน่งในคลัง</div>
+                        <div className="text-muted-foreground">
+                          ตำแหน่งในคลัง
+                        </div>
                         <div className="font-medium">{part.location}</div>
                       </div>
                       <div className="p-2 bg-muted/30 rounded-lg">
                         <div className="text-muted-foreground">ผู้จำหน่าย</div>
-                        <div className="font-medium">{part.supplier.split(' ')[1]}</div>
+                        <div className="font-medium">
+                          {part.supplier.split(" ")[1]}
+                        </div>
                       </div>
                     </div>
 
                     {/* Compatible Assets */}
                     {part.compatibleAssets.length > 0 && (
                       <div className="space-y-2">
-                        <div className="text-sm font-medium">อุปกรณ์ที่ใช้ได้:</div>
+                        <div className="text-sm font-medium">
+                          อุปกรณ์ที่ใช้ได้:
+                        </div>
                         <div className="flex flex-wrap gap-1">
                           {part.compatibleAssets.map((asset, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
+                            <Badge
+                              key={index}
+                              variant="outline"
+                              className="text-xs"
+                            >
                               {asset}
                             </Badge>
                           ))}
@@ -664,13 +755,13 @@ export function Parts() {
 
                     {/* Alerts */}
                     <div className="flex flex-wrap gap-2">
-                      {part.status === 'หมดสต็อก' && (
+                      {part.status === "หมดสต็อก" && (
                         <div className="inline-flex items-center gap-1 px-2 py-1 bg-destructive/10 text-destructive border border-destructive/20 rounded text-xs">
                           <TrendingDown className="h-3 w-3" />
                           หมดสต็อก - ต้องสั่งซื้อด่วน
                         </div>
                       )}
-                      {part.status === 'สต็อกต่ำ' && (
+                      {part.status === "สต็อกต่ำ" && (
                         <div className="inline-flex items-center gap-1 px-2 py-1 bg-warning/10 text-warning border border-warning/20 rounded text-xs">
                           <AlertTriangle className="h-3 w-3" />
                           สต็อกต่ำ - ควรสั่งซื้อเพิ่ม
