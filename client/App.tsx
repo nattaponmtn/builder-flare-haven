@@ -48,22 +48,7 @@ const App = () => (
                   />
                 }
               />
-              <Route
-                path="/qr-scanner"
-                element={
-                  <PlaceholderPage
-                    title="QR Code Scanner"
-                    description="Scan equipment QR codes to instantly start maintenance tasks"
-                    features={[
-                      "Camera-based QR code scanning",
-                      "Instant PM task initiation",
-                      "Asset identification and lookup",
-                      "Offline scanning capability",
-                      "History of scanned items"
-                    ]}
-                  />
-                }
-              />
+
               <Route
                 path="/schedule"
                 element={
