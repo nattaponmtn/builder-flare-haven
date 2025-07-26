@@ -44,7 +44,7 @@ const workOrders = [
   },
   {
     id: "WO-2024-003",
-    title: "เปลี่ยนเข็มขัดเคร���่องเก็บเกี่ยว",
+    title: "เปลี่ยนเข็มขัดเครื่องเก็บเกี่ยว",
     description: "เปลี่ยนเข็มขัดลำเลียงที่สึกหรอของเครื่องเก็บเกี่ยว",
     status: "เกินกำหนด",
     priority: "วิกฤติ",
@@ -142,7 +142,7 @@ export function WorkOrders() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
-                placeholder="Search work orders..."
+                placeholder="ค้นหาใบสั่งงาน..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 bg-background/50 border-0 shadow-sm"
@@ -151,18 +151,18 @@ export function WorkOrders() {
             <div className="flex gap-2">
               <Button variant="outline" size="sm" className="bg-background/50">
                 <Filter className="h-4 w-4 mr-2" />
-                Filter
+                กรอง
               </Button>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-3 py-2 bg-background/50 border rounded-md text-sm shadow-sm"
               >
-                <option value="All">All Status</option>
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Overdue">Overdue</option>
+                <option value="All">สถานะทั้งหมด</option>
+                <option value="รอดำเนินการ">รอดำเนินการ</option>
+                <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
+                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+                <option value="เกินกำหนด">เกินกำหนด</option>
               </select>
             </div>
           </div>
