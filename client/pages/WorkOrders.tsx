@@ -18,55 +18,55 @@ import { Link } from "react-router-dom";
 const workOrders = [
   {
     id: "WO-2024-001",
-    title: "Tractor Engine Maintenance",
-    description: "Routine maintenance check for CAT 320D excavator",
-    status: "In Progress",
-    priority: "High",
-    assignee: "John Doe",
+    title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
+    description: "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D",
+    status: "กำลังดำเนินการ",
+    priority: "สูง",
+    assignee: "สมชาย รักงาน",
     asset: "CAT-320D-001",
-    location: "Field A",
-    dueDate: "2024-01-15",
+    location: "ไร่ A",
+    dueDate: "15/01/2567",
     estimatedHours: 4,
-    type: "Preventive"
+    type: "ป้องกัน"
   },
   {
     id: "WO-2024-002",
-    title: "Irrigation System Check",
-    description: "Weekly inspection of irrigation pumps and valves",
-    status: "Pending",
-    priority: "Medium",
-    assignee: "Jane Smith",
+    title: "ตรวจสอบระบบน้ำ",
+    description: "ตรวจสอบปั๊มน้ำและวาล์วระบบน้ำประจำสัปดาห์",
+    status: "รอดำเนินการ",
+    priority: "ปานกลาง",
+    assignee: "สมหญิง ใจดี",
     asset: "PUMP-IR-001",
-    location: "Irrigation Hub",
-    dueDate: "2024-01-16",
+    location: "จุดควบคุมน้ำ",
+    dueDate: "16/01/2567",
     estimatedHours: 2,
-    type: "Preventive"
+    type: "ป้องกัน"
   },
   {
     id: "WO-2024-003",
-    title: "Harvester Belt Replacement",
-    description: "Replace worn conveyor belt on harvester",
-    status: "Overdue",
-    priority: "Critical",
-    assignee: "Mike Johnson",
+    title: "เปลี่ยนเข็มขัดเครื่องเก็บเกี่ยว",
+    description: "เปลี่ยนเข็มขัดลำเลียงที่สึกหรอของเครื่องเก็บเกี่ยว",
+    status: "เกินกำหนด",
+    priority: "วิกฤติ",
+    assignee: "สมศักดิ์ ช่างเก่ง",
     asset: "HARV-001",
-    location: "Maintenance Shop",
-    dueDate: "2024-01-14",
+    location: "โรงซ่อม",
+    dueDate: "14/01/2567",
     estimatedHours: 6,
-    type: "Corrective"
+    type: "แก้ไข"
   },
   {
     id: "WO-2024-004",
-    title: "Fertilizer Spreader Calibration",
-    description: "Annual calibration of fertilizer spreading equipment",
-    status: "Completed",
-    priority: "Low",
-    assignee: "Sarah Wilson",
+    title: "ปรับเทียบเครื่องใส่ปุ๋ย",
+    description: "การปรับเทียบอุปกรณ์ใส่ปุ๋ยประจำปี",
+    status: "เสร็จสิ้น",
+    priority: "ต่ำ",
+    assignee: "สมใส ขยันดี",
     asset: "FERT-SPR-001",
-    location: "Equipment Bay",
-    dueDate: "2024-01-13",
+    location: "อู่เครื่องจักร",
+    dueDate: "13/01/2567",
     estimatedHours: 3,
-    type: "Preventive"
+    type: "ป้องกัน"
   }
 ];
 
