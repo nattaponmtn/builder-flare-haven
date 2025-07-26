@@ -12,11 +12,11 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 const navItems = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/work-orders", label: "Work Orders", icon: ClipboardList },
-  { path: "/assets", label: "Assets", icon: Package },
-  { path: "/qr-scanner", label: "QR Scanner", icon: QrCode },
-  { path: "/settings", label: "Settings", icon: Settings },
+  { path: "/", label: "หน้าหลัก", icon: LayoutDashboard },
+  { path: "/work-orders", label: "ใบสั่งงาน", icon: ClipboardList },
+  { path: "/assets", label: "อุปกรณ์", icon: Package },
+  { path: "/qr-scanner", label: "สแกน QR", icon: QrCode },
+  { path: "/settings", label: "ตั้งค่า", icon: Settings },
 ];
 
 export function MobileNav() {
