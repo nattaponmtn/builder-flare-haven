@@ -43,7 +43,7 @@ const equipmentDatabase = {
       estimatedTime: "2 ชั่วโมง",
       tasks: [
         "ตรวจสอบระดับน้ำมันเครื่อง",
-        "ตรวจสอบระดับน้ำ���นหม้อน้ำ",
+        "ตรวจสอบระดับน้ำในหม้อน้ำ",
         "ตรวจสอบแรงดันลมยาง",
         "ทำความสะอาดไส้กรองอากาศ",
         "ตรวจสอบการทำงานของไฟส่องสว่าง"
@@ -197,6 +197,63 @@ export function QRScanner() {
     "TRACT-001", "ปั๊มน้ำ", "ไร่ A", "Kubota"
   ]);
 
+  // ระบบค้นหาแบบ Smart Search - รองรับหลายเงื่อนไข
+  const performSearch = useMemo(() => {
+    if (!searchTerm.trim()) return [];
+
+    const term = searchTerm.toLowerCase().trim();
+    const equipmentList = Object.values(equipmentDatabase);
+
+    return equipmentList.filter(equipment => {
+      // ค้นหาจากรหัสอุปกรณ์
+      if (equipment.id.toLowerCase().includes(term)) return true;
+
+      // ค้นหาจากชื่ออุปกรณ์
+      if (equipment.name.toLowerCase().includes(term)) return true;
+
+      // ค้นหาจากประเภท
+      if (equipment.type.toLowerCase().includes(term)) return true;
+
+      // ค้นหาจากสถานที่
+      if (equipment.location.toLowerCase().includes(term)) return true;
+
+      // ค้นหาจากแบรนด์
+      if (equipment.brand.toLowerCase().includes(term)) return true;
+
+      // ค้นหาจากโมเดล
+      if (equipment.model.toLowerCase().includes(term)) return true;
+
+      // ค้นหาจาก keywords ที่กำหนดไว้
+      if (equipment.searchKeywords.some(keyword => keyword.includes(term))) return true;
+
+      return false;
+    }).sort((a, b) => {
+      // เรียงลำดับผลลัพธ์ - ที่ตรงที่สุดก่อน
+      const aExactMatch = a.id.toLowerCase() === term || a.name.toLowerCase().includes(term);
+      const bExactMatch = b.id.toLowerCase() === term || b.name.toLowerCase().includes(term);
+
+      if (aExactMatch && !bExactMatch) return -1;
+      if (!aExactMatch && bExactMatch) return 1;
+
+      // เรียงตามสถานะ - ชำรุดก่อน, ต้องการบำรุงรักษา, ใช้งานได้
+      const statusOrder = { "ชำรุด": 0, "ต้องการบำรุงรักษา": 1, "ใช้งานได้": 2 };
+      return statusOrder[a.status as keyof typeof statusOrder] - statusOrder[b.status as keyof typeof statusOrder];
+    });
+  }, [searchTerm]);
+
+  // อัปเดตผลการค้นหาแบบ debounce
+  useEffect(() => {
+    if (searchMode === 'search') {
+      setIsSearching(true);
+      const timer = setTimeout(() => {
+        setSearchResults(performSearch);
+        setIsSearching(false);
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [searchTerm, searchMode, performSearch]);
+
   // Simulate camera scanning
   useEffect(() => {
     if (isScanning) {
@@ -206,7 +263,7 @@ export function QRScanner() {
         const randomId = equipmentIds[Math.floor(Math.random() * equipmentIds.length)];
         handleScanSuccess(randomId);
       }, 3000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isScanning]);
@@ -297,7 +354,7 @@ export function QRScanner() {
                   </div>
                 </div>
                 <p className="text-lg font-medium">กำลังสแกน...</p>
-                <p className="text-sm opacity-75">กรุณาให��� QR code อยู่ในกรอบ</p>
+                <p className="text-sm opacity-75">กรุณาให้ QR code อยู่ในกรอบ</p>
               </div>
             )}
 
