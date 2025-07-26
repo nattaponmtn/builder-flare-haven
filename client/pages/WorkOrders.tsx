@@ -45,7 +45,7 @@ const workOrders = [
   {
     id: "WO-2024-003",
     title: "เปลี่ยนเข็มขัดเครื่องเก็บเกี่ยว",
-    description: "เปลี่ยนเข็มขัดลำเลียงที่สึกหรอของเครื่��งเก็บเกี่ยว",
+    description: "เปลี่ยนเข็มขัดลำเลียงที่สึกหรอของเครื่องเก็บเกี่ยว",
     status: "เกินกำหนด",
     priority: "วิกฤติ",
     assignee: "สมศักดิ์ ช่างเก่ง",
@@ -57,7 +57,7 @@ const workOrders = [
   },
   {
     id: "WO-2024-004",
-    title: "ปรับเทียบเครื่องใส่ปุ๋ย",
+    title: "ปรับเทียบ��ครื่องใส่ปุ๋ย",
     description: "การปรับเทียบอุปกรณ์ใส่ปุ๋ยประจำปี",
     status: "เสร็จสิ้น",
     priority: "ต่ำ",
@@ -217,7 +217,7 @@ export function WorkOrders() {
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-3 border-t border-border/50">
                     <div className="text-xs sm:text-sm text-muted-foreground">
-                      {wo.type} • ประมาณ {wo.estimatedHours} ชม.
+                      {wo.type} • ��ระมาณ {wo.estimatedHours} ชม.
                     </div>
                     <Link to={`/work-orders/${wo.id}`}>
                       <Button variant="outline" size="sm" className="text-xs sm:text-sm">
@@ -234,7 +234,7 @@ export function WorkOrders() {
         {filteredWorkOrders.length === 0 && (
           <div className="card-elevated rounded-xl">
             <div className="text-center py-12 px-4">
-              <p className="text-muted-foreground">No work orders found matching your criteria.</p>
+              <p className="text-muted-foreground">ไม่พบใบสั่งงานที่ตรงกับเงื่อนไขที่ค้นหา</p>
             </div>
           </div>
         )}
