@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   QrCode,
   Camera,
@@ -13,9 +14,13 @@ import {
   Settings,
   Flashlight,
   RotateCcw,
-  X
+  X,
+  Search,
+  Keyboard,
+  History,
+  FileSearch
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 // Mock equipment data that QR codes can identify
@@ -37,7 +42,7 @@ const equipmentDatabase = {
         "ตรวจสอบระดับน้ำมันเครื่อง",
         "ตรวจสอบระดับน้ำในหม้อน้ำ", 
         "ตรวจสอบแรงดันลมยาง",
-        "ทำความสะอาดไส้กรองอากาศ",
+        "ทำความสะอาดไส้กรอ���อากาศ",
         "ตรวจสอบการทำงานของไฟส่องสว่าง"
       ]
     }
@@ -60,7 +65,7 @@ const equipmentDatabase = {
         "ตรวจสอบการรั่วซึมของน้ำมัน",
         "ทำความสะอาดใบพัดและท่อดูด",
         "ตรวจสอบความตึงของสายพาน",
-        "���รวจสอบการทำงานของมอเตอร์"
+        "ตรวจสอบการทำงานของมอเตอร์"
       ]
     }
   },
@@ -132,11 +137,11 @@ export function QRScanner() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "ใช้งาน��ด้":
+      case "ใช้งานได้":
         return "bg-success text-success-foreground";
       case "ต้องการบำรุงรักษา":
         return "bg-warning text-warning-foreground";
-      case "ชำรุด":
+      case "ชำรุ���":
         return "bg-destructive text-destructive-foreground";
       default:
         return "bg-secondary text-secondary-foreground";
