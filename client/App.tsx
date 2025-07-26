@@ -10,6 +10,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { WorkOrders } from "./pages/WorkOrders";
 import { WorkOrderDetail } from "./pages/WorkOrderDetail";
 import { QRScanner } from "./pages/QRScanner";
+import { CreateWorkOrderFromQR } from "./pages/CreateWorkOrderFromQR";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { MobileNav } from "./components/MobileNav";
 import NotFound from "./pages/NotFound";
