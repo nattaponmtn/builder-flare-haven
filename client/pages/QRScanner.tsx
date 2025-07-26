@@ -27,7 +27,7 @@ import { Link } from "react-router-dom";
 const equipmentDatabase = {
   "TRACT-001": {
     id: "TRACT-001",
-    name: "รถแทรกเตอร์ Kubota M7060",
+    name: "รถ��ทรกเตอร์ Kubota M7060",
     type: "รถแทรกเตอร์",
     location: "ไร่ A",
     status: "ใช้งานได้",
@@ -220,7 +220,7 @@ export function QRScanner() {
       // ค้นหาจากแบรนด์
       if (equipment.brand.toLowerCase().includes(term)) return true;
 
-      // ค้นหาจากโมเดล
+      // ค้นหาจากโ���เดล
       if (equipment.model.toLowerCase().includes(term)) return true;
 
       // ค้นหาจาก keywords ที่กำหนดไว้
@@ -271,22 +271,62 @@ export function QRScanner() {
   const handleScanSuccess = (qrData: string) => {
     setIsScanning(false);
     setScanResult(qrData);
-    
+
     const equipment = equipmentDatabase[qrData as keyof typeof equipmentDatabase];
     if (equipment) {
       setScannedEquipment(equipment);
+      setSelectedEquipment(equipment);
       setScanHistory(prev => [qrData, ...prev.slice(0, 4)]); // Keep last 5 scans
     }
+  };
+
+  const handleSearchSelect = (equipment: any) => {
+    setSelectedEquipment(equipment);
+    setScannedEquipment(equipment);
+
+    // เพิ่มในประวัติการค้นหา
+    if (searchTerm.trim()) {
+      setSearchHistory(prev => {
+        const newHistory = [searchTerm.trim(), ...prev.filter(item => item !== searchTerm.trim())];
+        return newHistory.slice(0, 5); // Keep last 5 searches
+      });
+    }
+  };
+
+  const handleQuickSearch = (term: string) => {
+    setSearchTerm(term);
+    setSearchMode('search');
   };
 
   const startScanning = () => {
     setIsScanning(true);
     setScanResult(null);
     setScannedEquipment(null);
+    setSelectedEquipment(null);
+    setSearchMode('qr');
   };
 
   const stopScanning = () => {
     setIsScanning(false);
+  };
+
+  const resetSearch = () => {
+    setSearchTerm('');
+    setSearchResults([]);
+    setSelectedEquipment(null);
+    setScannedEquipment(null);
+  };
+
+  const switchToSearchMode = () => {
+    setSearchMode('search');
+    setIsScanning(false);
+    setScannedEquipment(null);
+    setSelectedEquipment(null);
+  };
+
+  const switchToQRMode = () => {
+    setSearchMode('qr');
+    resetSearch();
   };
 
   const getStatusColor = (status: string) => {
