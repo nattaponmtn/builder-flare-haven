@@ -26,13 +26,15 @@ export function MobileNav() {
   return (
     <>
       {/* Mobile Header */}
-      <header className="bg-primary text-primary-foreground p-4 flex items-center justify-between md:hidden">
-        <h1 className="text-xl font-bold">CMMS Mobile Pro</h1>
+      <header className="glass-nav p-4 flex items-center justify-between md:hidden sticky top-0 z-40">
+        <h1 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+          CMMS Mobile Pro
+        </h1>
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 hover:bg-primary/80 rounded-lg transition-colors"
+          className="p-2 hover:bg-primary/10 rounded-xl transition-all duration-200 hover:scale-105"
         >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </header>
 
