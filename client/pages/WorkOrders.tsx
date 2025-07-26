@@ -46,7 +46,7 @@ const workOrders = [
     id: "WO-2024-003",
     title: "เปลี่ยนเข็มขัดเครื่องเก็บเกี่ยว",
     description: "เปลี่ยนเข็มขัดลำเลียงที่สึกหรอของเครื่องเก็บเกี่ยว",
-    status: "เกินกำหนด",
+    status: "��กินกำหนด",
     priority: "วิกฤติ",
     assignee: "สมศักดิ์ ช่างเก่ง",
     asset: "HARV-001",
@@ -84,11 +84,11 @@ export function WorkOrders() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "Completed":
+      case "เสร็จสิ้น":
         return <CheckCircle className="h-4 w-4 text-success" />;
-      case "In Progress":
+      case "กำลังดำเนินการ":
         return <Clock className="h-4 w-4 text-warning" />;
-      case "Overdue":
+      case "เกินกำหนด":
         return <AlertTriangle className="h-4 w-4 text-destructive" />;
       default:
         return <Clock className="h-4 w-4 text-muted-foreground" />;
@@ -97,11 +97,11 @@ export function WorkOrders() {
 
   const getStatusVariant = (status: string) => {
     switch (status) {
-      case "Completed":
+      case "เสร็จสิ้น":
         return "default" as const;
-      case "In Progress":
+      case "กำลังดำเนินการ":
         return "secondary" as const;
-      case "Overdue":
+      case "เกินกำหนด":
         return "destructive" as const;
       default:
         return "outline" as const;
@@ -110,11 +110,11 @@ export function WorkOrders() {
 
   const getPriorityVariant = (priority: string) => {
     switch (priority) {
-      case "Critical":
+      case "วิกฤติ":
         return "destructive" as const;
-      case "High":
+      case "สูง":
         return "default" as const;
-      case "Medium":
+      case "ปานกลาง":
         return "secondary" as const;
       default:
         return "outline" as const;
