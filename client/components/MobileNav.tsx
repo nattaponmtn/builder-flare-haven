@@ -15,8 +15,8 @@ const navItems = [
   { path: "/", label: "หน้าหลัก", icon: LayoutDashboard },
   { path: "/work-orders", label: "ใบสั่งงาน", icon: ClipboardList },
   { path: "/assets", label: "อุปกรณ์", icon: Package },
+  { path: "/parts", label: "คลังอะไหล่", icon: Settings },
   { path: "/qr-scanner", label: "สแกน QR", icon: QrCode },
-  { path: "/settings", label: "ตั้งค่า", icon: Settings },
 ];
 
 export function MobileNav() {
