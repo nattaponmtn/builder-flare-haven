@@ -39,22 +39,7 @@ const App = () => (
                 path="/create-work-order"
                 element={<CreateWorkOrderFromQR />}
               />
-              <Route
-                path="/assets"
-                element={
-                  <PlaceholderPage
-                    title="Assets Management"
-                    description="Manage and track all your agricultural equipment and machinery"
-                    features={[
-                      "Equipment inventory tracking",
-                      "Asset maintenance history",
-                      "QR code assignment and management",
-                      "Asset performance analytics",
-                      "Location tracking and mapping",
-                    ]}
-                  />
-                }
-              />
+              <Route path="/assets" element={<Assets />} />
 
               <Route
                 path="/schedule"
@@ -72,22 +57,7 @@ const App = () => (
                   />
                 }
               />
-              <Route
-                path="/parts"
-                element={
-                  <PlaceholderPage
-                    title="Parts Inventory"
-                    description="Manage spare parts and inventory for maintenance operations"
-                    features={[
-                      "Real-time inventory tracking",
-                      "Low stock alerts and notifications",
-                      "Parts usage analytics",
-                      "Supplier management",
-                      "Automated reorder suggestions",
-                    ]}
-                  />
-                }
-              />
+              <Route path="/parts" element={<Parts />} />
               <Route
                 path="/settings"
                 element={
