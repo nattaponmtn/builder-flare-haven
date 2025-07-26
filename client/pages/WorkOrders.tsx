@@ -218,9 +218,11 @@ export function WorkOrders() {
                     <div className="text-xs sm:text-sm text-muted-foreground">
                       {wo.type} • Est. {wo.estimatedHours}h
                     </div>
+                    <Link to={`/work-orders/${wo.id}`}>
                     <Button variant="outline" size="sm" className="text-xs sm:text-sm">
                       View Details
                     </Button>
+                  </Link>
                   </div>
                 </div>
               </div>
