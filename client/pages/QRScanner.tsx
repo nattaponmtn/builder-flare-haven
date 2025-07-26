@@ -46,7 +46,7 @@ const equipmentDatabase = {
     name: "ปั๊มน้ำไฟฟ้า Mitsubishi 5HP",
     type: "ปั๊มน้ำ",
     location: "จุดควบคุมน้ำ B",
-    status: "ต้องการบำรุงรักษา",
+    status: "ต้องการบำรุง���ักษา",
     lastMaintenance: "20/12/2566",
     nextMaintenance: "15/01/2567",
     pendingTasks: 1,
@@ -80,7 +80,7 @@ const equipmentDatabase = {
         "ตรวจสอบใบมีดตัดและทำความสะอาด",
         "ตรวจสอบเข็มขัดลำเลียง",
         "ตรวจสอบระบบไฮดรอลิก",
-        "ทำความสะ���าดเครื่องแยกเมล็ด",
+        "ทำความสะอาดเครื่องแยกเมล็ด",
         "ตรวจสอบระบบเบรกและพวงมาลัย"
       ]
     }
@@ -235,7 +235,7 @@ export function QRScanner() {
             {scannedEquipment && (
               <Button onClick={startScanning} variant="outline" className="w-full">
                 <RotateCcw className="h-4 w-4 mr-2" />
-                ��แกนใหม่
+                สแกนใหม่
               </Button>
             )}
           </div>
@@ -325,10 +325,12 @@ export function QRScanner() {
 
             {/* Action Buttons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Button className="bg-gradient-to-r from-primary to-primary/90">
-                <Wrench className="h-4 w-4 mr-2" />
-                เริ่มงานบำรุงรักษา
-              </Button>
+              <Link to={`/create-work-order?equipment=${scannedEquipment.id}&template=${scannedEquipment.pmTemplate.id}`}>
+                <Button className="w-full bg-gradient-to-r from-primary to-primary/90">
+                  <Wrench className="h-4 w-4 mr-2" />
+                  เริ่มงานบำรุงรักษา
+                </Button>
+              </Link>
               <Button variant="outline">
                 <Settings className="h-4 w-4 mr-2" />
                 ดูรายละเอียดอุปกรณ์
