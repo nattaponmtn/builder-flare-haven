@@ -25,7 +25,7 @@ const workOrderData = {
   "WO-2024-001": {
     id: "WO-2024-001",
     title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
-    description: "ตรวจสอบบำรุงรักษาตามก���หนดสำหรับรถขุด CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
+    description: "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
     status: "กำลังดำเนินการ",
     priority: "สูง",
     assignee: "สมชาย รักงาน",
@@ -51,7 +51,7 @@ const workOrderData = {
         id: 2,
         description: "เปลี่ยนไส้กรองน้ำมันเครื่อง",
         isCompleted: true,
-        actualValue: "เปลี่ยนไส้กรองแล้วด้วยชิ้นส��วน #OF-4553",
+        actualValue: "เปลี่ยนไส้กรองแล้วด้วยชิ้นส่วน #OF-4553",
         completedAt: "13/01/2567 10:15",
         isCritical: true
       },
@@ -118,11 +118,11 @@ export function WorkOrderDetail() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Completed":
+      case "เสร็จสิ้น":
         return "bg-success text-success-foreground";
-      case "In Progress":
+      case "กำลังดำเนินการ":
         return "bg-warning text-warning-foreground";
-      case "Overdue":
+      case "เกินกำหนด":
         return "bg-destructive text-destructive-foreground";
       default:
         return "bg-secondary text-secondary-foreground";
@@ -131,11 +131,11 @@ export function WorkOrderDetail() {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "Critical":
+      case "วิกฤติ":
         return "bg-destructive text-destructive-foreground";
-      case "High":
+      case "สูง":
         return "bg-warning text-warning-foreground";
-      case "Medium":
+      case "ปานกลาง":
         return "bg-primary text-primary-foreground";
       default:
         return "bg-secondary text-secondary-foreground";
