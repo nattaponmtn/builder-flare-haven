@@ -27,7 +27,7 @@ import { Link } from "react-router-dom";
 const equipmentDatabase = {
   "TRACT-001": {
     id: "TRACT-001",
-    name: "รถ��ทรกเตอร์ Kubota M7060",
+    name: "รถแทรกเตอร์ Kubota M7060",
     type: "รถแทรกเตอร์",
     location: "ไร่ A",
     status: "ใช้งานได้",
@@ -39,7 +39,7 @@ const equipmentDatabase = {
     searchKeywords: ["รถแทรกเตอร์", "kubota", "m7060", "ไร่", "a"],
     pmTemplate: {
       id: "PM-TRACTOR-WEEKLY",
-      name: "การบำรุงรักษารถแทรกเตอร์ประจำสัปดาห์",
+      name: "การบำรุงรักษารถแทรกเตอร์ป���ะจำสัปดาห์",
       estimatedTime: "2 ชั่วโมง",
       tasks: [
         "ตรวจสอบระดับน้ำมันเครื่อง",
@@ -92,7 +92,7 @@ const equipmentDatabase = {
       name: "การบำรุงรักษาปั๊มน้ำประจำเดือน",
       estimatedTime: "1.5 ชั่วโมง",
       tasks: [
-        "ตรวจสอบการสั่นสะเทือนของปั๊ม",
+        "ตรวจสอบการสั่นสะเทือนของปั��ม",
         "ตรวจสอบการรั่วซึมของน้ำมัน",
         "ทำความสะอาดใบพัดและท่อดูด",
         "ตรวจสอบความตึงของสายพาน",
@@ -119,7 +119,7 @@ const equipmentDatabase = {
       tasks: [
         "ตรวจสอบการสั่นสะเทือนของปั๊ม",
         "ตรวจสอบการรั่วซึมของน้ำมัน",
-        "ทำความสะอาดใบพัดและท่อดูด",
+        "ทำ���วามสะอาดใบพัดและท่อดูด",
         "ตรวจสอบความตึงของสายพาน",
         "ตรวจสอบการทำงานของมอเตอร์"
       ]
@@ -144,7 +144,7 @@ const equipmentDatabase = {
       tasks: [
         "ตรวจสอบใบมีดตัดและทำความสะอาด",
         "ตรวจสอบเข็มขัดลำเลียง",
-        "ตรวจสอบระบบไฮดรอลิก",
+        "ตรวจสอบระบบไ���ดรอลิก",
         "ทำความสะอาดเครื่องแยกเมล็ด",
         "ตรวจสอบระบบเบรกและพวงมาลัย"
       ]
@@ -170,7 +170,7 @@ const equipmentDatabase = {
         "ทำความสะอาดถังยาและท่อพ่น",
         "ตรวจสอบหัวพ่นและการทำงาน",
         "ตรวจสอบระบบปั๊มและแรงดัน",
-        "ทำความสะอาดไส้กรองยา"
+        "ทำความสะอาดไส้��รองยา"
       ]
     }
   }
@@ -220,7 +220,7 @@ export function QRScanner() {
       // ค้นหาจากแบรนด์
       if (equipment.brand.toLowerCase().includes(term)) return true;
 
-      // ค้นหาจากโ���เดล
+      // ค้นหาจากโมเดล
       if (equipment.model.toLowerCase().includes(term)) return true;
 
       // ค้นหาจาก keywords ที่กำหนดไว้
@@ -359,11 +359,35 @@ export function QRScanner() {
     <div className="min-h-screen">
       <div className="p-3 sm:p-4 pb-20 md:pb-4 space-y-5 max-w-4xl mx-auto">
         {/* Header */}
-        <div className="space-y-2 pt-2">
-          <h1 className="text-2xl sm:text-3xl font-bold">สแกน QR Code</h1>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            สแกน QR code บนอุปกรณ์เพื่อเริ่มงานบำรุงรักษา
-          </p>
+        <div className="space-y-3 pt-2">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold">ค้นหาอุปกรณ์</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">
+              สแกน QR code หรือพิมพ์ค้นหาอุปกรณ์เพื่อเริ่มงานบำรุงรักษา
+            </p>
+          </div>
+
+          {/* Mode Toggle */}
+          <div className="flex gap-2">
+            <Button
+              variant={searchMode === 'qr' ? 'default' : 'outline'}
+              size="sm"
+              onClick={switchToQRMode}
+              className="flex-1"
+            >
+              <QrCode className="h-4 w-4 mr-2" />
+              สแกน QR
+            </Button>
+            <Button
+              variant={searchMode === 'search' ? 'default' : 'outline'}
+              size="sm"
+              onClick={switchToSearchMode}
+              className="flex-1"
+            >
+              <Search className="h-4 w-4 mr-2" />
+              ค้นหา
+            </Button>
+          </div>
         </div>
 
         {/* Camera Interface */}
@@ -468,7 +492,7 @@ export function QRScanner() {
                 <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <div className="text-muted-foreground">สถานที่</div>
+                    <div className="text-muted-foreground">ส��านที่</div>
                     <div className="font-medium">{scannedEquipment.location}</div>
                   </div>
                 </div>
