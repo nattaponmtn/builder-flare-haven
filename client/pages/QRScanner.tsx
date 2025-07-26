@@ -43,7 +43,7 @@ const equipmentDatabase = {
       estimatedTime: "2 ชั่วโมง",
       tasks: [
         "ตรวจสอบระดับน้ำมันเครื่อง",
-        "ตรวจสอบระดับน้ำในหม้อน้ำ",
+        "ตรวจสอบระดับน้ำ���นหม้อน้ำ",
         "ตรวจสอบแรงดันลมยาง",
         "ทำความสะอาดไส้กรองอากาศ",
         "ตรวจสอบการทำงานของไฟส่องสว่าง"
@@ -67,7 +67,7 @@ const equipmentDatabase = {
       name: "การบำรุงรักษารถแทรกเตอร์ประจำสัปดาห์",
       estimatedTime: "2 ชั่วโมง",
       tasks: [
-        "ตรวจสอบระดับน้ำมันเครื��อง",
+        "ตรวจสอบระดับน้ำมันเครื่อง",
         "ตรวจสอบระดับน้ำในหม้อน้ำ",
         "ตรวจสอบแรงดันลมยาง",
         "ทำความสะอาดไส้กรองอากาศ",
@@ -120,7 +120,7 @@ const equipmentDatabase = {
         "ตรวจสอบการสั่นสะเทือนของปั๊ม",
         "ตรวจสอบการรั่วซึมของน้ำมัน",
         "ทำความสะอาดใบพัดและท่อดูด",
-        "ตรวจสอบ���วามตึงของสายพาน",
+        "ตรวจสอบความตึงของสายพาน",
         "ตรวจสอบการทำงานของมอเตอร์"
       ]
     }
@@ -145,7 +145,7 @@ const equipmentDatabase = {
         "ตรวจสอบใบมีดตัดและทำความสะอาด",
         "ตรวจสอบเข็มขัดลำเลียง",
         "ตรวจสอบระบบไฮดรอลิก",
-        "ทำความสะอาดเครื่องแยกเม���็ด",
+        "ทำความสะอาดเครื่องแยกเมล็ด",
         "ตรวจสอบระบบเบรกและพวงมาลัย"
       ]
     }
@@ -177,11 +177,25 @@ const equipmentDatabase = {
 };
 
 export function QRScanner() {
+  // QR Scanner states
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [scannedEquipment, setScannedEquipment] = useState<any>(null);
   const [flashEnabled, setFlashEnabled] = useState(false);
   const [scanHistory, setScanHistory] = useState<string[]>([]);
+
+  // Search states
+  const [searchMode, setSearchMode] = useState<'qr' | 'search'>('qr');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+
+  // เคสการใช้งานที่ต้องรองรับ
+  const [recentSearches, setRecentSearches] = useState<string[]>([
+    "TRACT-001", "ปั๊มน้ำ", "ไร่ A", "Kubota"
+  ]);
 
   // Simulate camera scanning
   useEffect(() => {
@@ -251,7 +265,7 @@ export function QRScanner() {
         <div className="space-y-2 pt-2">
           <h1 className="text-2xl sm:text-3xl font-bold">สแกน QR Code</h1>
           <p className="text-muted-foreground text-sm sm:text-base">
-            สแกน QR code บนอุปกรณ์เพื่อเริ่���งานบำรุงรักษา
+            สแกน QR code บนอุปกรณ์เพื่อเริ่มงานบำรุงรักษา
           </p>
         </div>
 
@@ -283,7 +297,7 @@ export function QRScanner() {
                   </div>
                 </div>
                 <p className="text-lg font-medium">กำลังสแกน...</p>
-                <p className="text-sm opacity-75">กรุณาให้ QR code อยู่ในกรอบ</p>
+                <p className="text-sm opacity-75">กรุณาให��� QR code อยู่ในกรอบ</p>
               </div>
             )}
 
