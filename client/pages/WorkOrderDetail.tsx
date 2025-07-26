@@ -65,7 +65,7 @@ const workOrderData = {
       },
       {
         id: 4,
-        description: "ตรวจสอบการสึกหรอของใส",
+        description: "ตรวจสอบการสึกหรอของใ��",
         isCompleted: false,
         actualValue: "",
         completedAt: null,
@@ -158,7 +158,7 @@ export function WorkOrderDetail() {
           </div>
           <Button size="sm" className="shrink-0">
             <Edit3 className="h-4 w-4 mr-2" />
-            Edit
+            แก้ไข
           </Button>
         </div>
 
