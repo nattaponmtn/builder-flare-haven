@@ -81,13 +81,13 @@ const workOrderData = {
       }
     ],
     parts: [
-      { name: "Engine Oil Filter", partNumber: "OF-4553", quantity: 1, used: true },
-      { name: "Engine Oil 15W-40", partNumber: "EO-1540", quantity: 8, used: false },
-      { name: "Hydraulic Filter", partNumber: "HF-2021", quantity: 1, used: false }
+      { name: "ไส้กรองน้ำมันเครื่อง", partNumber: "OF-4553", quantity: 1, used: true },
+      { name: "น้ำมันเครื่อง 15W-40", partNumber: "EO-1540", quantity: 8, used: false },
+      { name: "ไส้กรองไฮดรอลิก", partNumber: "HF-2021", quantity: 1, used: false }
     ],
     attachments: [
-      { name: "before_maintenance.jpg", type: "image", uploadedAt: "2024-01-13 09:00" },
-      { name: "oil_analysis_report.pdf", type: "document", uploadedAt: "2024-01-10 14:30" }
+      { name: "รูปก่อนบำรุงรักษา.jpg", type: "image", uploadedAt: "13/01/2567 09:00" },
+      { name: "รายงานวิเคราะห์น้ำมัน.pdf", type: "document", uploadedAt: "10/01/2567 14:30" }
     ]
   }
 };
