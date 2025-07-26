@@ -44,7 +44,7 @@ const workOrders = [
   },
   {
     id: "WO-2024-003",
-    title: "เปลี่ยนเข็มขัดเครื่องเก็บเกี่ยว",
+    title: "เปลี่ยนเข็มขัดเคร���่องเก็บเกี่ยว",
     description: "เปลี่ยนเข็มขัดลำเลียงที่สึกหรอของเครื่องเก็บเกี่ยว",
     status: "เกินกำหนด",
     priority: "วิกฤติ",
@@ -127,12 +127,12 @@ export function WorkOrders() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">Work Orders</h1>
-            <p className="text-muted-foreground text-sm sm:text-base">Manage and track maintenance tasks</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">ใบสั่งงาน</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">จัดการและติดตามงานบำรุงรักษา</p>
           </div>
           <Button className="sm:w-auto bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg">
             <Plus className="h-4 w-4 mr-2" />
-            New Work Order
+            สร้างใบสั่งงานใหม่
           </Button>
         </div>
 
