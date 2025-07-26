@@ -30,7 +30,7 @@ const equipmentDatabase = {
     name: "รถแทรกเตอร์ Kubota M7060",
     type: "รถแทรกเตอร์",
     location: "ไร่ A",
-    status: "ใช้งานได้",
+    status: "ใช้���านได้",
     brand: "Kubota",
     model: "M7060",
     lastMaintenance: "05/01/2567",
@@ -164,7 +164,7 @@ const equipmentDatabase = {
     searchKeywords: ["เครื่องพ่นยา", "amazone", "ux", "3200", "โรงเก็บ"],
     pmTemplate: {
       id: "PM-SPRAYER-WEEKLY",
-      name: "การบำรุงรักษาเครื่องพ่นยาประจำสัปดาห์",
+      name: "การบำรุงรักษาเครื่องพ่นยาป���ะจำสัปดาห์",
       estimatedTime: "1 ชั่วโมง",
       tasks: [
         "ทำความสะอาดถังยาและท่อพ่น",
@@ -192,7 +192,7 @@ export function QRScanner() {
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
   
-  // เคสการใช้งานที่ต้องรองรับ
+  // เคสการใช้งานที่ต้องรองรั��
   const [recentSearches, setRecentSearches] = useState<string[]>([
     "TRACT-001", "ปั๊มน้ำ", "ไร่ A", "Kubota"
   ]);
@@ -223,7 +223,7 @@ export function QRScanner() {
       // ค้นหาจากโมเดล
       if (equipment.model.toLowerCase().includes(term)) return true;
       
-      // ค้นหาจาก keywords ที่กำหนดไว้
+      // ��้นหาจาก keywords ที่กำหนดไว้
       if (equipment.searchKeywords.some(keyword => keyword.includes(term))) return true;
       
       return false;
@@ -346,7 +346,7 @@ export function QRScanner() {
     switch (status) {
       case "ใช้งานได้":
         return <CheckCircle className="h-4 w-4" />;
-      case "ต้องการบำรุงรักษา":
+      case "���้องการบำรุงรักษา":
         return <Clock className="h-4 w-4" />;
       case "ชำรุด":
         return <AlertTriangle className="h-4 w-4" />;
@@ -704,7 +704,7 @@ export function QRScanner() {
               </Link>
               <Button variant="outline">
                 <Settings className="h-4 w-4 mr-2" />
-                ด��รายละเอียดอุปกรณ์
+                ดูรายละเอียดอุปกรณ์
               </Button>
             </div>
           </div>
