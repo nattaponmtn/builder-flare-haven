@@ -28,7 +28,7 @@ shared/                   # Types used by both client & server
 └── api.ts                # Example of how to share api interfaces
 ```
 
-## Key Features
+## Key Features 
 
 ## SPA Routing System
 
