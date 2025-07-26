@@ -45,11 +45,13 @@ export function MobileNav() {
 
       {/* Mobile Side Menu */}
       <nav className={cn(
-        "fixed top-0 left-0 h-full w-80 bg-card border-r transform transition-transform duration-300 z-50 md:hidden",
+        "fixed top-0 left-0 h-full w-80 glass-nav transform transition-transform duration-300 z-50 md:hidden",
         isMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-6">
-          <h2 className="text-2xl font-bold text-primary mb-8">CMMS Mobile Pro</h2>
+          <h2 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-8">
+            CMMS Mobile Pro
+          </h2>
           <div className="space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -60,10 +62,10 @@ export function MobileNav() {
                   to={item.path}
                   onClick={() => setIsMenuOpen(false)}
                   className={cn(
-                    "flex items-center space-x-3 p-3 rounded-lg transition-colors",
-                    isActive 
-                      ? "bg-primary text-primary-foreground" 
-                      : "hover:bg-muted"
+                    "flex items-center space-x-3 p-4 rounded-xl transition-all duration-200",
+                    isActive
+                      ? "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-lg"
+                      : "hover:bg-muted/50 hover:scale-105"
                   )}
                 >
                   <Icon size={20} />
@@ -76,9 +78,11 @@ export function MobileNav() {
       </nav>
 
       {/* Desktop Sidebar */}
-      <nav className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-card border-r">
+      <nav className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 glass-nav">
         <div className="p-6">
-          <h2 className="text-2xl font-bold text-primary mb-8">CMMS Mobile Pro</h2>
+          <h2 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-8">
+            CMMS Mobile Pro
+          </h2>
           <div className="space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -88,10 +92,10 @@ export function MobileNav() {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    "flex items-center space-x-3 p-3 rounded-lg transition-colors",
-                    isActive 
-                      ? "bg-primary text-primary-foreground" 
-                      : "hover:bg-muted"
+                    "flex items-center space-x-3 p-4 rounded-xl transition-all duration-200",
+                    isActive
+                      ? "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-lg"
+                      : "hover:bg-muted/50 hover:scale-105"
                   )}
                 >
                   <Icon size={20} />
@@ -104,7 +108,7 @@ export function MobileNav() {
       </nav>
 
       {/* Bottom Navigation for Mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t p-2 md:hidden z-30">
+      <nav className="fixed bottom-0 left-0 right-0 glass-nav border-t-0 p-2 md:hidden z-30">
         <div className="flex justify-around">
           {navItems.slice(0, 4).map((item) => {
             const Icon = item.icon;
@@ -114,14 +118,14 @@ export function MobileNav() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex flex-col items-center p-2 rounded-lg transition-colors min-w-0 flex-1",
-                  isActive 
-                    ? "text-primary" 
-                    : "text-muted-foreground hover:text-foreground"
+                  "flex flex-col items-center p-3 rounded-xl transition-all duration-200 min-w-0 flex-1",
+                  isActive
+                    ? "text-primary bg-primary/10 scale-105"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                 )}
               >
-                <Icon size={20} />
-                <span className="text-xs mt-1 truncate">{item.label.split(' ')[0]}</span>
+                <Icon size={18} />
+                <span className="text-xs mt-1 truncate font-medium">{item.label.split(' ')[0]}</span>
               </Link>
             );
           })}
