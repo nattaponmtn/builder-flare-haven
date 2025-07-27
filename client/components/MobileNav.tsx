@@ -21,6 +21,7 @@ const navItems = [
   { path: "/parts", label: "คลังอะไหล่", icon: Settings },
   { path: "/schedule", label: "ตารางงาน", icon: Calendar },
   { path: "/reports", label: "รายงาน", icon: BarChart3 },
+  { path: "/notifications", label: "การแจ้งเตือน", icon: Bell },
   { path: "/qr-scanner", label: "สแกน QR", icon: QrCode },
 ];
 
