@@ -85,7 +85,7 @@ const equipmentDatabase = {
   "PUMP-003": {
     id: "PUMP-003",
     qrCode: "QR-PUMP-003",
-    name: "ปั๊มน้ำไฟฟ้า Grundfos CR5-8",
+    name: "ปั๊มน้ำไ���ฟ้า Grundfos CR5-8",
     type: "ปั๊มน้ำ",
     location: "จุดควบคุมน้ำ A",
     status: "ใช้งานได้",
@@ -115,9 +115,9 @@ const equipmentDatabase = {
   "HARV-003": {
     id: "HARV-003",
     qrCode: "QR-HARV-003",
-    name: "เครื่องเก็บเกี่ยว John Deere S660",
+    name: "เครื่องเก็���เกี่ยว John Deere S660",
     type: "เครื่องเก็บเกี่ยว",
-    location: "โรง���ก็บอุปกรณ์",
+    location: "โรงเก็บอุปกรณ์",
     status: "ชำรุด",
     brand: "John Deere",
     model: "S660",
@@ -138,7 +138,7 @@ const equipmentDatabase = {
         "ตรวจสอบและหล่อลื่นจุดสำคัญ",
         "ตรวจสอบเข็มขัดลำเลียง",
         "ทำความสะอาดตัวแยกเมล็ดพืช",
-        "ตรวจสอบระบบไฮดรอลิก",
+        "ตรวจสอบระบบ���ฮดรอลิก",
       ],
     },
   },
@@ -259,7 +259,7 @@ export function QRScanner() {
       return newHistory;
     });
     
-    toast.success("สแกน QR Code เรียบร้อยแล้ว");
+    toast.success("สแกน QR Code เรียบร้อยแ���้ว");
   };
 
   // สร้าง QR Code ใหม่
@@ -355,7 +355,7 @@ export function QRScanner() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">���ื่อ/หัวข้อ</label>
+                    <label className="text-sm font-medium">ชื่อ/หัวข้อ</label>
                     <Input
                       value={newQRData.title}
                       onChange={(e) => setNewQRData(prev => ({ ...prev, title: e.target.value }))}
@@ -575,7 +575,7 @@ export function QRScanner() {
                   {filteredItems.length === 0 && searchTerm && (
                     <div className="text-center py-8">
                       <FileSearch className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                      <p className="text-muted-foreground">ไม่พบผลลัพธ์ที่ตร��กับ "{searchTerm}"</p>
+                      <p className="text-muted-foreground">ไม่พบผลลัพธ์ที่ตรงกับ "{searchTerm}"</p>
                     </div>
                   )}
                 </div>
@@ -718,7 +718,7 @@ export function QRScanner() {
                       <div className="flex gap-2 pt-3 border-t">
                         <Button className="flex-1 sm:flex-none">
                           <Package className="h-4 w-4 mr-2" />
-                          เบ��กจ่าย
+                          เบิกจ่าย
                         </Button>
                         <Button variant="outline" className="flex-1 sm:flex-none">
                           <FileText className="h-4 w-4 mr-2" />
@@ -749,7 +749,7 @@ export function QRScanner() {
                         ดาวน์โหลด
                       </Button>
                       <Button variant="outline" size="sm">
-                        <Print className="h-4 w-4 mr-2" />
+                        <Printer className="h-4 w-4 mr-2" />
                         พิมพ์
                       </Button>
                       <Button variant="outline" size="sm">
@@ -773,7 +773,7 @@ export function QRScanner() {
                   <QrCode className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
                   <p className="text-muted-foreground">
                     {scannedCode 
-                      ? `ไ���่พบข้อมูลสำหรับรหัส: ${scannedCode}`
+                      ? `ไม่พบข้อมูลสำหรับรหัส: ${scannedCode}`
                       : "ยังไม่มีการสแกน QR Code"
                     }
                   </p>
