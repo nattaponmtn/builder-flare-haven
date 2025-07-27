@@ -20,7 +20,7 @@ import {
   AlertTriangle,
   User,
   MapPin,
-  Tool,
+  Wrench,
   FileText,
   Save,
   Plus,
@@ -72,7 +72,7 @@ const technicians = [
 
 const commonParts = [
   { id: "BELT-001", name: "เข็มขัดลำเลียง" },
-  { id: "FILTER-001", name: "ไส้กรองน้ำมัน" },
+  { id: "FILTER-001", name: "ไส้กรองน้ำ��ัน" },
   { id: "SPARK-001", name: "หัวเทียน" },
   { id: "SEAL-001", name: "ซีลกันน้ำมัน" },
   { id: "BEARING-001", name: "ลูกปืน" },
