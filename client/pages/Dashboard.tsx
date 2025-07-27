@@ -134,7 +134,7 @@ export function Dashboard() {
   const recentWorkOrders = [
     {
       id: "WO-2024-001",
-      title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
+      title: "บำรุงรักษาเครื่องย���ต์รถแทรกเตอร์",
       status: "กำลังดำเนินการ",
       priority: "สูง",
       assignee: "สมชาย รักงาน",
@@ -169,7 +169,7 @@ export function Dashboard() {
 
   const activeAlerts = [
     { message: "มีงาน 3 รายการเกินกำหนดแล้ว", type: "error", time: "5 นาทีที่แล้ว" },
-    { message: "อะไหล่หมดคลัง: ไส้กรองน้ำมัน", type: "warning", time: "10 นาทีที่แล้ว" },
+    { message: "อะไหล่หมดคลัง: ไ��้กรองน้ำมัน", type: "warning", time: "10 นาทีที่แล้ว" },
     { message: "ช่างสมใสเริ่มงานใหม่", type: "info", time: "15 นาทีที่แล้ว" },
   ];
 
@@ -209,7 +209,7 @@ export function Dashboard() {
               หน้าหลัก
             </h1>
             <p className="text-muted-foreground text-sm sm:text-base">
-              ยินดีต้อนรั��! นี่คือภาพรวมการบำรุงรักษาของคุณ
+              ยินดีต้อนรับ! นี่คือภาพรวมการบำรุงรักษาของคุณ
             </p>
           </div>
           <div className="text-right">
@@ -269,7 +269,7 @@ export function Dashboard() {
           </Link>
           <Link to="/assets" className="group">
             <div className="card-elevated rounded-xl p-4 h-24 flex flex-col items-center justify-center space-y-2 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-              <Tools size={20} className="sm:w-6 sm:h-6" />
+              <Settings size={20} className="sm:w-6 sm:h-6" />
               <span className="text-xs sm:text-sm font-medium">อุปกรณ์</span>
             </div>
           </Link>
@@ -425,7 +425,7 @@ export function Dashboard() {
                     {/* Progress and Time Info */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">คว��มคืบหน้า</span>
+                        <span className="text-muted-foreground">ความคืบหน้า</span>
                         <span className="font-medium">{wo.progress}%</span>
                       </div>
                       <Progress value={wo.progress} className="h-2" />
