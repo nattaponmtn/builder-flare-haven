@@ -45,7 +45,7 @@ import {
   X,
   RefreshCw,
   Archive,
-  Unzip,
+  ArchiveRestore,
   Filter,
   Search,
   Play,
@@ -335,7 +335,7 @@ export function DataTransfer() {
     try {
       // Simulate export process
       await new Promise(resolve => setTimeout(resolve, 3000));
-      toast.success("ส่งออกข้อมูลเรียบร้อยแล้ว");
+      toast.success("ส่งออกข้อมูล���รียบร้อยแล้ว");
     } catch (error) {
       toast.error("เกิดข้อผิดพลาดในการส่งออกข้อมูล");
     } finally {
@@ -373,7 +373,7 @@ export function DataTransfer() {
     
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success("สำรองข้อมูลเรียบร้อยแล้ว");
+      toast.success("สำรองข้อมูลเรียบ���้อยแล้ว");
     } catch (error) {
       toast.error("เกิดข้อผิดพลาดในการสำรองข้อมูล");
     }
