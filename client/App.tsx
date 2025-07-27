@@ -34,6 +34,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/work-orders" element={<WorkOrders />} />
+              <Route path="/work-orders/new" element={<CreateWorkOrder />} />
               <Route path="/work-orders/:id" element={<WorkOrderDetail />} />
               <Route path="/qr-scanner" element={<QRScanner />} />
               <Route
