@@ -57,22 +57,7 @@ const App = () => (
               <Route path="/users" element={<Users />} />
               <Route path="/parts" element={<Parts />} />
               <Route path="/parts/:id" element={<PartDetail />} />
-              <Route
-                path="/settings"
-                element={
-                  <PlaceholderPage
-                    title="Settings"
-                    description="Configure your CMMS Mobile Pro application"
-                    features={[
-                      "User profile management",
-                      "Company and location setup",
-                      "Notification preferences",
-                      "Data sync settings",
-                      "Security and access controls",
-                    ]}
-                  />
-                }
-              />
+              <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
