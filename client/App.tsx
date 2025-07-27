@@ -17,6 +17,7 @@ import { AssetDetail } from "./pages/AssetDetail";
 import { Parts } from "./pages/Parts";
 import { PartDetail } from "./pages/PartDetail";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { Schedule } from "./pages/Schedule";
 import { MobileNav } from "./components/MobileNav";
 import NotFound from "./pages/NotFound";
 
