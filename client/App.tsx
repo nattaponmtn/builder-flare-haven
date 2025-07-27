@@ -13,6 +13,7 @@ import { QRScanner } from "./pages/QRScanner";
 import { CreateWorkOrderFromQR } from "./pages/CreateWorkOrderFromQR";
 import { CreateWorkOrder } from "./pages/CreateWorkOrder";
 import { Assets } from "./pages/Assets";
+import { AssetDetail } from "./pages/AssetDetail";
 import { Parts } from "./pages/Parts";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { MobileNav } from "./components/MobileNav";
