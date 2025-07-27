@@ -87,7 +87,7 @@ export function WorkOrders() {
     switch (status) {
       case "เสร็จสิ้น":
         return <CheckCircle className="h-4 w-4 text-success" />;
-      case "กำลังดำเนินการ":
+      case "���ำลังดำเนินการ":
         return <Clock className="h-4 w-4 text-warning" />;
       case "เกินกำหนด":
         return <AlertTriangle className="h-4 w-4 text-destructive" />;
@@ -133,10 +133,12 @@ export function WorkOrders() {
               จัดการและติดตามงานบำรุงรักษา
             </p>
           </div>
-          <Button className="sm:w-auto bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg">
-            <Plus className="h-4 w-4 mr-2" />
-            สร้างใบสั่งงานใหม่
-          </Button>
+          <Link to="/work-orders/new">
+            <Button className="sm:w-auto bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg">
+              <Plus className="h-4 w-4 mr-2" />
+              สร้างใบสั่งงานใหม่
+            </Button>
+          </Link>
         </div>
 
         {/* Search and Filters */}
