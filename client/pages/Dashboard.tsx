@@ -17,7 +17,7 @@ import {
   Timer,
   Activity,
   DollarSign,
-  Tools,
+  Settings,
   Bell,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -134,7 +134,7 @@ export function Dashboard() {
   const recentWorkOrders = [
     {
       id: "WO-2024-001",
-      title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอ��์",
+      title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
       status: "กำลังดำเนินการ",
       priority: "สูง",
       assignee: "สมชาย รักงาน",
@@ -209,7 +209,7 @@ export function Dashboard() {
               หน้าหลัก
             </h1>
             <p className="text-muted-foreground text-sm sm:text-base">
-              ยินดีต้อนรับ! นี่คือภาพรวมการบำรุงรักษาของคุณ
+              ยินดีต้อนรั��! นี่คือภาพรวมการบำรุงรักษาของคุณ
             </p>
           </div>
           <div className="text-right">
@@ -425,7 +425,7 @@ export function Dashboard() {
                     {/* Progress and Time Info */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">ความคืบหน้า</span>
+                        <span className="text-muted-foreground">คว��มคืบหน้า</span>
                         <span className="font-medium">{wo.progress}%</span>
                       </div>
                       <Progress value={wo.progress} className="h-2" />
@@ -451,7 +451,7 @@ export function Dashboard() {
               <div>
                 <h3 className="font-medium">ประสิทธิภาพสัปดาห์นี้</h3>
                 <p className="text-2xl font-bold text-success">+12%</p>
-                <p className="text-xs text-muted-foreground">เมื่อเทียบก��บสัปดาห์ก่อน</p>
+                <p className="text-xs text-muted-foreground">เมื่อเทียบกับสัปดาห์ก่อน</p>
               </div>
             </div>
           </div>
@@ -477,7 +477,7 @@ export function Dashboard() {
               <div>
                 <h3 className="font-medium">ช่างที่มีภาระงานสูง</h3>
                 <p className="text-2xl font-bold text-primary">2 คน</p>
-                <p className="text-xs text-muted-foreground">ควรปรับ���มดุลภาระงาน</p>
+                <p className="text-xs text-muted-foreground">ควรปรับสมดุลภาระงาน</p>
               </div>
             </div>
           </div>
