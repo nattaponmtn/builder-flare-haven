@@ -11,6 +11,7 @@ import {
   BarChart3,
   Bell,
   Users,
+  Download,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -25,6 +26,7 @@ const navItems = [
   { path: "/notifications", label: "การแจ้งเตือน", icon: Bell },
   { path: "/users", label: "ผู้ใช้งาน", icon: Users },
   { path: "/settings", label: "ตั้งค่า", icon: Settings },
+  { path: "/data-transfer", label: "จัดการข้อมูล", icon: Download },
   { path: "/qr-scanner", label: "สแกน QR", icon: QrCode },
 ];
 
