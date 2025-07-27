@@ -36,7 +36,7 @@ import {
   History,
   FileSearch,
   Download,
-  Print,
+  Printer,
   Share2,
   Plus,
   Eye,
@@ -71,7 +71,7 @@ const equipmentDatabase = {
     searchKeywords: ["รถแทรกเตอร์", "kubota", "m7060", "ไร่", "a"],
     pmTemplate: {
       id: "PM-TRACTOR-WEEKLY",
-      name: "การบำรุงรักษารถแ���รกเตอร์ประจำสัปดาห์",
+      name: "การบำรุงรักษารถแทรกเตอร์ประจำสัปดาห์",
       estimatedTime: "2 ชั่วโมง",
       tasks: [
         "ตรวจสอบระดับน้ำมันเครื่อง",
@@ -117,7 +117,7 @@ const equipmentDatabase = {
     qrCode: "QR-HARV-003",
     name: "เครื่องเก็บเกี่ยว John Deere S660",
     type: "เครื่องเก็บเกี่ยว",
-    location: "โรงเก็บอุปกรณ์",
+    location: "โรง���ก็บอุปกรณ์",
     status: "ชำรุด",
     brand: "John Deere",
     model: "S660",
@@ -355,7 +355,7 @@ export function QRScanner() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">ชื่อ/หัวข้อ</label>
+                    <label className="text-sm font-medium">���ื่อ/หัวข้อ</label>
                     <Input
                       value={newQRData.title}
                       onChange={(e) => setNewQRData(prev => ({ ...prev, title: e.target.value }))}
@@ -575,7 +575,7 @@ export function QRScanner() {
                   {filteredItems.length === 0 && searchTerm && (
                     <div className="text-center py-8">
                       <FileSearch className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                      <p className="text-muted-foreground">ไม่พบผลลัพธ์ที่ตรงกับ "{searchTerm}"</p>
+                      <p className="text-muted-foreground">ไม่พบผลลัพธ์ที่ตร��กับ "{searchTerm}"</p>
                     </div>
                   )}
                 </div>
@@ -718,7 +718,7 @@ export function QRScanner() {
                       <div className="flex gap-2 pt-3 border-t">
                         <Button className="flex-1 sm:flex-none">
                           <Package className="h-4 w-4 mr-2" />
-                          เบิกจ่าย
+                          เบ��กจ่าย
                         </Button>
                         <Button variant="outline" className="flex-1 sm:flex-none">
                           <FileText className="h-4 w-4 mr-2" />
@@ -773,7 +773,7 @@ export function QRScanner() {
                   <QrCode className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
                   <p className="text-muted-foreground">
                     {scannedCode 
-                      ? `ไม่พบข้อมูลสำหรับรหัส: ${scannedCode}`
+                      ? `ไ���่พบข้อมูลสำหรับรหัส: ${scannedCode}`
                       : "ยังไม่มีการสแกน QR Code"
                     }
                   </p>
