@@ -20,6 +20,7 @@ import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { Schedule } from "./pages/Schedule";
 import { Reports } from "./pages/Reports";
 import { Notifications } from "./pages/Notifications";
+import { Users } from "./pages/Users";
 import { MobileNav } from "./components/MobileNav";
 import NotFound from "./pages/NotFound";
 
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/notifications" element={<Notifications />} />
+              <Route path="/users" element={<Users />} />
               <Route path="/parts" element={<Parts />} />
               <Route path="/parts/:id" element={<PartDetail />} />
               <Route
