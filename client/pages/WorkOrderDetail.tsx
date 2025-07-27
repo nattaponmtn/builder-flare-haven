@@ -36,7 +36,6 @@ import {
   Pause,
   Save,
   MessageSquare,
-  Wrench,
   Package,
 } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -49,7 +48,7 @@ const workOrderData = {
     id: "WO-2024-001",
     title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
     description:
-      "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุ�� CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
+      "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุ�� CAT 320D รวมถึงเปลี่���นน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
     status: "กำลังดำเนินการ",
     priority: "สูง",
     assignee: "สมชาย รักงาน",
@@ -228,7 +227,7 @@ export function WorkOrderDetail() {
       toast.error("กรุณาเลือกสถานะใหม่");
       return;
     }
-    toast.success(`อัปเดตสถานะเป็น "${newStatus}" เรียบร้อยแล้ว`);
+    toast.success(`อัป��ดตสถานะเป็น "${newStatus}" เรียบร้อยแล้ว`);
     setStatusUpdateOpen(false);
     setNewStatus("");
   };
@@ -409,7 +408,7 @@ export function WorkOrderDetail() {
 
             {/* Description */}
             <div className="card-elevated rounded-xl p-5">
-              <h3 className="font-semibold mb-3">ร���ยละเอียดงาน</h3>
+              <h3 className="font-semibold mb-3">ร���ยละเอียดง���น</h3>
               <p className="text-muted-foreground leading-relaxed">
                 {workOrder.description}
               </p>
