@@ -9,6 +9,7 @@ import {
   X,
   Calendar,
   BarChart3,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -18,7 +19,7 @@ const navItems = [
   { path: "/work-orders", label: "ใบสั่งงาน", icon: ClipboardList },
   { path: "/assets", label: "อุปกรณ์", icon: Package },
   { path: "/parts", label: "คลังอะไหล่", icon: Settings },
-  { path: "/schedule", label: "ต���รางงาน", icon: Calendar },
+  { path: "/schedule", label: "ตารางงาน", icon: Calendar },
   { path: "/reports", label: "รายงาน", icon: BarChart3 },
   { path: "/qr-scanner", label: "สแกน QR", icon: QrCode },
 ];
