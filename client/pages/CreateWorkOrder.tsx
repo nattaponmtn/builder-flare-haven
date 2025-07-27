@@ -45,7 +45,7 @@ const priorityOptions = [
   { value: "วิกฤติ", label: "วิกฤติ", color: "destructive" },
   { value: "สูง", label: "สูง", color: "default" },
   { value: "ปานกลาง", label: "ปานกลาง", color: "secondary" },
-  { value: "ต่ำ", label: "ต่ำ", color: "outline" },
+  { value: "ต่ำ", label: "���่ำ", color: "outline" },
 ];
 
 const typeOptions = [
@@ -72,7 +72,7 @@ const technicians = [
 
 const commonParts = [
   { id: "BELT-001", name: "เข็มขัดลำเลียง" },
-  { id: "FILTER-001", name: "ไส้กรองน้ำ��ัน" },
+  { id: "FILTER-001", name: "ไส้กรองน้ำมัน" },
   { id: "SPARK-001", name: "หัวเทียน" },
   { id: "SEAL-001", name: "ซีลกันน้ำมัน" },
   { id: "BEARING-001", name: "ลูกปืน" },
@@ -312,7 +312,7 @@ export function CreateWorkOrder() {
           <Card className="card-elevated">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Tool className="h-5 w-5" />
+                <Wrench className="h-5 w-5" />
                 อุปกรณ์และสถานที่
               </CardTitle>
             </CardHeader>
