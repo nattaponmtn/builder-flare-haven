@@ -2,6 +2,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   QrCode,
   Camera,
@@ -19,27 +35,43 @@ import {
   Keyboard,
   History,
   FileSearch,
+  Download,
+  Print,
+  Share2,
+  Plus,
+  Eye,
+  Edit,
+  Copy,
+  Package,
+  User,
+  FileText,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
-// Mock equipment database สำหรับทดสอบการค้น���าหลากหลายกรณี
+// Mock equipment database
 const equipmentDatabase = {
   "TRACT-001": {
     id: "TRACT-001",
+    qrCode: "QR-TRACT-001",
     name: "รถแทรกเตอร์ Kubota M7060",
     type: "รถแทรกเตอร์",
     location: "ไร่ A",
-    status: "ใช้���านได้",
+    status: "ใช้งานได้",
     brand: "Kubota",
     model: "M7060",
+    serialNumber: "KB-M7060-2023001",
     lastMaintenance: "05/01/2567",
     nextMaintenance: "20/01/2567",
     pendingTasks: 2,
+    operatingHours: 1250,
+    condition: "ดี",
+    assignedOperator: "สมชาย ใจดี",
     searchKeywords: ["รถแทรกเตอร์", "kubota", "m7060", "ไร่", "a"],
     pmTemplate: {
       id: "PM-TRACTOR-WEEKLY",
-      name: "การบำรุงรักษารถแทรกเตอร์ประจำสัปดาห์",
+      name: "การบำรุงรักษารถแ���รกเตอร์ประจำสัปดาห์",
       estimatedTime: "2 ชั่วโมง",
       tasks: [
         "ตรวจสอบระดับน้ำมันเครื่อง",
@@ -47,773 +79,764 @@ const equipmentDatabase = {
         "ตรวจสอบแรงดันลมยาง",
         "ทำความสะอาดไส้กรองอากาศ",
         "ตรวจสอบการทำงานของไฟส่องสว่าง",
-      ],
-    },
-  },
-  "TRACT-002": {
-    id: "TRACT-002",
-    name: "รถแทรกเตอร์ Massey Ferguson 4707",
-    type: "รถแทรกเตอร์",
-    location: "ไร่ B",
-    status: "ต้องการบำรุงรักษา",
-    brand: "Massey Ferguson",
-    model: "4707",
-    lastMaintenance: "01/01/2567",
-    nextMaintenance: "เกินกำหนดแล้ว",
-    pendingTasks: 3,
-    searchKeywords: ["รถแทรกเตอร์", "massey", "ferguson", "4707", "ไร่", "b"],
-    pmTemplate: {
-      id: "PM-TRACTOR-WEEKLY",
-      name: "การบำรุงรักษารถแทรกเตอร์ประจำสัปดาห์",
-      estimatedTime: "2 ชั่วโมง",
-      tasks: [
-        "ตรวจสอบระดับน้ำมันเครื่อง",
-        "ตรวจสอบระดับน้ำในหม้อน้ำ",
-        "ตรวจสอบแรงดันลมยาง",
-        "ทำความสะอาดไส้กรองอากาศ",
-        "ตรวจสอบการทำงานของไฟส่องสว่าง",
-      ],
-    },
-  },
-  "PUMP-002": {
-    id: "PUMP-002",
-    name: "ปั๊มน้ำไฟฟ้า Mitsubishi 5HP",
-    type: "ปั๊มน้ำ",
-    location: "จุดควบคุมน้ำ B",
-    status: "ต้องการบำรุงรักษา",
-    brand: "Mitsubishi",
-    model: "5HP",
-    lastMaintenance: "20/12/2566",
-    nextMaintenance: "15/01/2567",
-    pendingTasks: 1,
-    searchKeywords: ["ปั๊มน้ำ", "mitsubishi", "5hp", "จุดควบคุม", "น้ำ"],
-    pmTemplate: {
-      id: "PM-PUMP-MONTHLY",
-      name: "การบำรุงรักษาปั๊มน้ำประจำเดือน",
-      estimatedTime: "1.5 ชั่วโมง",
-      tasks: [
-        "ตรวจสอบการสั่นสะเทือนของปั๊ม",
-        "ตรวจสอบการรั่วซึมของน้ำมัน",
-        "ทำความสะอาดใบพัดและท่อดูด",
-        "ตรวจสอบความตึงของสายพาน",
-        "ตรวจสอบการทำงานของมอเตอร์",
       ],
     },
   },
   "PUMP-003": {
     id: "PUMP-003",
+    qrCode: "QR-PUMP-003",
     name: "ปั๊มน้ำไฟฟ้า Grundfos CR5-8",
     type: "ปั๊มน้ำ",
     location: "จุดควบคุมน้ำ A",
     status: "ใช้งานได้",
     brand: "Grundfos",
     model: "CR5-8",
+    serialNumber: "GF-CR58-2023012",
     lastMaintenance: "15/01/2567",
     nextMaintenance: "15/02/2567",
     pendingTasks: 0,
-    searchKeywords: ["ปั๊มน้ำ", "grundfos", "cr5", "จุดควบคุม", "น้ำ"],
+    operatingHours: 2800,
+    condition: "ดีมาก",
+    assignedOperator: "สมหญิง ใจดี",
+    searchKeywords: ["ปั๊มน้ำ", "grundfos", "cr5", "จุดควบคุม"],
     pmTemplate: {
       id: "PM-PUMP-MONTHLY",
       name: "การบำรุงรักษาปั๊มน้ำประจำเดือน",
       estimatedTime: "1.5 ชั่วโมง",
       tasks: [
-        "ตรวจสอบการสั่นสะเทือนของปั๊ม",
-        "ตรวจสอบการรั่วซึมของน้ำมัน",
-        "ทำความสะอาดใบพัดและท่อดูด",
-        "ตรวจสอบความตึงของสายพาน",
-        "ตรวจสอบการทำงานของมอเตอร์",
+        "ตรวจสอบการรั่วซึมของน้ำ",
+        "ตรวจสอบเสียงการทำงาน",
+        "ทำความสะอาดตัวกรอง",
+        "ตรวจสอบการสั่นสะเทือน",
+        "ตรวจสอบอุณหภูมิมอเตอร์",
       ],
     },
   },
   "HARV-003": {
     id: "HARV-003",
+    qrCode: "QR-HARV-003",
     name: "เครื่องเก็บเกี่ยว John Deere S660",
     type: "เครื่องเก็บเกี่ยว",
     location: "โรงเก็บอุปกรณ์",
     status: "ชำรุด",
     brand: "John Deere",
     model: "S660",
+    serialNumber: "JD-S660-2021005",
     lastMaintenance: "28/12/2566",
     nextMaintenance: "เกินกำหนดแล้ว",
     pendingTasks: 5,
+    operatingHours: 4500,
+    condition: "ต้องซ่อม",
+    assignedOperator: "สมศักดิ์ ช่างเก่ง",
     searchKeywords: ["เครื่องเก็บเกี่ยว", "john", "deere", "s660", "โรงเก็บ"],
     pmTemplate: {
-      id: "PM-HARVESTER-DAILY",
-      name: "การตรวจสอบเครื่องเก็บเกี่ยวประจำวัน",
-      estimatedTime: "3 ชั่วโมง",
+      id: "PM-HARVESTER-MAJOR",
+      name: "การบำรุงรักษาเครื่องเก็บเกี่ยวขั้นสูง",
+      estimatedTime: "4 ชั่วโมง",
       tasks: [
-        "ตรวจสอบใบมีดตัดและทำความสะอาด",
+        "ตรวจสอบระบบเก็บเกี่ยว",
+        "ตรวจสอบและหล่อลื่นจุดสำคัญ",
         "ตรวจสอบเข็มขัดลำเลียง",
+        "ทำความสะอาดตัวแยกเมล็ดพืช",
         "ตรวจสอบระบบไฮดรอลิก",
-        "ทำความสะอาดเครื่องแยกเมล็ด",
-        "ตรวจสอบระบบเบรกและพวงมาลัย",
-      ],
-    },
-  },
-  "SPRAY-004": {
-    id: "SPRAY-004",
-    name: "เครื่องพ่นยา Amazone UX 3200",
-    type: "เครื่องพ่นยา",
-    location: "โรงเก็บอุปกรณ์",
-    status: "ใช้งานได้",
-    brand: "Amazone",
-    model: "UX 3200",
-    lastMaintenance: "10/01/2567",
-    nextMaintenance: "25/01/2567",
-    pendingTasks: 1,
-    searchKeywords: ["เครื่องพ่นยา", "amazone", "ux", "3200", "โรงเก็บ"],
-    pmTemplate: {
-      id: "PM-SPRAYER-WEEKLY",
-      name: "การบำรุงรักษาเครื่องพ่นยาป���ะจำสัปดาห์",
-      estimatedTime: "1 ชั่วโมง",
-      tasks: [
-        "ทำความสะอาดถังยาและท่อพ่น",
-        "ตรวจสอบหัวพ่นและการทำงาน",
-        "ตรวจสอบระบบปั๊มและแรงดัน",
-        "ทำความสะอาดไส้กรองยา",
       ],
     },
   },
 };
 
+// Mock parts database for QR
+const partsDatabase = {
+  "PT-001": {
+    id: "PT-001",
+    qrCode: "QR-PT-001",
+    partNumber: "OF-4553",
+    name: "ไส้กรองน้ำมันเครื่อง",
+    category: "ไส้กรอง",
+    brand: "Kubota",
+    stockQuantity: 25,
+    location: "A1-B2-C3",
+    unitPrice: 450,
+    compatibleAssets: ["TRACT-001", "TRACT-002"],
+  },
+  "PT-002": {
+    id: "PT-002",
+    qrCode: "QR-PT-002",
+    partNumber: "EO-1540",
+    name: "น้ำมันเครื่อง 15W-40",
+    category: "น้ำมัน",
+    brand: "Shell",
+    stockQuantity: 125,
+    location: "B2-C1-D4",
+    unitPrice: 280,
+    compatibleAssets: ["TRACT-001", "TRACT-002", "HARV-003"],
+  },
+};
+
 export function QRScanner() {
-  // QR Scanner states
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<string | null>(null);
-  const [scannedEquipment, setScannedEquipment] = useState<any>(null);
-  const [flashEnabled, setFlashEnabled] = useState(false);
-  const [scanHistory, setScanHistory] = useState<string[]>([]);
-
-  // Search states
-  const [searchMode, setSearchMode] = useState<"qr" | "search">("qr");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const preselectedAsset = searchParams.get('preselect');
+  
+  const [activeTab, setActiveTab] = useState("scanner");
+  const [isCameraActive, setIsCameraActive] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
-  const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+  const [manualCode, setManualCode] = useState("");
+  const [scannedCode, setScannedCode] = useState(preselectedAsset || "");
+  const [isFlashlightOn, setIsFlashlightOn] = useState(false);
+  const [scanHistory, setScanHistory] = useState<string[]>([]);
+  const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
+  const [newQRData, setNewQRData] = useState({
+    type: "asset",
+    id: "",
+    title: "",
+    description: "",
+  });
 
-  // เคสการใช้งานที่ต้องรองรั��
-  const [recentSearches, setRecentSearches] = useState<string[]>([
-    "TRACT-001",
-    "ปั๊มน้ำ",
-    "ไร่ A",
-    "Kubota",
-  ]);
+  // รวมข้อมูลทั้งหมดสำหรับการค้นหา
+  const allItems = useMemo(() => {
+    const assets = Object.values(equipmentDatabase).map(item => ({
+      ...item,
+      itemType: "asset" as const,
+      qrUrl: `/qr-scanner?code=${item.qrCode}`,
+    }));
+    const parts = Object.values(partsDatabase).map(item => ({
+      ...item,
+      itemType: "part" as const,
+      qrUrl: `/qr-scanner?code=${item.qrCode}`,
+    }));
+    return [...assets, ...parts];
+  }, []);
 
-  // ระบบค้นหาแบบ Smart Search - รองรับหลายเงื่อนไข
-  const performSearch = useMemo(() => {
-    if (!searchTerm.trim()) return [];
-
-    const term = searchTerm.toLowerCase().trim();
-    const equipmentList = Object.values(equipmentDatabase);
-
-    return equipmentList
-      .filter((equipment) => {
-        // ค้นหาจากรหัสอุปกรณ์
-        if (equipment.id.toLowerCase().includes(term)) return true;
-
-        // ค้นหาจากชื่ออุปกรณ์
-        if (equipment.name.toLowerCase().includes(term)) return true;
-
-        // ค้นหาจากประเภท
-        if (equipment.type.toLowerCase().includes(term)) return true;
-
-        // ค้นหาจากสถานที่
-        if (equipment.location.toLowerCase().includes(term)) return true;
-
-        // ค้นหาจากแบรนด์
-        if (equipment.brand.toLowerCase().includes(term)) return true;
-
-        // ค้นหาจากโมเดล
-        if (equipment.model.toLowerCase().includes(term)) return true;
-
-        // ��้นหาจาก keywords ที่กำหนดไว้
-        if (equipment.searchKeywords.some((keyword) => keyword.includes(term)))
-          return true;
-
-        return false;
-      })
-      .sort((a, b) => {
-        // เรียงลำดับผลลัพธ์ - ที่ตรงที่สุดก่อน
-        const aExactMatch =
-          a.id.toLowerCase() === term || a.name.toLowerCase().includes(term);
-        const bExactMatch =
-          b.id.toLowerCase() === term || b.name.toLowerCase().includes(term);
-
-        if (aExactMatch && !bExactMatch) return -1;
-        if (!aExactMatch && bExactMatch) return 1;
-
-        // เรียงตามสถานะ - ชำรุดก่อน, ต้องการบำรุงรักษา, ใช้งานได้
-        const statusOrder = { ชำรุด: 0, ต้องการบำรุงรักษา: 1, ใช้งานได้: 2 };
-        return (
-          statusOrder[a.status as keyof typeof statusOrder] -
-          statusOrder[b.status as keyof typeof statusOrder]
-        );
-      });
-  }, [searchTerm]);
-
-  // อัปเดตผลการค้นหาแบบ debounce
-  useEffect(() => {
-    if (searchMode === "search") {
-      setIsSearching(true);
-      const timer = setTimeout(() => {
-        setSearchResults(performSearch);
-        setIsSearching(false);
-      }, 300);
-
-      return () => clearTimeout(timer);
+  // ค้นหาข้อมูลจาก QR Code
+  const searchResult = useMemo(() => {
+    if (!scannedCode) return null;
+    
+    // ค้นหาจาก QR Code
+    let found = Object.values(equipmentDatabase).find(
+      equipment => equipment.qrCode === scannedCode || equipment.id === scannedCode
+    );
+    
+    if (found) {
+      return { ...found, type: "asset" };
     }
-  }, [searchTerm, searchMode, performSearch]);
-
-  // Simulate camera scanning
-  useEffect(() => {
-    if (isScanning) {
-      const timer = setTimeout(() => {
-        // Simulate scanning a random equipment QR code
-        const equipmentIds = Object.keys(equipmentDatabase);
-        const randomId =
-          equipmentIds[Math.floor(Math.random() * equipmentIds.length)];
-        handleScanSuccess(randomId);
-      }, 3000);
-
-      return () => clearTimeout(timer);
+    
+    // ค้นหาจาก Parts
+    found = Object.values(partsDatabase).find(
+      part => part.qrCode === scannedCode || part.id === scannedCode
+    );
+    
+    if (found) {
+      return { ...found, type: "part" };
     }
-  }, [isScanning]);
+    
+    return null;
+  }, [scannedCode]);
 
-  const handleScanSuccess = (qrData: string) => {
-    setIsScanning(false);
-    setScanResult(qrData);
+  // ฟิลเตอร์รายการตามการค้นหา
+  const filteredItems = useMemo(() => {
+    if (!searchTerm) return allItems;
+    
+    return allItems.filter(item => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        item.name.toLowerCase().includes(searchLower) ||
+        item.id.toLowerCase().includes(searchLower) ||
+        item.brand.toLowerCase().includes(searchLower) ||
+        (item.itemType === "asset" && item.type.toLowerCase().includes(searchLower)) ||
+        (item.itemType === "part" && item.category.toLowerCase().includes(searchLower))
+      );
+    });
+  }, [allItems, searchTerm]);
 
-    const equipment =
-      equipmentDatabase[qrData as keyof typeof equipmentDatabase];
-    if (equipment) {
-      setScannedEquipment(equipment);
-      setSelectedEquipment(equipment);
-      setScanHistory((prev) => [qrData, ...prev.slice(0, 4)]); // Keep last 5 scans
+  // จำลองการสแกน QR Code
+  const simulateQRScan = (code: string) => {
+    setScannedCode(code);
+    setIsCameraActive(false);
+    
+    // เพิ่มลงประวัติ
+    setScanHistory(prev => {
+      const newHistory = [code, ...prev.filter(c => c !== code)].slice(0, 10);
+      return newHistory;
+    });
+    
+    toast.success("สแกน QR Code เรียบร้อยแล้ว");
+  };
+
+  // สร้าง QR Code ใหม่
+  const handleGenerateQR = () => {
+    if (!newQRData.id || !newQRData.title) {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+      return;
     }
+    
+    toast.success(`สร้าง QR Code สำหรับ ${newQRData.title} เรียบร้อยแล้ว`);
+    setGenerateDialogOpen(false);
+    setNewQRData({ type: "asset", id: "", title: "", description: "" });
   };
 
-  const handleSearchSelect = (equipment: any) => {
-    setSelectedEquipment(equipment);
-    setScannedEquipment(equipment);
-
-    // เพิ่มในประวัติการค้นหา
-    if (searchTerm.trim()) {
-      setSearchHistory((prev) => {
-        const newHistory = [
-          searchTerm.trim(),
-          ...prev.filter((item) => item !== searchTerm.trim()),
-        ];
-        return newHistory.slice(0, 5); // Keep last 5 searches
-      });
-    }
-  };
-
-  const handleQuickSearch = (term: string) => {
-    setSearchTerm(term);
-    setSearchMode("search");
-  };
-
-  const startScanning = () => {
-    setIsScanning(true);
-    setScanResult(null);
-    setScannedEquipment(null);
-    setSelectedEquipment(null);
-    setSearchMode("qr");
-  };
-
-  const stopScanning = () => {
-    setIsScanning(false);
-  };
-
-  const resetSearch = () => {
-    setSearchTerm("");
-    setSearchResults([]);
-    setSelectedEquipment(null);
-    setScannedEquipment(null);
-  };
-
-  const switchToSearchMode = () => {
-    setSearchMode("search");
-    setIsScanning(false);
-    setScannedEquipment(null);
-    setSelectedEquipment(null);
-  };
-
-  const switchToQRMode = () => {
-    setSearchMode("qr");
-    resetSearch();
-  };
-
+  // การแสดงผลสถานะ
   const getStatusColor = (status: string) => {
     switch (status) {
       case "ใช้งานได้":
-        return "bg-success text-success-foreground";
+        return "text-success";
       case "ต้องการบำรุงรักษา":
-        return "bg-warning text-warning-foreground";
+        return "text-warning";
       case "ชำรุด":
-        return "bg-destructive text-destructive-foreground";
+        return "text-destructive";
       default:
-        return "bg-secondary text-secondary-foreground";
+        return "text-muted-foreground";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "ใช้งานได้":
-        return <CheckCircle className="h-4 w-4" />;
-      case "���้องการบำรุงรักษา":
-        return <Clock className="h-4 w-4" />;
+        return <CheckCircle className="h-4 w-4 text-success" />;
+      case "ต้องการบำรุงรักษา":
+        return <Clock className="h-4 w-4 text-warning" />;
       case "ชำรุด":
-        return <AlertTriangle className="h-4 w-4" />;
+        return <AlertTriangle className="h-4 w-4 text-destructive" />;
       default:
-        return <Settings className="h-4 w-4" />;
+        return <Settings className="h-4 w-4 text-muted-foreground" />;
     }
   };
+
+  useEffect(() => {
+    if (preselectedAsset) {
+      setScannedCode(preselectedAsset);
+      setActiveTab("result");
+    }
+  }, [preselectedAsset]);
 
   return (
     <div className="min-h-screen">
       <div className="p-3 sm:p-4 pb-20 md:pb-4 space-y-5 max-w-4xl mx-auto">
         {/* Header */}
-        <div className="space-y-3 pt-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">ค้นหาอุปกรณ์</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">QR Code Scanner</h1>
             <p className="text-muted-foreground text-sm sm:text-base">
-              สแกน QR code หรือพิมพ์ค้นหาอุปกรณ์เพื่อเริ่มงานบำรุงรักษา
+              สแกนหรือค้นหาอุปกรณ์และอะไหล่
             </p>
           </div>
-
-          {/* Mode Toggle */}
           <div className="flex gap-2">
-            <Button
-              variant={searchMode === "qr" ? "default" : "outline"}
-              size="sm"
-              onClick={switchToQRMode}
-              className="flex-1"
-            >
-              <QrCode className="h-4 w-4 mr-2" />
-              สแกน QR
-            </Button>
-            <Button
-              variant={searchMode === "search" ? "default" : "outline"}
-              size="sm"
-              onClick={switchToSearchMode}
-              className="flex-1"
-            >
-              <Search className="h-4 w-4 mr-2" />
-              ค้นหา
+            <Dialog open={generateDialogOpen} onOpenChange={setGenerateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  สร้าง QR Code
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>สร้าง QR Code ใหม่</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">ประเภท</label>
+                    <Select value={newQRData.type} onValueChange={(value) => setNewQRData(prev => ({ ...prev, type: value }))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="asset">อุปกรณ์</SelectItem>
+                        <SelectItem value="part">อะไหล่</SelectItem>
+                        <SelectItem value="location">สถานที่</SelectItem>
+                        <SelectItem value="workorder">ใบสั่งงาน</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">รหัส/ID</label>
+                    <Input
+                      value={newQRData.id}
+                      onChange={(e) => setNewQRData(prev => ({ ...prev, id: e.target.value }))}
+                      placeholder="เช่น TRACT-004"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">ชื่อ/หัวข้อ</label>
+                    <Input
+                      value={newQRData.title}
+                      onChange={(e) => setNewQRData(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="เช่น รถแทรกเตอร์ใหม่"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">รายละเอียด</label>
+                    <Textarea
+                      value={newQRData.description}
+                      onChange={(e) => setNewQRData(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="รายละเอียดเพิ่มเติม..."
+                      rows={3}
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <Button onClick={handleGenerateQR} className="flex-1">สร้าง QR Code</Button>
+                    <Button variant="outline" onClick={() => setGenerateDialogOpen(false)}>ยกเลิก</Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              ส่งออก
             </Button>
           </div>
         </div>
 
-        {/* Search Interface */}
-        {searchMode === "search" && (
-          <div className="space-y-4">
-            {/* Search Input */}
-            <div className="card-elevated rounded-xl p-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="ค้นหาด้วยรหัส, ชื่อ, ประเภท, สถานที่..."
-                  className="pl-10 bg-background/50 border-0 shadow-sm text-base"
-                />
-                {searchTerm && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={resetSearch}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
+        {/* Main Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="scanner">สแกน</TabsTrigger>
+            <TabsTrigger value="search">ค้นหา</TabsTrigger>
+            <TabsTrigger value="result">ผลลัพธ์</TabsTrigger>
+            <TabsTrigger value="history">ประวัติ</TabsTrigger>
+          </TabsList>
 
-              {/* Quick Search Suggestions */}
-              {!searchTerm && (
-                <div className="mt-3 space-y-2">
-                  <p className="text-sm text-muted-foreground">ค้นหาด่วน:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {recentSearches.map((term, index) => (
+          {/* Scanner Tab */}
+          <TabsContent value="scanner" className="space-y-4">
+            <Card className="card-elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Camera className="h-5 w-5" />
+                  สแกน QR Code
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Camera View Simulation */}
+                <div className="relative aspect-square max-w-sm mx-auto bg-black rounded-lg overflow-hidden">
+                  {isCameraActive ? (
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-black flex items-center justify-center">
+                      <div className="w-48 h-48 border-2 border-white/50 rounded-lg relative">
+                        <div className="absolute inset-0 border-2 border-primary rounded-lg animate-pulse" />
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm">
+                          วาง QR Code ในกรอบ
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 bg-muted flex items-center justify-center">
+                      <div className="text-center">
+                        <Camera className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                        <p className="text-muted-foreground">กดเริ่มสแกนเพื่อเปิดกล้อง</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Camera Controls */}
+                <div className="flex justify-center gap-3">
+                  <Button
+                    variant={isCameraActive ? "destructive" : "default"}
+                    onClick={() => setIsCameraActive(!isCameraActive)}
+                    className="px-6"
+                  >
+                    {isCameraActive ? (
+                      <>
+                        <X className="h-4 w-4 mr-2" />
+                        หยุดสแกน
+                      </>
+                    ) : (
+                      <>
+                        <Camera className="h-4 w-4 mr-2" />
+                        เริ่มสแกน
+                      </>
+                    )}
+                  </Button>
+                  {isCameraActive && (
+                    <>
                       <Button
-                        key={index}
+                        variant="outline"
+                        onClick={() => setIsFlashlightOn(!isFlashlightOn)}
+                        className={isFlashlightOn ? "bg-yellow-100" : ""}
+                      >
+                        <Flashlight className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline">
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                {/* Manual Input */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="h-px bg-border flex-1" />
+                    <span className="text-sm text-muted-foreground">หรือ</span>
+                    <div className="h-px bg-border flex-1" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">ป้อนรหัส QR Code</label>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="เช่น QR-TRACT-001"
+                        value={manualCode}
+                        onChange={(e) => setManualCode(e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button
+                        onClick={() => {
+                          if (manualCode) {
+                            simulateQRScan(manualCode);
+                            setManualCode("");
+                            setActiveTab("result");
+                          }
+                        }}
+                        disabled={!manualCode}
+                      >
+                        <Keyboard className="h-4 w-4 mr-2" />
+                        ค้นหา
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Scan Buttons */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium">สแกนทดสอบ</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {Object.values(equipmentDatabase).slice(0, 4).map((equipment) => (
+                      <Button
+                        key={equipment.id}
                         variant="outline"
                         size="sm"
-                        onClick={() => handleQuickSearch(term)}
-                        className="text-xs"
+                        onClick={() => {
+                          simulateQRScan(equipment.qrCode);
+                          setActiveTab("result");
+                        }}
+                        className="justify-start text-left"
                       >
-                        {term}
+                        <QrCode className="h-4 w-4 mr-2" />
+                        {equipment.name}
                       </Button>
                     ))}
                   </div>
                 </div>
-              )}
-            </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-            {/* Search Results */}
-            {searchTerm && (
-              <div className="card-elevated rounded-xl">
-                {isSearching ? (
-                  <div className="p-8 text-center">
-                    <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full mx-auto mb-2"></div>
-                    <p className="text-sm text-muted-foreground">
-                      กำลังค้นหา...
-                    </p>
-                  </div>
-                ) : searchResults.length > 0 ? (
-                  <div className="divide-y">
-                    <div className="p-4 bg-muted/20">
-                      <p className="text-sm text-muted-foreground">
-                        พบ {searchResults.length} รายการ สำหรับ "{searchTerm}"
-                      </p>
-                    </div>
-                    <div className="max-h-80 overflow-y-auto">
-                      {searchResults.map((equipment) => (
-                        <div
-                          key={equipment.id}
-                          onClick={() => handleSearchSelect(equipment)}
-                          className="p-4 hover:bg-muted/30 cursor-pointer transition-colors border-l-4"
-                          style={{
-                            borderLeftColor:
-                              equipment.status === "ชำรุด"
-                                ? "#ef4444"
-                                : equipment.status === "ต้องการบำรุงรักษา"
-                                  ? "#f59e0b"
-                                  : "#10b981",
-                          }}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="space-y-1 flex-1">
-                              <div className="flex items-center gap-2">
-                                <h4 className="font-medium text-sm">
-                                  {equipment.name}
-                                </h4>
-                                <div
-                                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(equipment.status)}`}
-                                >
-                                  {getStatusIcon(equipment.status)}
-                                  {equipment.status}
-                                </div>
-                              </div>
-                              <p className="text-xs text-muted-foreground font-mono">
-                                {equipment.id}
-                              </p>
-                              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                                <span>📍 {equipment.location}</span>
-                                <span>🔧 {equipment.type}</span>
-                                {equipment.pendingTasks > 0 && (
-                                  <span className="text-warning">
-                                    ⚠️ {equipment.pendingTasks} งานค้าง
-                                  </span>
-                                )}
-                              </div>
-                            </div>
+          {/* Search Tab */}
+          <TabsContent value="search" className="space-y-4">
+            <Card className="card-elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Search className="h-5 w-5" />
+                  ค้นหาอุปกรณ์และอะไหล่
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    placeholder="ค้นหาด้วยชื่อ, รหัส, แบรนด์..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  {filteredItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
+                      onClick={() => {
+                        simulateQRScan(item.qrCode);
+                        setActiveTab("result");
+                      }}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-1 flex-1">
+                          <div className="flex items-center gap-2">
+                            {item.itemType === "asset" ? (
+                              <Settings className="h-4 w-4 text-primary" />
+                            ) : (
+                              <Package className="h-4 w-4 text-warning" />
+                            )}
+                            <h4 className="font-medium">{item.name}</h4>
+                            <Badge variant="outline" className="text-xs">
+                              {item.itemType === "asset" ? "อุปกรณ์" : "อะไหล่"}
+                            </Badge>
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {item.id} • {item.brand} • {item.itemType === "asset" ? item.location : `สต็อก: ${item.stockQuantity}`}
                           </div>
                         </div>
-                      ))}
+                        <Button variant="ghost" size="sm">
+                          <QrCode className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
+                  ))}
+                  
+                  {filteredItems.length === 0 && searchTerm && (
+                    <div className="text-center py-8">
+                      <FileSearch className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                      <p className="text-muted-foreground">ไม่พบผลลัพธ์ที่ตรงกับ "{searchTerm}"</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Result Tab */}
+          <TabsContent value="result" className="space-y-4">
+            {searchResult ? (
+              <>
+                {searchResult.type === "asset" ? (
+                  // Asset Result
+                  <Card className="card-elevated">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Settings className="h-5 w-5" />
+                        ข้อมูลอุปกรณ์
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-2 flex-1">
+                          <div className="flex items-center gap-2">
+                            {getStatusIcon(searchResult.status)}
+                            <h3 className="text-lg font-semibold">{searchResult.name}</h3>
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {searchResult.id} • {searchResult.brand} {searchResult.model}
+                          </div>
+                          <div className={`text-sm font-medium ${getStatusColor(searchResult.status)}`}>
+                            {searchResult.status}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Link to={`/assets/${searchResult.id}`}>
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4 mr-1" />
+                              ดูรายละเอียด
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                        <div className="p-3 bg-muted/30 rounded-lg">
+                          <div className="text-muted-foreground">สถานที่</div>
+                          <div className="font-medium">{searchResult.location}</div>
+                        </div>
+                        <div className="p-3 bg-muted/30 rounded-lg">
+                          <div className="text-muted-foreground">ชั่วโมงทำงาน</div>
+                          <div className="font-medium">{searchResult.operatingHours.toLocaleString()} ชม.</div>
+                        </div>
+                        <div className="p-3 bg-muted/30 rounded-lg">
+                          <div className="text-muted-foreground">บำรุงรักษาล่าสุด</div>
+                          <div className="font-medium">{searchResult.lastMaintenance}</div>
+                        </div>
+                        <div className="p-3 bg-muted/30 rounded-lg">
+                          <div className="text-muted-foreground">บำรุงรักษาครั้งต่อไป</div>
+                          <div className={`font-medium ${searchResult.nextMaintenance === "เกินกำหนดแล้ว" ? "text-destructive" : ""}`}>
+                            {searchResult.nextMaintenance}
+                          </div>
+                        </div>
+                      </div>
+
+                      {searchResult.pendingTasks > 0 && (
+                        <div className="p-3 bg-warning/10 border border-warning/20 rounded-lg">
+                          <div className="flex items-center gap-2 text-warning">
+                            <AlertTriangle className="h-4 w-4" />
+                            <span className="font-medium">มีงานค้างอยู่ {searchResult.pendingTasks} งาน</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex gap-2 pt-3 border-t">
+                        <Link to={`/work-orders/new?asset=${searchResult.id}`}>
+                          <Button className="flex-1 sm:flex-none">
+                            <Wrench className="h-4 w-4 mr-2" />
+                            เริ่มบำรุงรักษา
+                          </Button>
+                        </Link>
+                        <Link to={`/work-orders?asset=${searchResult.id}`}>
+                          <Button variant="outline" className="flex-1 sm:flex-none">
+                            <FileText className="h-4 w-4 mr-2" />
+                            ประวัติงาน
+                          </Button>
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  // Part Result
+                  <Card className="card-elevated">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Package className="h-5 w-5" />
+                        ข้อมูลอะไหล่
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-2 flex-1">
+                          <h3 className="text-lg font-semibold">{searchResult.name}</h3>
+                          <div className="text-sm text-muted-foreground">
+                            {searchResult.partNumber} • {searchResult.brand}
+                          </div>
+                          <div className="text-sm font-medium">
+                            หมวดหมู่: {searchResult.category}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Link to={`/parts/${searchResult.id}`}>
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4 mr-1" />
+                              ดูรายละเอียด
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                        <div className="p-3 bg-muted/30 rounded-lg">
+                          <div className="text-muted-foreground">สต็อกปัจจุบัน</div>
+                          <div className="font-medium">{searchResult.stockQuantity} ชิ้น</div>
+                        </div>
+                        <div className="p-3 bg-muted/30 rounded-lg">
+                          <div className="text-muted-foreground">ตำแหน่ง</div>
+                          <div className="font-medium">{searchResult.location}</div>
+                        </div>
+                        <div className="p-3 bg-muted/30 rounded-lg">
+                          <div className="text-muted-foreground">ราคา</div>
+                          <div className="font-medium">฿{searchResult.unitPrice.toLocaleString()}</div>
+                        </div>
+                        <div className="p-3 bg-muted/30 rounded-lg">
+                          <div className="text-muted-foreground">อุปกรณ์ที่ใช้ได้</div>
+                          <div className="font-medium">{searchResult.compatibleAssets.length} รายการ</div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 pt-3 border-t">
+                        <Button className="flex-1 sm:flex-none">
+                          <Package className="h-4 w-4 mr-2" />
+                          เบิกจ่าย
+                        </Button>
+                        <Button variant="outline" className="flex-1 sm:flex-none">
+                          <FileText className="h-4 w-4 mr-2" />
+                          ประวัติการใช้
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* QR Code Display */}
+                <Card className="card-elevated">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <QrCode className="h-5 w-5" />
+                      QR Code
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-center p-8 bg-white rounded-lg border">
+                      <div className="w-32 h-32 bg-black flex items-center justify-center text-white text-xs">
+                        QR Code<br/>{scannedCode}
+                      </div>
+                    </div>
+                    <div className="flex gap-2 justify-center">
+                      <Button variant="outline" size="sm">
+                        <Download className="h-4 w-4 mr-2" />
+                        ดาวน์โหลด
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Print className="h-4 w-4 mr-2" />
+                        พิมพ์
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Share2 className="h-4 w-4 mr-2" />
+                        แชร์
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => {
+                        navigator.clipboard.writeText(scannedCode);
+                        toast.success("คัดลอกรหัสแล้ว");
+                      }}>
+                        <Copy className="h-4 w-4 mr-2" />
+                        คัดลอก
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            ) : (
+              <Card className="card-elevated">
+                <CardContent className="text-center py-12">
+                  <QrCode className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                  <p className="text-muted-foreground">
+                    {scannedCode 
+                      ? `ไม่พบข้อมูลสำหรับรหัส: ${scannedCode}`
+                      : "ยังไม่มีการสแกน QR Code"
+                    }
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="mt-3"
+                    onClick={() => setActiveTab("scanner")}
+                  >
+                    เริ่มสแกนใหม่
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* History Tab */}
+          <TabsContent value="history" className="space-y-4">
+            <Card className="card-elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5" />
+                  ประวัติการสแกน
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {scanHistory.length > 0 ? (
+                  <div className="space-y-3">
+                    {scanHistory.map((code, index) => {
+                      const item = Object.values(equipmentDatabase).find(eq => eq.qrCode === code) ||
+                                  Object.values(partsDatabase).find(part => part.qrCode === code);
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
+                          onClick={() => {
+                            setScannedCode(code);
+                            setActiveTab("result");
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <QrCode className="h-4 w-4 text-muted-foreground" />
+                            <div>
+                              <div className="font-medium">{item ? item.name : code}</div>
+                              <div className="text-sm text-muted-foreground">{code}</div>
+                            </div>
+                          </div>
+                          <Button variant="ghost" size="sm">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : (
-                  <div className="p-8 text-center">
-                    <FileSearch className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                    <p className="text-muted-foreground mb-2">ไม่พบอุปกรณ์</p>
-                    <p className="text-sm text-muted-foreground">
-                      ลองค้นหาด้วยคำอื่น เช่น รหัสอุปกรณ์, ชื่อ, หรือสถานที่
-                    </p>
-
-                    {/* แนะนำการค้นหา */}
-                    <div className="mt-4 p-3 bg-muted/30 rounded-lg text-left">
-                      <p className="text-sm font-medium mb-2">
-                        💡 เทคนิคการค้นหา:
-                      </p>
-                      <div className="text-xs text-muted-foreground space-y-1">
-                        <p>• ใช้รหัส: TRACT-001, PUMP-002</p>
-                        <p>• ใช้ชื่อ: รถแทรกเตอร์, ปั๊มน้ำ</p>
-                        <p>• ใช้แบรนด์: Kubota, Mitsubishi</p>
-                        <p>• ใช้สถานที่: ไร่ A, โรงเก็บอุปกรณ์</p>
-                      </div>
-                    </div>
+                  <div className="text-center py-8">
+                    <History className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                    <p className="text-muted-foreground">ยังไม่มีประวัติการสแกน</p>
                   </div>
                 )}
-              </div>
-            )}
-
-            {/* Search History */}
-            {searchHistory.length > 0 && !searchTerm && (
-              <div className="card-elevated rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <History className="h-4 w-4 text-muted-foreground" />
-                  <h3 className="font-medium text-sm">ประวัติการค้นหา</h3>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {searchHistory.map((term, index) => (
-                    <Button
-                      key={index}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleQuickSearch(term)}
-                      className="text-xs h-8 px-3 bg-muted/30 hover:bg-muted/50"
-                    >
-                      <Clock className="h-3 w-3 mr-1" />
-                      {term}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Camera Interface */}
-        {searchMode === "qr" && (
-          <div className="card-elevated rounded-xl overflow-hidden">
-            <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 aspect-square max-h-96">
-              {!isScanning && !scannedEquipment && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-4">
-                  <QrCode className="h-16 w-16 opacity-50" />
-                  <p className="text-lg font-medium">พร้อมสแกน QR Code</p>
-                  <p className="text-sm opacity-75 text-center px-4">
-                    กดปุ่มเริ่มสแกนเพื่อเปิดกล้องและสแกน QR code บนอุปกรณ์
-                  </p>
-                </div>
-              )}
-
-              {isScanning && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-4">
-                  <div className="relative">
-                    <div className="w-48 h-48 border-2 border-white/50 rounded-xl relative">
-                      {/* Scanning animation corners */}
-                      <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-xl"></div>
-                      <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-xl"></div>
-                      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-xl"></div>
-                      <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-xl"></div>
-
-                      {/* Scanning line animation */}
-                      <div className="absolute inset-x-0 top-1/2 h-0.5 bg-primary animate-pulse"></div>
-                    </div>
-                  </div>
-                  <p className="text-lg font-medium">กำลังสแกน...</p>
-                  <p className="text-sm opacity-75">
-                    กรุณาให้ QR code อยู่ในกรอบ
-                  </p>
-                </div>
-              )}
-
-              {/* Scanner Controls */}
-              <div className="absolute top-4 right-4 flex gap-2">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setFlashEnabled(!flashEnabled)}
-                  className={flashEnabled ? "bg-yellow-500 text-yellow-50" : ""}
-                >
-                  <Flashlight className="h-4 w-4" />
-                </Button>
-                {isScanning && (
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={stopScanning}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            {/* Scan Button */}
-            <div className="p-4">
-              {!isScanning && !scannedEquipment && (
-                <Button
-                  onClick={startScanning}
-                  className="w-full bg-gradient-to-r from-primary to-primary/90 shadow-lg"
-                >
-                  <Camera className="h-4 w-4 mr-2" />
-                  เริ่มสแกน QR Code
-                </Button>
-              )}
-
-              {isScanning && (
-                <Button
-                  onClick={stopScanning}
-                  variant="destructive"
-                  className="w-full"
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  หยุดสแกน
-                </Button>
-              )}
-
-              {scannedEquipment && (
-                <Button
-                  onClick={startScanning}
-                  variant="outline"
-                  className="w-full"
-                >
-                  <RotateCcw className="h-4 w-4 mr-2" />
-                  สแกนใหม่
-                </Button>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Equipment Result Display */}
-        {(scannedEquipment || selectedEquipment) && (
-          <div className="space-y-4">
-            {/* Equipment Info Card */}
-            <div className="card-elevated rounded-xl p-5">
-              <div className="flex items-start justify-between mb-4">
-                <div className="space-y-1">
-                  <h3 className="text-lg font-semibold">
-                    {(scannedEquipment || selectedEquipment).name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {(scannedEquipment || selectedEquipment).id}
-                  </p>
-                </div>
-                <div
-                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${getStatusColor((scannedEquipment || selectedEquipment).status)}`}
-                >
-                  {getStatusIcon(
-                    (scannedEquipment || selectedEquipment).status,
-                  )}
-                  {(scannedEquipment || selectedEquipment).status}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                  <Settings className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="text-muted-foreground">ประเภท</div>
-                    <div className="font-medium">
-                      {(scannedEquipment || selectedEquipment).type}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="text-muted-foreground">สถานที่</div>
-                    <div className="font-medium">
-                      {(scannedEquipment || selectedEquipment).location}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="text-muted-foreground">
-                      บำรุงรักษาครั้งล่าสุด
-                    </div>
-                    <div className="font-medium">
-                      {(scannedEquipment || selectedEquipment).lastMaintenance}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="text-muted-foreground">
-                      บำรุงรักษาครั้งต่อไป
-                    </div>
-                    <div className="font-medium">
-                      {(scannedEquipment || selectedEquipment).nextMaintenance}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {(scannedEquipment || selectedEquipment).pendingTasks > 0 && (
-                <div className="mt-4 p-3 bg-warning/10 border border-warning/20 rounded-lg">
-                  <div className="flex items-center gap-2 text-warning">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="font-medium">
-                      มีงานค้างอยู่{" "}
-                      {(scannedEquipment || selectedEquipment).pendingTasks} งาน
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* PM Template Card */}
-            <div className="card-elevated rounded-xl p-5">
-              <h3 className="font-semibold mb-3">งานบำรุงรักษาที่แนะนำ</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium">
-                    {(scannedEquipment || selectedEquipment).pmTemplate.name}
-                  </h4>
-                  <Badge variant="outline">
-                    {
-                      (scannedEquipment || selectedEquipment).pmTemplate
-                        .estimatedTime
-                    }
-                  </Badge>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    รายการตรวจสอบ:
-                  </p>
-                  <div className="space-y-1">
-                    {(
-                      scannedEquipment || selectedEquipment
-                    ).pmTemplate.tasks.map((task: string, index: number) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 text-sm"
-                      >
-                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        <span>{task}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Link
-                to={`/create-work-order?equipment=${(scannedEquipment || selectedEquipment).id}&template=${(scannedEquipment || selectedEquipment).pmTemplate.id}`}
-              >
-                <Button className="w-full bg-gradient-to-r from-primary to-primary/90">
-                  <Wrench className="h-4 w-4 mr-2" />
-                  เริ่มงานบำรุงรักษา
-                </Button>
-              </Link>
-              <Button variant="outline">
-                <Settings className="h-4 w-4 mr-2" />
-                ดูรายละเอียดอุปกรณ์
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* QR Scan History */}
-        {scanHistory.length > 0 && searchMode === "qr" && (
-          <div className="card-elevated rounded-xl p-5">
-            <h3 className="font-semibold mb-3">ประวัติการสแกนล่าสุด</h3>
-            <div className="space-y-2">
-              {scanHistory.map((qrCode, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-2 bg-muted/30 rounded-lg"
-                >
-                  <span className="text-sm font-mono">{qrCode}</span>
-                  <Button variant="ghost" size="sm">
-                    <QrCode className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
