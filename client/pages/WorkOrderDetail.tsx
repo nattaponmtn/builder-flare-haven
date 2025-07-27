@@ -36,7 +36,7 @@ import {
   Pause,
   Save,
   MessageSquare,
-  Tools,
+  Wrench,
   Package,
 } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -49,7 +49,7 @@ const workOrderData = {
     id: "WO-2024-001",
     title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
     description:
-      "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
+      "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D รวมถึงเป��ี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
     status: "กำลังดำเนินการ",
     priority: "สูง",
     assignee: "สมชาย รักงาน",
@@ -238,7 +238,7 @@ export function WorkOrderDetail() {
       toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
       return;
     }
-    toast.success(`บันทึกเวลา ${loggedHours} ชั่วโมง เรียบร้��ยแล้ว`);
+    toast.success(`บันทึกเวลา ${loggedHours} ชั่วโมง เรียบร้อยแล้ว`);
     setTimeLogOpen(false);
     setLoggedHours("");
     setWorkDescription("");
@@ -333,7 +333,7 @@ export function WorkOrderDetail() {
           <div className="card-elevated rounded-xl p-4 text-center">
             <div className="text-xs text-muted-foreground mb-1">เวลาใช้งาน</div>
             <div className="text-lg font-bold text-warning">{workOrder.actualHours} ชม.</div>
-            <div className="text-xs text-muted-foreground">���าก {workOrder.estimatedHours} ชม.</div>
+            <div className="text-xs text-muted-foreground">จาก {workOrder.estimatedHours} ชม.</div>
           </div>
         </div>
 
@@ -433,7 +433,7 @@ export function WorkOrderDetail() {
                 </div>
                 <div>
                   <span className="text-muted-foreground">ประมาณการเวลา:</span>
-                  <span className="ml-2 font-medium">{workOrder.estimatedHours} ชั่วโมง</span>
+                  <span className="ml-2 font-medium">{workOrder.estimatedHours} ชั่���โมง</span>
                 </div>
               </div>
             </div>
@@ -499,7 +499,7 @@ export function WorkOrderDetail() {
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">รายการงาน ({completedTasks}/{totalTasks})</h3>
               <div className="text-sm text-muted-foreground">
-                เสร็��สิ้น {progressPercent}%
+                เสร็จสิ้น {progressPercent}%
               </div>
             </div>
             {workOrder.tasks.map((task) => (
@@ -686,7 +686,7 @@ export function WorkOrderDetail() {
                 <div className="flex gap-3">
                   <Button onClick={handleStatusUpdate} className="flex-1">
                     <Save className="h-4 w-4 mr-2" />
-                    บันทึก
+                    ��ันทึก
                   </Button>
                   <Button variant="outline" onClick={() => setStatusUpdateOpen(false)}>
                     ยกเลิก
