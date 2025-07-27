@@ -11,6 +11,7 @@ import { WorkOrders } from "./pages/WorkOrders";
 import { WorkOrderDetail } from "./pages/WorkOrderDetail";
 import { QRScanner } from "./pages/QRScanner";
 import { CreateWorkOrderFromQR } from "./pages/CreateWorkOrderFromQR";
+import { CreateWorkOrder } from "./pages/CreateWorkOrder";
 import { Assets } from "./pages/Assets";
 import { Parts } from "./pages/Parts";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
