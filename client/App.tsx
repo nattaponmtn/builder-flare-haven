@@ -63,6 +63,7 @@ const App = () => (
                 }
               />
               <Route path="/parts" element={<Parts />} />
+              <Route path="/parts/:id" element={<PartDetail />} />
               <Route
                 path="/settings"
                 element={
