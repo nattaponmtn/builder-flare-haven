@@ -47,22 +47,7 @@ const App = () => (
               <Route path="/assets" element={<Assets />} />
               <Route path="/assets/:id" element={<AssetDetail />} />
 
-              <Route
-                path="/schedule"
-                element={
-                  <PlaceholderPage
-                    title="Maintenance Schedule"
-                    description="View and manage preventive maintenance schedules"
-                    features={[
-                      "Calendar view of scheduled maintenance",
-                      "Frequency-based task planning",
-                      "Team workload distribution",
-                      "Automated scheduling suggestions",
-                      "Schedule conflict resolution",
-                    ]}
-                  />
-                }
-              />
+              <Route path="/schedule" element={<Schedule />} />
               <Route path="/parts" element={<Parts />} />
               <Route path="/parts/:id" element={<PartDetail />} />
               <Route
