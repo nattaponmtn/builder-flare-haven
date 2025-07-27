@@ -260,7 +260,7 @@ const scheduledExports = [
   {
     id: "sched-001",
     name: "รายงานรายสัปดาห์",
-    template: "รายงานและสถิติ",
+    template: "รายงานและส��ิติ",
     schedule: "ทุกวันจันทร์ 09:00",
     format: "pdf",
     recipients: ["manager@company.com", "admin@company.com"],
@@ -335,7 +335,7 @@ export function DataTransfer() {
     try {
       // Simulate export process
       await new Promise(resolve => setTimeout(resolve, 3000));
-      toast.success("ส่งออกข้อมูล���รียบร้อยแล้ว");
+      toast.success("ส่งออกข้อมูลเรียบร้อยแล้ว");
     } catch (error) {
       toast.error("เกิดข้อผิดพลาดในการส่งออกข้อมูล");
     } finally {
@@ -373,7 +373,7 @@ export function DataTransfer() {
     
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success("สำรองข้อมูลเรียบ���้อยแล้ว");
+      toast.success("สำรองข้อมูลเรียบร้อยแล้ว");
     } catch (error) {
       toast.error("เกิดข้อผิดพลาดในการสำรองข้อมูล");
     }
@@ -516,7 +516,7 @@ export function DataTransfer() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="all">ข้อมูลทั้งหมด</SelectItem>
-                            <SelectItem value="30days">30 วันล่าสุด</SelectItem>
+                            <SelectItem value="30days">30 วั��ล่าสุด</SelectItem>
                             <SelectItem value="90days">90 วันล่าสุด</SelectItem>
                             <SelectItem value="1year">1 ปีล่าสุด</SelectItem>
                             <SelectItem value="custom">กำหนดเอง</SelectItem>
@@ -668,7 +668,7 @@ export function DataTransfer() {
                           checked={importOptions.updateExisting}
                           onCheckedChange={(checked) => setImportOptions({...importOptions, updateExisting: !!checked})}
                         />
-                        <Label htmlFor="updateExisting">อัปเดตข้อมูลที่มีอยู่</Label>
+                        <Label htmlFor="updateExisting">อัปเด��ข้อมูลที่มีอยู่</Label>
                       </div>
 
                       <div className="flex items-center space-x-2">
@@ -865,7 +865,7 @@ export function DataTransfer() {
                               ดาวน์โหลด
                             </Button>
                             <Button variant="ghost" size="sm">
-                              <Unzip className="h-3 w-3 mr-1" />
+                              <ArchiveRestore className="h-3 w-3 mr-1" />
                               คืนค่า
                             </Button>
                           </div>
