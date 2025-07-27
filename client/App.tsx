@@ -21,6 +21,7 @@ import { Schedule } from "./pages/Schedule";
 import { Reports } from "./pages/Reports";
 import { Notifications } from "./pages/Notifications";
 import { Users } from "./pages/Users";
+import { Settings } from "./pages/Settings";
 import { MobileNav } from "./components/MobileNav";
 import NotFound from "./pages/NotFound";
 
