@@ -38,6 +38,7 @@ import {
   ArrowUp,
   ArrowDown,
   Minus,
+  Eye,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { Progress } from "@/components/ui/progress";
@@ -115,7 +116,7 @@ const analyticsData = {
       { name: "น้ำมัน", value: 98000, turnover: 8.2, items: 23 },
       { name: "อะไหล่เครื่องจักร", value: 156000, turnover: 3.4, items: 67 },
       { name: "ซีลและปะเก็น", value: 45000, turnover: 5.1, items: 89 },
-      { name: "อะไหล่ไฟฟ้า", value: 61000, turnover: 4.7, items: 34 },
+      { name: "อ��ไหล่ไฟฟ้า", value: 61000, turnover: 4.7, items: 34 },
     ]
   }
 };
@@ -149,7 +150,7 @@ const reportTemplates = [
   {
     id: "technician-performance",
     name: "ประสิทธิภาพช่าง",
-    description: "ประเมินผลงานและประสิทธิภาพของช่าง",
+    description: "ประเม��นผลงานและประสิทธิภาพของช่าง",
     category: "บุคลากร",
     frequency: "รายเดือน",
     lastGenerated: "2024-01-12",
@@ -672,7 +673,7 @@ export function Reports() {
                         <div className="grid grid-cols-2 gap-2 text-xs">
                           <div className="text-center p-2 bg-muted/30 rounded">
                             <div className="font-bold">{category.turnover}</div>
-                            <div className="text-muted-foreground">การหมุนเวียน</div>
+                            <div className="text-muted-foreground">การห��ุนเวียน</div>
                           </div>
                           <div className="text-center p-2 bg-muted/30 rounded">
                             <div className="font-bold">{category.items}</div>
