@@ -22,6 +22,7 @@ import { Reports } from "./pages/Reports";
 import { Notifications } from "./pages/Notifications";
 import { Users } from "./pages/Users";
 import { Settings } from "./pages/Settings";
+import { DataTransfer } from "./pages/DataTransfer";
 import { MobileNav } from "./components/MobileNav";
 import NotFound from "./pages/NotFound";
 
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="/parts" element={<Parts />} />
               <Route path="/parts/:id" element={<PartDetail />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/data-transfer" element={<DataTransfer />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
