@@ -49,7 +49,7 @@ const workOrderData = {
     id: "WO-2024-001",
     title: "บำรุงรักษาเครื่องยนต์รถแทรกเตอร์",
     description:
-      "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุด CAT 320D รวมถึงเป��ี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
+      "ตรวจสอบบำรุงรักษาตามกำหนดสำหรับรถขุ�� CAT 320D รวมถึงเปลี่ยนน้ำมันเครื่อง เปลี่ยนไส้กรอง และตรวจสอบทั่วไป",
     status: "กำลังดำเนินการ",
     priority: "สูง",
     assignee: "สมชาย รักงาน",
@@ -120,7 +120,7 @@ const workOrderData = {
         used: false,
       },
       {
-        name: "ไส้กรองไฮดรอลิก",
+        name: "ไส้กรอง���ฮดรอลิก",
         partNumber: "HF-2021",
         quantity: 1,
         used: false,
@@ -297,7 +297,7 @@ export function WorkOrderDetail() {
             </Button>
             <Button size="sm" variant="outline">
               <Edit3 className="h-4 w-4 mr-2" />
-              แก้ไข
+              แ��้ไข
             </Button>
           </div>
         </div>
@@ -409,7 +409,7 @@ export function WorkOrderDetail() {
 
             {/* Description */}
             <div className="card-elevated rounded-xl p-5">
-              <h3 className="font-semibold mb-3">รายละเอียดงาน</h3>
+              <h3 className="font-semibold mb-3">ร���ยละเอียดงาน</h3>
               <p className="text-muted-foreground leading-relaxed">
                 {workOrder.description}
               </p>
@@ -433,7 +433,7 @@ export function WorkOrderDetail() {
                 </div>
                 <div>
                   <span className="text-muted-foreground">ประมาณการเวลา:</span>
-                  <span className="ml-2 font-medium">{workOrder.estimatedHours} ชั่���โมง</span>
+                  <span className="ml-2 font-medium">{workOrder.estimatedHours} ชั่วโมง</span>
                 </div>
               </div>
             </div>
@@ -686,7 +686,7 @@ export function WorkOrderDetail() {
                 <div className="flex gap-3">
                   <Button onClick={handleStatusUpdate} className="flex-1">
                     <Save className="h-4 w-4 mr-2" />
-                    ��ันทึก
+                    บันทึก
                   </Button>
                   <Button variant="outline" onClick={() => setStatusUpdateOpen(false)}>
                     ยกเลิก
@@ -744,7 +744,7 @@ export function WorkOrderDetail() {
           </Dialog>
 
           <Button variant="outline">
-            <Tools className="h-4 w-4 mr-2" />
+            <Wrench className="h-4 w-4 mr-2" />
             เครื่องมือ
           </Button>
         </div>
