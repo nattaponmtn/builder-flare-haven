@@ -19,6 +19,7 @@ import { PartDetail } from "./pages/PartDetail";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { Schedule } from "./pages/Schedule";
 import { Reports } from "./pages/Reports";
+import { Notifications } from "./pages/Notifications";
 import { MobileNav } from "./components/MobileNav";
 import NotFound from "./pages/NotFound";
 
