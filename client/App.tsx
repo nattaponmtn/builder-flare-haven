@@ -24,6 +24,7 @@ import { Users } from "./pages/Users";
 import { Settings } from "./pages/Settings";
 import { DataTransfer } from "./pages/DataTransfer";
 import { MobileNav } from "./components/MobileNav";
+import { PWAInstall, PWAStatus } from "./components/PWAInstall";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
