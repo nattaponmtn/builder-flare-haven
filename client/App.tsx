@@ -38,6 +38,9 @@ const App = () => (
         <div className="min-h-screen bg-background">
           <MobileNav />
 
+          {/* PWA Install Component */}
+          <PWAInstall showBanner={true} autoShow={false} />
+
           {/* Main Content */}
           <main className="md:ml-64">
             <Routes>
