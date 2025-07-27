@@ -43,6 +43,7 @@ const App = () => (
                 element={<CreateWorkOrderFromQR />}
               />
               <Route path="/assets" element={<Assets />} />
+              <Route path="/assets/:id" element={<AssetDetail />} />
 
               <Route
                 path="/schedule"
