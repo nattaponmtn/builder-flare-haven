@@ -87,7 +87,7 @@ const defaultSettings = {
     timeFormat: "24h",
     currency: "THB",
     theme: "system",
-    logoUrl: ""
+    logoUrl: "",
   },
   notifications: {
     emailEnabled: true,
@@ -109,8 +109,8 @@ const defaultSettings = {
     quietHours: {
       enabled: false,
       start: "22:00",
-      end: "08:00"
-    }
+      end: "08:00",
+    },
   },
   system: {
     autoBackup: true,
@@ -126,7 +126,7 @@ const defaultSettings = {
     dataEncryption: true,
     apiRateLimit: "1000",
     maxFileSize: "50",
-    allowedFileTypes: ["jpg", "png", "pdf", "doc", "xls"]
+    allowedFileTypes: ["jpg", "png", "pdf", "doc", "xls"],
   },
   database: {
     host: "localhost",
@@ -137,7 +137,7 @@ const defaultSettings = {
     queryTimeout: "30",
     backupPath: "/backups",
     compressionEnabled: true,
-    encryptionEnabled: true
+    encryptionEnabled: true,
   },
   integration: {
     apiEnabled: true,
@@ -151,7 +151,7 @@ const defaultSettings = {
     ssoProvider: "oauth2",
     ldapServer: "",
     elasticsearchUrl: "",
-    redisUrl: ""
+    redisUrl: "",
   },
   mobile: {
     offlineMode: true,
@@ -162,8 +162,8 @@ const defaultSettings = {
     maxOfflineData: "100",
     locationTracking: false,
     biometricAuth: false,
-    autoLock: "5"
-  }
+    autoLock: "5",
+  },
 };
 
 export function Settings() {
@@ -175,26 +175,31 @@ export function Settings() {
   const { toast } = useToast();
 
   const updateSetting = (category: string, key: string, value: any) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
       [category]: {
         ...prev[category as keyof typeof prev],
-        [key]: value
-      }
+        [key]: value,
+      },
     }));
     setHasChanges(true);
   };
 
-  const updateNestedSetting = (category: string, parentKey: string, key: string, value: any) => {
-    setSettings(prev => ({
+  const updateNestedSetting = (
+    category: string,
+    parentKey: string,
+    key: string,
+    value: any,
+  ) => {
+    setSettings((prev) => ({
       ...prev,
       [category]: {
         ...prev[category as keyof typeof prev],
         [parentKey]: {
           ...(prev[category as keyof typeof prev] as any)[parentKey],
-          [key]: value
-        }
-      }
+          [key]: value,
+        },
+      },
     }));
     setHasChanges(true);
   };
@@ -202,7 +207,7 @@ export function Settings() {
   const handleSave = async () => {
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("บันทึกการตั้งค่าเรียบร้อยแล้ว");
       setHasChanges(false);
     } catch (error) {
@@ -219,7 +224,7 @@ export function Settings() {
   const testEmailConnection = async () => {
     setIsTestingConnection(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       toast.success("ทดสอบการเชื่อมต่ออีเมลสำเร็จ");
     } catch (error) {
       toast.error("ไม่สามารถเชื่อมต่ออีเมลได้");
@@ -231,7 +236,7 @@ export function Settings() {
   const testDatabaseConnection = async () => {
     setIsTestingConnection(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       toast.success("ทดสอบการเชื่อมต่อฐานข้อมูลสำเร็จ");
     } catch (error) {
       toast.error("ไม่สามารถเชื่อมต่อฐานข้อมูลได้");
@@ -248,15 +253,20 @@ export function Settings() {
       key: newKey,
       created: new Date().toISOString(),
       lastUsed: null,
-      permissions: ["read", "write"]
+      permissions: ["read", "write"],
     };
-    
-    updateSetting("integration", "apiKeys", [...settings.integration.apiKeys, newApiKey]);
+
+    updateSetting("integration", "apiKeys", [
+      ...settings.integration.apiKeys,
+      newApiKey,
+    ]);
     toast.success("สร้าง API Key ใหม่เรียบร้อยแล้ว");
   };
 
   const deleteApiKey = (keyId: string) => {
-    const updatedKeys = settings.integration.apiKeys.filter((key: any) => key.id !== keyId);
+    const updatedKeys = settings.integration.apiKeys.filter(
+      (key: any) => key.id !== keyId,
+    );
     updateSetting("integration", "apiKeys", updatedKeys);
     toast.success("ลบ API Key เรียบร้อยแล้ว");
   };
@@ -287,7 +297,11 @@ export function Settings() {
         </div>
 
         {/* Main Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="general">ทั่วไป</TabsTrigger>
             <TabsTrigger value="notifications">การแจ้งเตือน</TabsTrigger>
@@ -313,7 +327,9 @@ export function Settings() {
                     <Input
                       id="companyName"
                       value={settings.general.companyName}
-                      onChange={(e) => updateSetting("general", "companyName", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("general", "companyName", e.target.value)
+                      }
                     />
                   </div>
                   <div>
@@ -321,7 +337,13 @@ export function Settings() {
                     <Textarea
                       id="companyAddress"
                       value={settings.general.companyAddress}
-                      onChange={(e) => updateSetting("general", "companyAddress", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting(
+                          "general",
+                          "companyAddress",
+                          e.target.value,
+                        )
+                      }
                       rows={3}
                     />
                   </div>
@@ -331,7 +353,13 @@ export function Settings() {
                       <Input
                         id="companyPhone"
                         value={settings.general.companyPhone}
-                        onChange={(e) => updateSetting("general", "companyPhone", e.target.value)}
+                        onChange={(e) =>
+                          updateSetting(
+                            "general",
+                            "companyPhone",
+                            e.target.value,
+                          )
+                        }
                       />
                     </div>
                     <div>
@@ -340,7 +368,13 @@ export function Settings() {
                         id="companyEmail"
                         type="email"
                         value={settings.general.companyEmail}
-                        onChange={(e) => updateSetting("general", "companyEmail", e.target.value)}
+                        onChange={(e) =>
+                          updateSetting(
+                            "general",
+                            "companyEmail",
+                            e.target.value,
+                          )
+                        }
                       />
                     </div>
                   </div>
@@ -358,7 +392,12 @@ export function Settings() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Label htmlFor="language">ภาษา</Label>
-                      <Select value={settings.general.language} onValueChange={(value) => updateSetting("general", "language", value)}>
+                      <Select
+                        value={settings.general.language}
+                        onValueChange={(value) =>
+                          updateSetting("general", "language", value)
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -370,22 +409,34 @@ export function Settings() {
                     </div>
                     <div>
                       <Label htmlFor="timezone">เขตเวลา</Label>
-                      <Select value={settings.general.timezone} onValueChange={(value) => updateSetting("general", "timezone", value)}>
+                      <Select
+                        value={settings.general.timezone}
+                        onValueChange={(value) =>
+                          updateSetting("general", "timezone", value)
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Asia/Bangkok">Asia/Bangkok</SelectItem>
+                          <SelectItem value="Asia/Bangkok">
+                            Asia/Bangkok
+                          </SelectItem>
                           <SelectItem value="UTC">UTC</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Label htmlFor="dateFormat">รูปแบบวันที่</Label>
-                      <Select value={settings.general.dateFormat} onValueChange={(value) => updateSetting("general", "dateFormat", value)}>
+                      <Select
+                        value={settings.general.dateFormat}
+                        onValueChange={(value) =>
+                          updateSetting("general", "dateFormat", value)
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -398,7 +449,12 @@ export function Settings() {
                     </div>
                     <div>
                       <Label htmlFor="timeFormat">รูปแบบเวลา</Label>
-                      <Select value={settings.general.timeFormat} onValueChange={(value) => updateSetting("general", "timeFormat", value)}>
+                      <Select
+                        value={settings.general.timeFormat}
+                        onValueChange={(value) =>
+                          updateSetting("general", "timeFormat", value)
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -413,7 +469,12 @@ export function Settings() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Label htmlFor="currency">สกุลเงิน</Label>
-                      <Select value={settings.general.currency} onValueChange={(value) => updateSetting("general", "currency", value)}>
+                      <Select
+                        value={settings.general.currency}
+                        onValueChange={(value) =>
+                          updateSetting("general", "currency", value)
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -426,7 +487,12 @@ export function Settings() {
                     </div>
                     <div>
                       <Label htmlFor="theme">ธีม</Label>
-                      <Select value={settings.general.theme} onValueChange={(value) => updateSetting("general", "theme", value)}>
+                      <Select
+                        value={settings.general.theme}
+                        onValueChange={(value) =>
+                          updateSetting("general", "theme", value)
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -457,44 +523,68 @@ export function Settings() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>การแจ้งเตือนใบสั่งงาน</Label>
-                      <p className="text-sm text-muted-foreground">แจ้งเตือนเมื่อมีใบสั่งงานใหม่หรือมีการอัปเดต</p>
+                      <p className="text-sm text-muted-foreground">
+                        แจ้งเตือนเมื่อมีใบสั่งงานใหม่หรือมีการอัปเดต
+                      </p>
                     </div>
                     <Switch
                       checked={settings.notifications.workOrderNotifications}
-                      onCheckedChange={(checked) => updateSetting("notifications", "workOrderNotifications", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting(
+                          "notifications",
+                          "workOrderNotifications",
+                          checked,
+                        )
+                      }
                     />
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>การแจ้งเตือนบำรุงรักษา</Label>
-                      <p className="text-sm text-muted-foreground">แจ้งเตือนกำหนดการบำรุงรักษา</p>
+                      <p className="text-sm text-muted-foreground">
+                        แจ้งเตือนกำหนดการบำรุงรักษา
+                      </p>
                     </div>
                     <Switch
                       checked={settings.notifications.maintenanceReminders}
-                      onCheckedChange={(checked) => updateSetting("notifications", "maintenanceReminders", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting(
+                          "notifications",
+                          "maintenanceReminders",
+                          checked,
+                        )
+                      }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>การแจ้งเตือนสต็อก</Label>
-                      <p className="text-sm text-muted-foreground">แจ้งเตือนเมื่อสต็อกใกล้หมด</p>
+                      <p className="text-sm text-muted-foreground">
+                        แจ้งเตือนเมื่อสต็อกใกล้หมด
+                      </p>
                     </div>
                     <Switch
                       checked={settings.notifications.stockAlerts}
-                      onCheckedChange={(checked) => updateSetting("notifications", "stockAlerts", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("notifications", "stockAlerts", checked)
+                      }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>การแจ้งเตือนระบบ</Label>
-                      <p className="text-sm text-muted-foreground">แจ้งเตือนข้อผิดพลาดและการอัปเดตระบบ</p>
+                      <p className="text-sm text-muted-foreground">
+                        แจ้งเตือนข้อผิดพลาดและการอัปเดตระบบ
+                      </p>
                     </div>
                     <Switch
                       checked={settings.notifications.systemAlerts}
-                      onCheckedChange={(checked) => updateSetting("notifications", "systemAlerts", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("notifications", "systemAlerts", checked)
+                      }
                     />
                   </div>
 
@@ -503,7 +593,13 @@ export function Settings() {
                     <div className="mt-2">
                       <Slider
                         value={settings.notifications.notificationDelay}
-                        onValueChange={(value) => updateSetting("notifications", "notificationDelay", value)}
+                        onValueChange={(value) =>
+                          updateSetting(
+                            "notifications",
+                            "notificationDelay",
+                            value,
+                          )
+                        }
                         max={60}
                         min={1}
                         step={1}
@@ -529,7 +625,9 @@ export function Settings() {
                     <Label>เปิดใช้งานการแจ้งเตือนทางอีเมล</Label>
                     <Switch
                       checked={settings.notifications.emailEnabled}
-                      onCheckedChange={(checked) => updateSetting("notifications", "emailEnabled", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("notifications", "emailEnabled", checked)
+                      }
                     />
                   </div>
 
@@ -541,7 +639,13 @@ export function Settings() {
                           <Input
                             id="emailHost"
                             value={settings.notifications.emailHost}
-                            onChange={(e) => updateSetting("notifications", "emailHost", e.target.value)}
+                            onChange={(e) =>
+                              updateSetting(
+                                "notifications",
+                                "emailHost",
+                                e.target.value,
+                              )
+                            }
                             placeholder="smtp.gmail.com"
                           />
                         </div>
@@ -550,18 +654,30 @@ export function Settings() {
                           <Input
                             id="emailPort"
                             value={settings.notifications.emailPort}
-                            onChange={(e) => updateSetting("notifications", "emailPort", e.target.value)}
+                            onChange={(e) =>
+                              updateSetting(
+                                "notifications",
+                                "emailPort",
+                                e.target.value,
+                              )
+                            }
                             placeholder="587"
                           />
                         </div>
                       </div>
-                      
+
                       <div>
                         <Label htmlFor="emailUsername">Username</Label>
                         <Input
                           id="emailUsername"
                           value={settings.notifications.emailUsername}
-                          onChange={(e) => updateSetting("notifications", "emailUsername", e.target.value)}
+                          onChange={(e) =>
+                            updateSetting(
+                              "notifications",
+                              "emailUsername",
+                              e.target.value,
+                            )
+                          }
                           placeholder="your-email@gmail.com"
                         />
                       </div>
@@ -572,7 +688,13 @@ export function Settings() {
                           id="emailPassword"
                           type="password"
                           value={settings.notifications.emailPassword}
-                          onChange={(e) => updateSetting("notifications", "emailPassword", e.target.value)}
+                          onChange={(e) =>
+                            updateSetting(
+                              "notifications",
+                              "emailPassword",
+                              e.target.value,
+                            )
+                          }
                           placeholder="••••••••"
                         />
                       </div>
@@ -608,11 +730,20 @@ export function Settings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>เปิดใช้งานช่วงเวลาเงียบ</Label>
-                    <p className="text-sm text-muted-foreground">ไม่ส่งการแจ้งเตือนในช่วงเวลาที่กำหนด</p>
+                    <p className="text-sm text-muted-foreground">
+                      ไม่ส่งการแจ้งเตือนในช่วงเวลาที่กำหนด
+                    </p>
                   </div>
                   <Switch
                     checked={settings.notifications.quietHours.enabled}
-                    onCheckedChange={(checked) => updateNestedSetting("notifications", "quietHours", "enabled", checked)}
+                    onCheckedChange={(checked) =>
+                      updateNestedSetting(
+                        "notifications",
+                        "quietHours",
+                        "enabled",
+                        checked,
+                      )
+                    }
                   />
                 </div>
 
@@ -624,7 +755,14 @@ export function Settings() {
                         id="quietStart"
                         type="time"
                         value={settings.notifications.quietHours.start}
-                        onChange={(e) => updateNestedSetting("notifications", "quietHours", "start", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedSetting(
+                            "notifications",
+                            "quietHours",
+                            "start",
+                            e.target.value,
+                          )
+                        }
                       />
                     </div>
                     <div>
@@ -633,7 +771,14 @@ export function Settings() {
                         id="quietEnd"
                         type="time"
                         value={settings.notifications.quietHours.end}
-                        onChange={(e) => updateNestedSetting("notifications", "quietHours", "end", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedSetting(
+                            "notifications",
+                            "quietHours",
+                            "end",
+                            e.target.value,
+                          )
+                        }
                       />
                     </div>
                   </div>
@@ -657,15 +802,24 @@ export function Settings() {
                     <Label>เปิดใช้งานการสำรองข้อมูลอัตโนมัติ</Label>
                     <Switch
                       checked={settings.system.autoBackup}
-                      onCheckedChange={(checked) => updateSetting("system", "autoBackup", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("system", "autoBackup", checked)
+                      }
                     />
                   </div>
 
                   {settings.system.autoBackup && (
                     <div className="space-y-3">
                       <div>
-                        <Label htmlFor="backupFrequency">ความถี่การสำรองข้อมูล</Label>
-                        <Select value={settings.system.backupFrequency} onValueChange={(value) => updateSetting("system", "backupFrequency", value)}>
+                        <Label htmlFor="backupFrequency">
+                          ความถี่การสำรองข้อมูล
+                        </Label>
+                        <Select
+                          value={settings.system.backupFrequency}
+                          onValueChange={(value) =>
+                            updateSetting("system", "backupFrequency", value)
+                          }
+                        >
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
@@ -679,12 +833,20 @@ export function Settings() {
                       </div>
 
                       <div>
-                        <Label htmlFor="backupRetention">เก็บข้อมูลสำรอง (วัน)</Label>
+                        <Label htmlFor="backupRetention">
+                          เก็บข้อมูลสำรอง (วัน)
+                        </Label>
                         <Input
                           id="backupRetention"
                           type="number"
                           value={settings.system.backupRetention}
-                          onChange={(e) => updateSetting("system", "backupRetention", e.target.value)}
+                          onChange={(e) =>
+                            updateSetting(
+                              "system",
+                              "backupRetention",
+                              e.target.value,
+                            )
+                          }
                         />
                       </div>
                     </div>
@@ -706,27 +868,49 @@ export function Settings() {
                       id="sessionTimeout"
                       type="number"
                       value={settings.system.sessionTimeout}
-                      onChange={(e) => updateSetting("system", "sessionTimeout", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting(
+                          "system",
+                          "sessionTimeout",
+                          e.target.value,
+                        )
+                      }
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="maxLoginAttempts">จำนวนครั้งล็อกอินสูงสุด</Label>
+                    <Label htmlFor="maxLoginAttempts">
+                      จำนวนครั้งล็อกอินสูงสุด
+                    </Label>
                     <Input
                       id="maxLoginAttempts"
                       type="number"
                       value={settings.system.maxLoginAttempts}
-                      onChange={(e) => updateSetting("system", "maxLoginAttempts", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting(
+                          "system",
+                          "maxLoginAttempts",
+                          e.target.value,
+                        )
+                      }
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="passwordExpiry">วันหมดอายุรหัสผ่าน (วัน)</Label>
+                    <Label htmlFor="passwordExpiry">
+                      วันหมดอายุรหัสผ่าน (วัน)
+                    </Label>
                     <Input
                       id="passwordExpiry"
                       type="number"
                       value={settings.system.passwordExpiry}
-                      onChange={(e) => updateSetting("system", "passwordExpiry", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting(
+                          "system",
+                          "passwordExpiry",
+                          e.target.value,
+                        )
+                      }
                     />
                   </div>
 
@@ -734,7 +918,9 @@ export function Settings() {
                     <Label>เข้ารหัสข้อมูล</Label>
                     <Switch
                       checked={settings.system.dataEncryption}
-                      onCheckedChange={(checked) => updateSetting("system", "dataEncryption", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("system", "dataEncryption", checked)
+                      }
                     />
                   </div>
                 </CardContent>
@@ -753,33 +939,45 @@ export function Settings() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>โหมดการบำรุงรักษา</Label>
-                      <p className="text-xs text-muted-foreground">ปิดการเข้าถึงสำหรับผู้ใช้ทั่วไป</p>
+                      <p className="text-xs text-muted-foreground">
+                        ปิดการเข้าถึงสำหรับผู้ใช้ทั่วไป
+                      </p>
                     </div>
                     <Switch
                       checked={settings.system.maintenanceMode}
-                      onCheckedChange={(checked) => updateSetting("system", "maintenanceMode", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("system", "maintenanceMode", checked)
+                      }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>อัปเดตอัตโนมัติ</Label>
-                      <p className="text-xs text-muted-foreground">อัปเดตระบบโดยอัต���นมัติ</p>
+                      <p className="text-xs text-muted-foreground">
+                        อัปเดตระบบโดยอัต���นมัติ
+                      </p>
                     </div>
                     <Switch
                       checked={settings.system.autoUpdates}
-                      onCheckedChange={(checked) => updateSetting("system", "autoUpdates", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("system", "autoUpdates", checked)
+                      }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>โหมด Debug</Label>
-                      <p className="text-xs text-muted-foreground">เปิดใช้งาน Debug Mode</p>
+                      <p className="text-xs text-muted-foreground">
+                        เปิดใช้งาน Debug Mode
+                      </p>
                     </div>
                     <Switch
                       checked={settings.system.debugMode}
-                      onCheckedChange={(checked) => updateSetting("system", "debugMode", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("system", "debugMode", checked)
+                      }
                     />
                   </div>
                 </div>
@@ -803,7 +1001,9 @@ export function Settings() {
                     <Input
                       id="dbHost"
                       value={settings.database.host}
-                      onChange={(e) => updateSetting("database", "host", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("database", "host", e.target.value)
+                      }
                     />
                   </div>
                   <div>
@@ -811,7 +1011,9 @@ export function Settings() {
                     <Input
                       id="dbPort"
                       value={settings.database.port}
-                      onChange={(e) => updateSetting("database", "port", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("database", "port", e.target.value)
+                      }
                     />
                   </div>
                   <div>
@@ -819,7 +1021,9 @@ export function Settings() {
                     <Input
                       id="dbName"
                       value={settings.database.name}
-                      onChange={(e) => updateSetting("database", "name", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("database", "name", e.target.value)
+                      }
                     />
                   </div>
                   <div>
@@ -827,7 +1031,9 @@ export function Settings() {
                     <Input
                       id="dbUsername"
                       value={settings.database.username}
-                      onChange={(e) => updateSetting("database", "username", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("database", "username", e.target.value)
+                      }
                     />
                   </div>
                   <div>
@@ -836,7 +1042,13 @@ export function Settings() {
                       id="connectionPool"
                       type="number"
                       value={settings.database.connectionPool}
-                      onChange={(e) => updateSetting("database", "connectionPool", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting(
+                          "database",
+                          "connectionPool",
+                          e.target.value,
+                        )
+                      }
                     />
                   </div>
                   <div>
@@ -845,7 +1057,13 @@ export function Settings() {
                       id="queryTimeout"
                       type="number"
                       value={settings.database.queryTimeout}
-                      onChange={(e) => updateSetting("database", "queryTimeout", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting(
+                          "database",
+                          "queryTimeout",
+                          e.target.value,
+                        )
+                      }
                     />
                   </div>
                 </div>
@@ -870,14 +1088,18 @@ export function Settings() {
                     <Label>เปิดใช้งานการบีบอัด</Label>
                     <Switch
                       checked={settings.database.compressionEnabled}
-                      onCheckedChange={(checked) => updateSetting("database", "compressionEnabled", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("database", "compressionEnabled", checked)
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <Label>เข้ารหัสฐานข้อมูล</Label>
                     <Switch
                       checked={settings.database.encryptionEnabled}
-                      onCheckedChange={(checked) => updateSetting("database", "encryptionEnabled", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("database", "encryptionEnabled", checked)
+                      }
                     />
                   </div>
                 </div>
@@ -896,7 +1118,9 @@ export function Settings() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <p className="text-sm text-muted-foreground">จัดการ API Keys สำหรับการเชื่อมต่อกับระบบภายนอก</p>
+                  <p className="text-sm text-muted-foreground">
+                    จัดการ API Keys สำหรับการเชื่อมต่อกับระบบภายนอก
+                  </p>
                   <Button onClick={generateApiKey}>
                     <Key className="h-4 w-4 mr-2" />
                     สร้าง API Key
@@ -914,7 +1138,10 @@ export function Settings() {
                               {showApiKeys ? apiKey.key : "•".repeat(32)}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              สร้างเมื่อ: {new Date(apiKey.created).toLocaleDateString('th-TH')}
+                              สร้างเมื่อ:{" "}
+                              {new Date(apiKey.created).toLocaleDateString(
+                                "th-TH",
+                              )}
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
@@ -923,7 +1150,11 @@ export function Settings() {
                               size="sm"
                               onClick={() => setShowApiKeys(!showApiKeys)}
                             >
-                              {showApiKeys ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showApiKeys ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
@@ -933,14 +1164,19 @@ export function Settings() {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>ยืนยันการลบ API Key</AlertDialogTitle>
+                                  <AlertDialogTitle>
+                                    ยืนยันการลบ API Key
+                                  </AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    คุณต้องการลบ API Key "{apiKey.name}" ใช่หรือไม่?
+                                    คุณต้องการลบ API Key "{apiKey.name}"
+                                    ใช่หรือไม่?
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => deleteApiKey(apiKey.id)}>
+                                  <AlertDialogAction
+                                    onClick={() => deleteApiKey(apiKey.id)}
+                                  >
                                     ลบ API Key
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
@@ -954,8 +1190,12 @@ export function Settings() {
                 ) : (
                   <div className="text-center py-8">
                     <Key className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium mb-2">ยังไม่มี API Key</h3>
-                    <p className="text-muted-foreground">สร้าง API Key เพื่อเชื่อมต่อกับระบบภายนอก</p>
+                    <h3 className="text-lg font-medium mb-2">
+                      ยังไม่มี API Key
+                    </h3>
+                    <p className="text-muted-foreground">
+                      สร้าง API Key เพื่อเชื่อมต่อกับระบบภายนอก
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -977,7 +1217,9 @@ export function Settings() {
                     <Label>โหมดออฟไลน์</Label>
                     <Switch
                       checked={settings.mobile.offlineMode}
-                      onCheckedChange={(checked) => updateSetting("mobile", "offlineMode", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("mobile", "offlineMode", checked)
+                      }
                     />
                   </div>
 
@@ -985,7 +1227,9 @@ export function Settings() {
                     <Label>ซิงค์อัตโนมัติ</Label>
                     <Switch
                       checked={settings.mobile.autoSync}
-                      onCheckedChange={(checked) => updateSetting("mobile", "autoSync", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("mobile", "autoSync", checked)
+                      }
                     />
                   </div>
 
@@ -995,17 +1239,27 @@ export function Settings() {
                       id="syncInterval"
                       type="number"
                       value={settings.mobile.syncInterval}
-                      onChange={(e) => updateSetting("mobile", "syncInterval", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("mobile", "syncInterval", e.target.value)
+                      }
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="maxOfflineData">ข้อมูลออฟไลน์สูงสุด (MB)</Label>
+                    <Label htmlFor="maxOfflineData">
+                      ข้อมูลออฟไลน์สูงสุด (MB)
+                    </Label>
                     <Input
                       id="maxOfflineData"
                       type="number"
                       value={settings.mobile.maxOfflineData}
-                      onChange={(e) => updateSetting("mobile", "maxOfflineData", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting(
+                          "mobile",
+                          "maxOfflineData",
+                          e.target.value,
+                        )
+                      }
                     />
                   </div>
                 </CardContent>
@@ -1024,7 +1278,9 @@ export function Settings() {
                     <div className="mt-2">
                       <Slider
                         value={settings.mobile.imageQuality}
-                        onValueChange={(value) => updateSetting("mobile", "imageQuality", value)}
+                        onValueChange={(value) =>
+                          updateSetting("mobile", "imageQuality", value)
+                        }
                         max={100}
                         min={10}
                         step={10}
@@ -1040,7 +1296,9 @@ export function Settings() {
                     <Label>บีบอัดข���อมูล</Label>
                     <Switch
                       checked={settings.mobile.compressionEnabled}
-                      onCheckedChange={(checked) => updateSetting("mobile", "compressionEnabled", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("mobile", "compressionEnabled", checked)
+                      }
                     />
                   </div>
 
@@ -1048,7 +1306,9 @@ export function Settings() {
                     <Label>ติดตามตำแหน่ง</Label>
                     <Switch
                       checked={settings.mobile.locationTracking}
-                      onCheckedChange={(checked) => updateSetting("mobile", "locationTracking", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("mobile", "locationTracking", checked)
+                      }
                     />
                   </div>
 
@@ -1056,7 +1316,9 @@ export function Settings() {
                     <Label>การยืนยันตัวตนด้วยไบโอเมตริก</Label>
                     <Switch
                       checked={settings.mobile.biometricAuth}
-                      onCheckedChange={(checked) => updateSetting("mobile", "biometricAuth", checked)}
+                      onCheckedChange={(checked) =>
+                        updateSetting("mobile", "biometricAuth", checked)
+                      }
                     />
                   </div>
 
@@ -1066,7 +1328,9 @@ export function Settings() {
                       id="autoLock"
                       type="number"
                       value={settings.mobile.autoLock}
-                      onChange={(e) => updateSetting("mobile", "autoLock", e.target.value)}
+                      onChange={(e) =>
+                        updateSetting("mobile", "autoLock", e.target.value)
+                      }
                     />
                   </div>
                 </CardContent>

@@ -320,19 +320,27 @@ export function WorkOrderDetail() {
             </div>
           </div>
           <div className="card-elevated rounded-xl p-4 text-center">
-            <div className="text-xs text-muted-foreground mb-1">ความคืบหน้า</div>
-            <div className="text-lg font-bold text-primary">{progressPercent}%</div>
+            <div className="text-xs text-muted-foreground mb-1">
+              ความคืบหน้า
+            </div>
+            <div className="text-lg font-bold text-primary">
+              {progressPercent}%
+            </div>
             <div className="w-full bg-muted rounded-full h-2 mt-1">
-              <div 
-                className="bg-primary h-2 rounded-full transition-all duration-300" 
+              <div
+                className="bg-primary h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
           </div>
           <div className="card-elevated rounded-xl p-4 text-center">
             <div className="text-xs text-muted-foreground mb-1">เวลาใช้งาน</div>
-            <div className="text-lg font-bold text-warning">{workOrder.actualHours} ชม.</div>
-            <div className="text-xs text-muted-foreground">จาก {workOrder.estimatedHours} ชม.</div>
+            <div className="text-lg font-bold text-warning">
+              {workOrder.actualHours} ชม.
+            </div>
+            <div className="text-xs text-muted-foreground">
+              จาก {workOrder.estimatedHours} ชม.
+            </div>
           </div>
         </div>
 
@@ -400,7 +408,9 @@ export function WorkOrderDetail() {
                   <div>
                     <div className="text-muted-foreground">อุปกรณ์</div>
                     <div className="font-medium">{workOrder.assetName}</div>
-                    <div className="text-xs text-muted-foreground">{workOrder.asset}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {workOrder.asset}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -424,15 +434,21 @@ export function WorkOrderDetail() {
                 </div>
                 <div>
                   <span className="text-muted-foreground">ผู้ขอ:</span>
-                  <span className="ml-2 font-medium">{workOrder.requestedBy}</span>
+                  <span className="ml-2 font-medium">
+                    {workOrder.requestedBy}
+                  </span>
                 </div>
                 <div>
                   <span className="text-muted-foreground">วันที่สร้าง:</span>
-                  <span className="ml-2 font-medium">{workOrder.createdDate}</span>
+                  <span className="ml-2 font-medium">
+                    {workOrder.createdDate}
+                  </span>
                 </div>
                 <div>
                   <span className="text-muted-foreground">ประมาณการเวลา:</span>
-                  <span className="ml-2 font-medium">{workOrder.estimatedHours} ชั่วโมง</span>
+                  <span className="ml-2 font-medium">
+                    {workOrder.estimatedHours} ชั่วโมง
+                  </span>
                 </div>
               </div>
             </div>
@@ -470,7 +486,10 @@ export function WorkOrderDetail() {
                           <Save className="h-4 w-4 mr-2" />
                           บันทึก
                         </Button>
-                        <Button variant="outline" onClick={() => setCommentOpen(false)}>
+                        <Button
+                          variant="outline"
+                          onClick={() => setCommentOpen(false)}
+                        >
                           ยกเลิก
                         </Button>
                       </div>
@@ -482,8 +501,12 @@ export function WorkOrderDetail() {
                 {workOrder.comments.map((comment) => (
                   <div key={comment.id} className="p-3 bg-muted/30 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-sm">{comment.author}</span>
-                      <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
+                      <span className="font-medium text-sm">
+                        {comment.author}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {comment.timestamp}
+                      </span>
                     </div>
                     <p className="text-sm">{comment.message}</p>
                   </div>
@@ -496,7 +519,9 @@ export function WorkOrderDetail() {
         {activeTab === "tasks" && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold">รายการงาน ({completedTasks}/{totalTasks})</h3>
+              <h3 className="font-semibold">
+                รายการงาน ({completedTasks}/{totalTasks})
+              </h3>
               <div className="text-sm text-muted-foreground">
                 เสร็จสิ้น {progressPercent}%
               </div>
@@ -522,7 +547,10 @@ export function WorkOrderDetail() {
                         {task.description}
                       </h4>
                       {task.isCritical && (
-                        <Badge variant="outline" className="text-xs shrink-0 border-warning text-warning">
+                        <Badge
+                          variant="outline"
+                          className="text-xs shrink-0 border-warning text-warning"
+                        >
                           สำคัญ
                         </Badge>
                       )}
@@ -551,8 +579,8 @@ export function WorkOrderDetail() {
                             <Camera className="h-4 w-4 mr-2" />
                             ถ่ายรูป
                           </Button>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             onClick={() => markTaskComplete(task.id)}
                             className="bg-success hover:bg-success/90"
                           >
@@ -574,7 +602,8 @@ export function WorkOrderDetail() {
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">อะไหล่ที่ใช้</h3>
               <div className="text-sm text-muted-foreground">
-                {workOrder.parts.filter(p => p.used).length}/{workOrder.parts.length} รายการ
+                {workOrder.parts.filter((p) => p.used).length}/
+                {workOrder.parts.length} รายการ
               </div>
             </div>
             {workOrder.parts.map((part, index) => (
@@ -602,7 +631,11 @@ export function WorkOrderDetail() {
                     ) : (
                       <div className="space-y-1">
                         <Badge variant="outline">พร้อมใช้</Badge>
-                        <Button size="sm" variant="outline" className="block text-xs">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="block text-xs"
+                        >
                           ใช้อะไหล่
                         </Button>
                       </div>
@@ -676,7 +709,9 @@ export function WorkOrderDetail() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="รอดำเนินการ">รอดำเนินการ</SelectItem>
-                      <SelectItem value="กำลังดำเนินการ">กำลังดำเนินการ</SelectItem>
+                      <SelectItem value="กำลังดำเนินการ">
+                        กำลังดำเนินการ
+                      </SelectItem>
                       <SelectItem value="เสร็จสิ้น">เสร็จสิ้น</SelectItem>
                       <SelectItem value="เกินกำหนด">เกินกำหนด</SelectItem>
                     </SelectContent>
@@ -687,7 +722,10 @@ export function WorkOrderDetail() {
                     <Save className="h-4 w-4 mr-2" />
                     บันทึก
                   </Button>
-                  <Button variant="outline" onClick={() => setStatusUpdateOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setStatusUpdateOpen(false)}
+                  >
                     ยกเลิก
                   </Button>
                 </div>
@@ -734,7 +772,10 @@ export function WorkOrderDetail() {
                     <Save className="h-4 w-4 mr-2" />
                     บันทึก
                   </Button>
-                  <Button variant="outline" onClick={() => setTimeLogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setTimeLogOpen(false)}
+                  >
                     ยกเลิก
                   </Button>
                 </div>

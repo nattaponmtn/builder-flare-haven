@@ -34,7 +34,11 @@ import {
   Home,
   Settings,
 } from "lucide-react";
-import { pwaManager, networkMonitor, type PWAInstallationState } from "@/utils/pwa";
+import {
+  pwaManager,
+  networkMonitor,
+  type PWAInstallationState,
+} from "@/utils/pwa";
 import { useToast } from "@/hooks/use-toast";
 
 interface PWAInstallProps {
@@ -42,8 +46,13 @@ interface PWAInstallProps {
   autoShow?: boolean;
 }
 
-export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallProps) {
-  const [installState, setInstallState] = useState<PWAInstallationState | null>(null);
+export function PWAInstall({
+  showBanner = true,
+  autoShow = false,
+}: PWAInstallProps) {
+  const [installState, setInstallState] = useState<PWAInstallationState | null>(
+    null,
+  );
   const [isOnline, setIsOnline] = useState(true);
   const [showInstallDialog, setShowInstallDialog] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -52,8 +61,9 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
 
   useEffect(() => {
     // Listen for installation state changes
-    const unsubscribeInstall = pwaManager.onInstallationStateChange(setInstallState);
-    
+    const unsubscribeInstall =
+      pwaManager.onInstallationStateChange(setInstallState);
+
     // Listen for network changes
     const unsubscribeNetwork = networkMonitor.onStatusChange(setIsOnline);
 
@@ -77,7 +87,7 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
     setIsInstalling(true);
     try {
       const installed = await pwaManager.promptInstall();
-      
+
       if (installed) {
         toast.success("ติดตั้งแอปสำเร็จแล้ว!");
         setShowInstallDialog(false);
@@ -85,7 +95,7 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
         toast.info("การติดตั้งถูกยกเลิก");
       }
     } catch (error) {
-      console.error('Installation failed:', error);
+      console.error("Installation failed:", error);
       toast.error("เกิดข้อผิดพลาดในการติดตั้ง");
     } finally {
       setIsInstalling(false);
@@ -95,14 +105,14 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
   const requestNotificationPermission = async () => {
     try {
       const permission = await pwaManager.requestNotificationPermission();
-      
-      if (permission === 'granted') {
+
+      if (permission === "granted") {
         toast.success("เปิดใช้การแจ้งเตือนแล้ว");
-      } else if (permission === 'denied') {
+      } else if (permission === "denied") {
         toast.error("การแจ้งเตือนถูกปฏิเสธ");
       }
     } catch (error) {
-      console.error('Notification permission failed:', error);
+      console.error("Notification permission failed:", error);
       toast.error("ไม่สามารถขอสิทธิ์การแจ้งเตือนได้");
     }
   };
@@ -141,7 +151,11 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
               <Button size="sm" onClick={() => setShowInstallDialog(true)}>
                 ติดตั้ง
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => setShowInstallDialog(false)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowInstallDialog(false)}
+              >
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -158,7 +172,7 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
         <Smartphone className="h-12 w-12 mx-auto text-primary mb-2" />
         <h3 className="font-medium">วิธีติดตั้งบน iOS</h3>
       </div>
-      
+
       <div className="space-y-3 text-sm">
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
@@ -166,10 +180,12 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
           </div>
           <div>
             <div className="font-medium">เปิด Safari</div>
-            <div className="text-muted-foreground">เข้าใช้งานเว็บไซต์ผ่าน Safari</div>
+            <div className="text-muted-foreground">
+              เข้าใช้งานเว็บไซต์ผ่าน Safari
+            </div>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
             2
@@ -178,10 +194,12 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
             <div className="font-medium flex items-center gap-2">
               กดปุ่ม Share <Share className="h-4 w-4" />
             </div>
-            <div className="text-muted-foreground">กดปุ่มแชร์ที่ด้านล่างของหน้าจอ</div>
+            <div className="text-muted-foreground">
+              กดปุ่มแชร์ที่ด้านล่างของหน้าจอ
+            </div>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
             3
@@ -190,17 +208,21 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
             <div className="font-medium flex items-center gap-2">
               เลือก "Add to Home Screen" <Home className="h-4 w-4" />
             </div>
-            <div className="text-muted-foreground">เลื่อนลงหาตัวเลือก "เพิ่มที่หน้าจอ Home"</div>
+            <div className="text-muted-foreground">
+              เลื่อนลงหาตัวเลือก "เพิ่มที่หน้าจอ Home"
+            </div>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
             4
           </div>
           <div>
             <div className="font-medium">ยืนยันการติดตั้ง</div>
-            <div className="text-muted-foreground">กดปุ่ม "เพ��่ม" เพื่อติดตั้งแอป</div>
+            <div className="text-muted-foreground">
+              กดปุ่ม "เพ��่ม" เพื่อติดตั้งแอป
+            </div>
           </div>
         </div>
       </div>
@@ -214,7 +236,7 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
         <Smartphone className="h-12 w-12 mx-auto text-primary mb-2" />
         <h3 className="font-medium">วิธีติดตั้งบน Android</h3>
       </div>
-      
+
       <div className="space-y-3 text-sm">
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
@@ -222,20 +244,24 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
           </div>
           <div>
             <div className="font-medium">เปิด Chrome Browser</div>
-            <div className="text-muted-foreground">เข้าใช้งานเว็บไซต์ผ่าน Chrome</div>
+            <div className="text-muted-foreground">
+              เข้าใช้งานเว็บไซต์ผ่าน Chrome
+            </div>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
             2
           </div>
           <div>
             <div className="font-medium">มอ��หา Banner การติดตั้ง</div>
-            <div className="text-muted-foreground">จะมี popup หรือ banner แจ้งให้ติดตั้งแอป</div>
+            <div className="text-muted-foreground">
+              จะมี popup หรือ banner แจ้งให้ติดตั้งแอป
+            </div>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
             3
@@ -245,7 +271,7 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
             <div className="text-muted-foreground">กดยืนยันการติดตั้งแอป</div>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
             4
@@ -282,12 +308,16 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
               {isOnline ? (
                 <>
                   <Wifi className="h-4 w-4 text-success" />
-                  <span className="text-sm text-success">เชื่อมต่ออินเทอร์เน็ต</span>
+                  <span className="text-sm text-success">
+                    เชื่อมต่ออินเทอร์เน็ต
+                  </span>
                 </>
               ) : (
                 <>
                   <WifiOff className="h-4 w-4 text-destructive" />
-                  <span className="text-sm text-destructive">ไม่ได้เชื่อมต่ออินเทอร์เน็ต</span>
+                  <span className="text-sm text-destructive">
+                    ไม่ได้เชื่อมต่ออินเทอร์เน็ต
+                  </span>
                 </>
               )}
             </div>
@@ -317,8 +347,8 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
 
             {/* Install Button */}
             {installState.canInstall ? (
-              <Button 
-                onClick={handleInstall} 
+              <Button
+                onClick={handleInstall}
                 disabled={isInstalling}
                 className="w-full"
               >
@@ -342,9 +372,9 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
                     ไม่สามารถติดตั้งอัตโนมัติได้
                   </p>
                 </div>
-                
-                <Button 
-                  variant="outline" 
+
+                <Button
+                  variant="outline"
                   onClick={() => setShowInstructions(true)}
                   className="w-full"
                 >
@@ -354,8 +384,8 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
             )}
 
             {/* Notification Permission */}
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={requestNotificationPermission}
               className="w-full"
             >
@@ -379,7 +409,11 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
           {installState.isIOS ? <IOSInstructions /> : <AndroidInstructions />}
 
           <div className="flex gap-2 pt-4">
-            <Button variant="outline" onClick={() => setShowInstructions(false)} className="flex-1">
+            <Button
+              variant="outline"
+              onClick={() => setShowInstructions(false)}
+              className="flex-1"
+            >
               ปิด
             </Button>
           </div>
@@ -391,11 +425,14 @@ export function PWAInstall({ showBanner = true, autoShow = false }: PWAInstallPr
 
 // PWA Status indicator component
 export function PWAStatus() {
-  const [installState, setInstallState] = useState<PWAInstallationState | null>(null);
+  const [installState, setInstallState] = useState<PWAInstallationState | null>(
+    null,
+  );
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
-    const unsubscribeInstall = pwaManager.onInstallationStateChange(setInstallState);
+    const unsubscribeInstall =
+      pwaManager.onInstallationStateChange(setInstallState);
     const unsubscribeNetwork = networkMonitor.onStatusChange(setIsOnline);
 
     return () => {

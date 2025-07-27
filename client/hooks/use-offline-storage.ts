@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { offlineDataManager, networkMonitor } from '@/utils/pwa';
+import { useState, useEffect, useCallback } from "react";
+import { offlineDataManager, networkMonitor } from "@/utils/pwa";
 
 export interface OfflineStorageOptions {
   autoSync?: boolean;
@@ -17,7 +17,7 @@ export interface OfflineStorageState<T> {
 }
 
 export function useOfflineStorage<T extends { id: string }>(
-  options: OfflineStorageOptions
+  options: OfflineStorageOptions,
 ): {
   state: OfflineStorageState<T>;
   save: (item: T) => Promise<void>;
@@ -41,88 +41,97 @@ export function useOfflineStorage<T extends { id: string }>(
   // Load data from offline storage
   const loadData = useCallback(async () => {
     try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-      
+      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
       const offlineData = await offlineDataManager.getOfflineData(storeName);
       const unsyncedData = await offlineDataManager.getUnsyncedData(storeName);
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         data: offlineData,
         hasUnsyncedData: unsyncedData.length > 0,
         isLoading: false,
       }));
     } catch (error) {
-      console.error('Failed to load offline data:', error);
-      setState(prev => ({
+      console.error("Failed to load offline data:", error);
+      setState((prev) => ({
         ...prev,
-        error: 'Failed to load data',
+        error: "Failed to load data",
         isLoading: false,
       }));
     }
   }, [storeName]);
 
   // Save item to offline storage
-  const save = useCallback(async (item: T) => {
-    try {
-      await offlineDataManager.saveOfflineData(storeName, item);
-      await loadData();
-      
-      // If online and auto-sync enabled, try to sync immediately
-      if (state.isOnline && autoSync) {
-        await sync();
-      }
-    } catch (error) {
-      console.error('Failed to save data:', error);
-      setState(prev => ({
-        ...prev,
-        error: 'Failed to save data',
-      }));
-    }
-  }, [storeName, autoSync, state.isOnline, loadData]);
-
-  // Update existing item
-  const update = useCallback(async (id: string, updates: Partial<T>) => {
-    try {
-      // Get existing item
-      const existingData = await offlineDataManager.getOfflineData(storeName);
-      const existingItem = existingData.find((item: T) => item.id === id);
-      
-      if (existingItem) {
-        const updatedItem = { ...existingItem, ...updates };
-        await offlineDataManager.saveOfflineData(storeName, updatedItem);
+  const save = useCallback(
+    async (item: T) => {
+      try {
+        await offlineDataManager.saveOfflineData(storeName, item);
         await loadData();
-        
+
+        // If online and auto-sync enabled, try to sync immediately
         if (state.isOnline && autoSync) {
           await sync();
         }
+      } catch (error) {
+        console.error("Failed to save data:", error);
+        setState((prev) => ({
+          ...prev,
+          error: "Failed to save data",
+        }));
       }
-    } catch (error) {
-      console.error('Failed to update data:', error);
-      setState(prev => ({
-        ...prev,
-        error: 'Failed to update data',
-      }));
-    }
-  }, [storeName, autoSync, state.isOnline, loadData]);
+    },
+    [storeName, autoSync, state.isOnline, loadData],
+  );
+
+  // Update existing item
+  const update = useCallback(
+    async (id: string, updates: Partial<T>) => {
+      try {
+        // Get existing item
+        const existingData = await offlineDataManager.getOfflineData(storeName);
+        const existingItem = existingData.find((item: T) => item.id === id);
+
+        if (existingItem) {
+          const updatedItem = { ...existingItem, ...updates };
+          await offlineDataManager.saveOfflineData(storeName, updatedItem);
+          await loadData();
+
+          if (state.isOnline && autoSync) {
+            await sync();
+          }
+        }
+      } catch (error) {
+        console.error("Failed to update data:", error);
+        setState((prev) => ({
+          ...prev,
+          error: "Failed to update data",
+        }));
+      }
+    },
+    [storeName, autoSync, state.isOnline, loadData],
+  );
 
   // Remove item from offline storage
-  const remove = useCallback(async (id: string) => {
-    try {
-      await offlineDataManager.deleteOfflineData(storeName, id);
-      await loadData();
-      
-      if (state.isOnline && autoSync) {
-        await sync();
+  const remove = useCallback(
+    async (id: string) => {
+      try {
+        await offlineDataManager.deleteOfflineData(storeName, id);
+        await loadData();
+
+        if (state.isOnline && autoSync) {
+          await sync();
+        }
+      } catch (error) {
+        console.error("Failed to remove data:", error);
+        setState((prev) => ({
+          ...prev,
+          error: "Failed to remove data",
+        }));
       }
-    } catch (error) {
-      console.error('Failed to remove data:', error);
-      setState(prev => ({
-        ...prev,
-        error: 'Failed to remove data',
-      }));
-    }
-  }, [storeName, autoSync, state.isOnline, loadData]);
+    },
+    [storeName, autoSync, state.isOnline, loadData],
+  );
 
   // Sync data with server
   const sync = useCallback(async () => {
@@ -131,19 +140,19 @@ export function useOfflineStorage<T extends { id: string }>(
     }
 
     try {
-      setState(prev => ({ ...prev, error: null }));
-      
+      setState((prev) => ({ ...prev, error: null }));
+
       // Get unsynced data
       const unsyncedData = await offlineDataManager.getUnsyncedData(storeName);
-      
+
       // Sync each item
       for (const item of unsyncedData) {
         try {
           // Make API call to sync data
           const response = await fetch(`/api/${storeName}`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(item),
           });
@@ -158,7 +167,7 @@ export function useOfflineStorage<T extends { id: string }>(
       }
 
       // Update state
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         lastSync: new Date(),
         hasUnsyncedData: false,
@@ -167,10 +176,10 @@ export function useOfflineStorage<T extends { id: string }>(
       // Reload data
       await loadData();
     } catch (error) {
-      console.error('Sync failed:', error);
-      setState(prev => ({
+      console.error("Sync failed:", error);
+      setState((prev) => ({
         ...prev,
-        error: 'Sync failed',
+        error: "Sync failed",
       }));
     }
   }, [storeName, state.isOnline, loadData]);
@@ -181,10 +190,10 @@ export function useOfflineStorage<T extends { id: string }>(
       await offlineDataManager.clearOfflineData(storeName);
       await loadData();
     } catch (error) {
-      console.error('Failed to clear data:', error);
-      setState(prev => ({
+      console.error("Failed to clear data:", error);
+      setState((prev) => ({
         ...prev,
-        error: 'Failed to clear data',
+        error: "Failed to clear data",
       }));
     }
   }, [storeName, loadData]);
@@ -194,7 +203,7 @@ export function useOfflineStorage<T extends { id: string }>(
     try {
       return await offlineDataManager.getUnsyncedData(storeName);
     } catch (error) {
-      console.error('Failed to get unsynced data:', error);
+      console.error("Failed to get unsynced data:", error);
       return [];
     }
   }, [storeName]);
@@ -206,8 +215,8 @@ export function useOfflineStorage<T extends { id: string }>(
 
     // Listen for network changes
     const unsubscribe = networkMonitor.onStatusChange((isOnline) => {
-      setState(prev => ({ ...prev, isOnline }));
-      
+      setState((prev) => ({ ...prev, isOnline }));
+
       // Auto-sync when coming back online
       if (isOnline && autoSync) {
         sync();
@@ -247,7 +256,7 @@ export function useOfflineWorkOrders() {
     createdDate: string;
     dueDate?: string;
   }>({
-    storeName: 'work-orders',
+    storeName: "work-orders",
     autoSync: true,
     syncOnMount: true,
   });
@@ -264,7 +273,7 @@ export function useOfflineAssets() {
     purchaseDate?: string;
     warranty?: string;
   }>({
-    storeName: 'assets',
+    storeName: "assets",
     autoSync: true,
     syncOnMount: true,
   });
@@ -281,7 +290,7 @@ export function useOfflineParts() {
     supplier: string;
     location: string;
   }>({
-    storeName: 'parts',
+    storeName: "parts",
     autoSync: true,
     syncOnMount: true,
   });
@@ -298,7 +307,7 @@ export function useOfflineMaintenance() {
     technician: string;
     cost: number;
   }>({
-    storeName: 'maintenance',
+    storeName: "maintenance",
     autoSync: true,
     syncOnMount: true,
   });
@@ -315,7 +324,7 @@ export function useSyncStatus() {
 
   const checkUnsyncedData = useCallback(async () => {
     try {
-      const stores = ['work-orders', 'assets', 'parts', 'maintenance'];
+      const stores = ["work-orders", "assets", "parts", "maintenance"];
       let totalUnsynced = 0;
 
       for (const store of stores) {
@@ -323,9 +332,9 @@ export function useSyncStatus() {
         totalUnsynced += unsyncedData.length;
       }
 
-      setSyncStatus(prev => ({ ...prev, totalUnsynced }));
+      setSyncStatus((prev) => ({ ...prev, totalUnsynced }));
     } catch (error) {
-      console.error('Failed to check unsynced data:', error);
+      console.error("Failed to check unsynced data:", error);
     }
   }, []);
 
@@ -334,10 +343,10 @@ export function useSyncStatus() {
       return;
     }
 
-    setSyncStatus(prev => ({ ...prev, isSyncing: true }));
+    setSyncStatus((prev) => ({ ...prev, isSyncing: true }));
 
     try {
-      const stores = ['work-orders', 'assets', 'parts', 'maintenance'];
+      const stores = ["work-orders", "assets", "parts", "maintenance"];
 
       for (const store of stores) {
         const unsyncedData = await offlineDataManager.getUnsyncedData(store);
@@ -345,9 +354,9 @@ export function useSyncStatus() {
         for (const item of unsyncedData) {
           try {
             const response = await fetch(`/api/${store}`, {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify(item),
             });
@@ -361,15 +370,15 @@ export function useSyncStatus() {
         }
       }
 
-      setSyncStatus(prev => ({
+      setSyncStatus((prev) => ({
         ...prev,
         lastSync: new Date(),
         totalUnsynced: 0,
       }));
     } catch (error) {
-      console.error('Global sync failed:', error);
+      console.error("Global sync failed:", error);
     } finally {
-      setSyncStatus(prev => ({ ...prev, isSyncing: false }));
+      setSyncStatus((prev) => ({ ...prev, isSyncing: false }));
     }
   }, [syncStatus.isOnline]);
 
@@ -379,8 +388,8 @@ export function useSyncStatus() {
 
     // Listen for network changes
     const unsubscribe = networkMonitor.onStatusChange((isOnline) => {
-      setSyncStatus(prev => ({ ...prev, isOnline }));
-      
+      setSyncStatus((prev) => ({ ...prev, isOnline }));
+
       // Auto-sync when coming back online
       if (isOnline) {
         syncAll();

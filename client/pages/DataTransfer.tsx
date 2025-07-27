@@ -79,50 +79,91 @@ const exportTemplates = [
     name: "ใบสั่งงานทั้งหมด",
     description: "ส่งออกข้อมูลใบสั่งงานพร้อมรายละเอียด",
     category: "work-orders",
-    fields: ["id", "title", "description", "status", "priority", "assignee", "createdDate", "dueDate"],
+    fields: [
+      "id",
+      "title",
+      "description",
+      "status",
+      "priority",
+      "assignee",
+      "createdDate",
+      "dueDate",
+    ],
     formats: ["csv", "excel", "json"],
     estimatedSize: "2.5 MB",
-    recordCount: 1250
+    recordCount: 1250,
   },
   {
     id: "asset-template",
     name: "รายการอุปกร���์",
     description: "ส่งออกข้อมูลอุปกรณ์และประวัติการบำรุงรักษา",
     category: "assets",
-    fields: ["id", "name", "category", "location", "status", "purchaseDate", "warranty"],
+    fields: [
+      "id",
+      "name",
+      "category",
+      "location",
+      "status",
+      "purchaseDate",
+      "warranty",
+    ],
     formats: ["csv", "excel", "pdf"],
     estimatedSize: "1.8 MB",
-    recordCount: 145
+    recordCount: 145,
   },
   {
     id: "parts-template",
     name: "คลังอะไหล่",
     description: "ส่งออกข้อมูลอะไหล่และการเคลื่อนไหวสต็อก",
     category: "parts",
-    fields: ["id", "name", "category", "quantity", "unitPrice", "supplier", "location"],
+    fields: [
+      "id",
+      "name",
+      "category",
+      "quantity",
+      "unitPrice",
+      "supplier",
+      "location",
+    ],
     formats: ["csv", "excel", "json"],
     estimatedSize: "956 KB",
-    recordCount: 890
+    recordCount: 890,
   },
   {
     id: "maintenance-template",
     name: "ประวัติการบำรุงรักษา",
     description: "ส่งออกประวัติการบำรุงรักษาและตารางงาน",
     category: "maintenance",
-    fields: ["id", "assetId", "type", "description", "completedDate", "technician", "cost"],
+    fields: [
+      "id",
+      "assetId",
+      "type",
+      "description",
+      "completedDate",
+      "technician",
+      "cost",
+    ],
     formats: ["csv", "excel", "pdf"],
     estimatedSize: "3.2 MB",
-    recordCount: 2150
+    recordCount: 2150,
   },
   {
     id: "users-template",
     name: "ผู้ใช้งานระบบ",
     description: "ส่งออกข้อมูลผู้ใช้งานและสิทธิ์",
     category: "users",
-    fields: ["id", "username", "fullName", "email", "role", "department", "status"],
+    fields: [
+      "id",
+      "username",
+      "fullName",
+      "email",
+      "role",
+      "department",
+      "status",
+    ],
     formats: ["csv", "excel"],
     estimatedSize: "124 KB",
-    recordCount: 25
+    recordCount: 25,
   },
   {
     id: "reports-template",
@@ -132,8 +173,8 @@ const exportTemplates = [
     fields: ["reportType", "generatedDate", "data", "summary"],
     formats: ["pdf", "excel", "json"],
     estimatedSize: "4.1 MB",
-    recordCount: 98
-  }
+    recordCount: 98,
+  },
 ];
 
 const exportHistory = [
@@ -146,7 +187,7 @@ const exportHistory = [
     fileSize: "2.4 MB",
     recordCount: 1245,
     downloadUrl: "/downloads/work-orders-20240115.xlsx",
-    expiresAt: "2024-01-22"
+    expiresAt: "2024-01-22",
   },
   {
     id: "exp-002",
@@ -157,7 +198,7 @@ const exportHistory = [
     fileSize: "1.7 MB",
     recordCount: 145,
     downloadUrl: "/downloads/assets-20240114.pdf",
-    expiresAt: "2024-01-21"
+    expiresAt: "2024-01-21",
   },
   {
     id: "exp-003",
@@ -167,7 +208,7 @@ const exportHistory = [
     createdDate: "2024-01-15 16:45",
     fileSize: "-",
     recordCount: 890,
-    progress: 75
+    progress: 75,
   },
   {
     id: "exp-004",
@@ -177,8 +218,8 @@ const exportHistory = [
     createdDate: "2024-01-15 11:20",
     fileSize: "-",
     recordCount: 0,
-    error: "ไม่สามารถเข้าถึงฐานข้อมูลได้"
-  }
+    error: "ไม่สามารถเข้าถึงฐานข้อมูลได้",
+  },
 ];
 
 const importHistory = [
@@ -194,8 +235,8 @@ const importHistory = [
     recordsFailed: 2,
     validationErrors: [
       { row: 3, field: "purchaseDate", message: "รูปแบบวันที่ไม่ถูกต้อง" },
-      { row: 7, field: "category", message: "ประเภทอุปกรณ์ไม่มีในระบบ" }
-    ]
+      { row: 7, field: "category", message: "ประเภทอุปกรณ์ไม่มีในระบบ" },
+    ],
   },
   {
     id: "imp-002",
@@ -207,7 +248,7 @@ const importHistory = [
     recordsProcessed: 450,
     recordsSuccess: 425,
     recordsFailed: 25,
-    progress: 85
+    progress: 85,
   },
   {
     id: "imp-003",
@@ -219,8 +260,8 @@ const importHistory = [
     recordsProcessed: 0,
     recordsSuccess: 0,
     recordsFailed: 0,
-    error: "ไฟล์เสียหายหรือรูปแบบไม่ถูกต้อง"
-  }
+    error: "ไฟล์เสียหายหรือรูปแบบไม่ถูกต้อง",
+  },
 ];
 
 const backupHistory = [
@@ -232,7 +273,7 @@ const backupHistory = [
     fileSize: "125 MB",
     status: "completed",
     retention: "30 วัน",
-    downloadUrl: "/backups/full-backup-20240115.zip"
+    downloadUrl: "/backups/full-backup-20240115.zip",
   },
   {
     id: "backup-002",
@@ -242,7 +283,7 @@ const backupHistory = [
     fileSize: "15 MB",
     status: "completed",
     retention: "7 วัน",
-    downloadUrl: "/backups/workorders-20240114.zip"
+    downloadUrl: "/backups/workorders-20240114.zip",
   },
   {
     id: "backup-003",
@@ -252,8 +293,8 @@ const backupHistory = [
     fileSize: "89 MB",
     status: "processing",
     retention: "30 วัน",
-    progress: 45
-  }
+    progress: 45,
+  },
 ];
 
 const scheduledExports = [
@@ -266,7 +307,7 @@ const scheduledExports = [
     recipients: ["manager@company.com", "admin@company.com"],
     status: "active",
     lastRun: "2024-01-15 09:00",
-    nextRun: "2024-01-22 09:00"
+    nextRun: "2024-01-22 09:00",
   },
   {
     id: "sched-002",
@@ -277,8 +318,8 @@ const scheduledExports = [
     recipients: ["inventory@company.com"],
     status: "active",
     lastRun: "2024-01-01 08:00",
-    nextRun: "2024-02-01 08:00"
-  }
+    nextRun: "2024-02-01 08:00",
+  },
 ];
 
 export function DataTransfer() {
@@ -299,12 +340,12 @@ export function DataTransfer() {
     skipDuplicates: true,
     validateOnly: false,
     updateExisting: false,
-    createBackup: true
+    createBackup: true,
   });
 
   const filteredHistory = useMemo(() => {
     let history: any[] = [];
-    
+
     if (activeTab === "export") {
       history = exportHistory;
     } else if (activeTab === "import") {
@@ -313,14 +354,16 @@ export function DataTransfer() {
       history = backupHistory;
     }
 
-    return history.filter(item => {
-      const matchesSearch = searchTerm === "" || 
+    return history.filter((item) => {
+      const matchesSearch =
+        searchTerm === "" ||
         item.templateName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.fileName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.name?.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesStatus = statusFilter === "all" || item.status === statusFilter;
-      
+
+      const matchesStatus =
+        statusFilter === "all" || item.status === statusFilter;
+
       return matchesSearch && matchesStatus;
     });
   }, [activeTab, searchTerm, statusFilter]);
@@ -334,7 +377,7 @@ export function DataTransfer() {
     setIsExporting(true);
     try {
       // Simulate export process
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       toast.success("ส่งออกข้อมูลเรียบร้อยแล้ว");
     } catch (error) {
       toast.error("เกิดข้อผิดพลาดในการส่งออกข้อมูล");
@@ -355,10 +398,10 @@ export function DataTransfer() {
     try {
       // Simulate upload progress
       for (let i = 0; i <= 100; i += 10) {
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         setUploadProgress(i);
       }
-      
+
       toast.success("นำเข้าข้อมูลเรียบร้อยแล้ว");
     } catch (error) {
       toast.error("เกิดข้อผิดพลาดในการนำเข้าข้อมูล");
@@ -370,9 +413,9 @@ export function DataTransfer() {
 
   const handleBackup = async (type: "full" | "partial") => {
     toast.info("เริ่มการสำรองข้อมูล...");
-    
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       toast.success("สำรองข้อมูลเรียบร้อยแล้ว");
     } catch (error) {
       toast.error("เกิดข้อผิดพลาดในการสำรองข้อมูล");
@@ -382,13 +425,21 @@ export function DataTransfer() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "completed":
-        return <Badge className="bg-success text-success-foreground">สำเร็จ</Badge>;
+        return (
+          <Badge className="bg-success text-success-foreground">สำเร็จ</Badge>
+        );
       case "processing":
-        return <Badge className="bg-warning text-warning-foreground">กำลังดำเนินการ</Badge>;
+        return (
+          <Badge className="bg-warning text-warning-foreground">
+            กำลังดำเนินการ
+          </Badge>
+        );
       case "failed":
         return <Badge variant="destructive">ล้มเหลว</Badge>;
       case "active":
-        return <Badge className="bg-primary text-primary-foreground">ใช้งาน</Badge>;
+        return (
+          <Badge className="bg-primary text-primary-foreground">ใช้งาน</Badge>
+        );
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -452,7 +503,11 @@ export function DataTransfer() {
         </div>
 
         {/* Main Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="export">ส่งออกข้อมูล</TabsTrigger>
             <TabsTrigger value="import">นำเข้าข้อมูล</TabsTrigger>
@@ -475,12 +530,15 @@ export function DataTransfer() {
                   <CardContent className="space-y-4">
                     <div>
                       <Label htmlFor="template">เลือกเทมเพลต</Label>
-                      <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+                      <Select
+                        value={selectedTemplate}
+                        onValueChange={setSelectedTemplate}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="เลือกเทมเพลตการส่งออก" />
                         </SelectTrigger>
                         <SelectContent>
-                          {exportTemplates.map(template => (
+                          {exportTemplates.map((template) => (
                             <SelectItem key={template.id} value={template.id}>
                               <div className="flex items-center gap-2">
                                 {getCategoryIcon(template.category)}
@@ -495,7 +553,10 @@ export function DataTransfer() {
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <Label htmlFor="format">รูปแบบไฟล์</Label>
-                        <Select value={exportFormat} onValueChange={setExportFormat}>
+                        <Select
+                          value={exportFormat}
+                          onValueChange={setExportFormat}
+                        >
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
@@ -516,7 +577,9 @@ export function DataTransfer() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="all">ข้อมูลทั้งหมด</SelectItem>
-                            <SelectItem value="30days">30 วั��ล่าสุด</SelectItem>
+                            <SelectItem value="30days">
+                              30 วั��ล่าสุด
+                            </SelectItem>
                             <SelectItem value="90days">90 วันล่าสุด</SelectItem>
                             <SelectItem value="1year">1 ปีล่าสุด</SelectItem>
                             <SelectItem value="custom">กำหนดเอง</SelectItem>
@@ -531,19 +594,38 @@ export function DataTransfer() {
                           <div className="space-y-2">
                             <h4 className="font-medium">ข้อมูลที่จะส่งออก:</h4>
                             <div className="text-sm text-muted-foreground">
-                              {exportTemplates.find(t => t.id === selectedTemplate)?.description}
+                              {
+                                exportTemplates.find(
+                                  (t) => t.id === selectedTemplate,
+                                )?.description
+                              }
                             </div>
                             <div className="flex items-center gap-4 text-sm">
-                              <span>ประมาณ {exportTemplates.find(t => t.id === selectedTemplate)?.recordCount} รายการ</span>
-                              <span>ขนาดไฟล์ {exportTemplates.find(t => t.id === selectedTemplate)?.estimatedSize}</span>
+                              <span>
+                                ประมาณ{" "}
+                                {
+                                  exportTemplates.find(
+                                    (t) => t.id === selectedTemplate,
+                                  )?.recordCount
+                                }{" "}
+                                รายการ
+                              </span>
+                              <span>
+                                ขนาดไฟล์{" "}
+                                {
+                                  exportTemplates.find(
+                                    (t) => t.id === selectedTemplate,
+                                  )?.estimatedSize
+                                }
+                              </span>
                             </div>
                           </div>
                         </CardContent>
                       </Card>
                     )}
 
-                    <Button 
-                      onClick={handleExport} 
+                    <Button
+                      onClick={handleExport}
                       disabled={!selectedTemplate || isExporting}
                       className="w-full"
                     >
@@ -573,28 +655,38 @@ export function DataTransfer() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {exportHistory.slice(0, 5).map(export_ => (
+                      {exportHistory.slice(0, 5).map((export_) => (
                         <div key={export_.id} className="p-3 border rounded-lg">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
                               {getFormatIcon(export_.format)}
-                              <span className="text-sm font-medium">{export_.templateName}</span>
+                              <span className="text-sm font-medium">
+                                {export_.templateName}
+                              </span>
                             </div>
                             {getStatusBadge(export_.status)}
                           </div>
                           <div className="text-xs text-muted-foreground">
                             {export_.createdDate}
                           </div>
-                          {export_.status === "processing" && export_.progress && (
-                            <div className="mt-2">
-                              <Progress value={export_.progress} className="h-1" />
-                              <div className="text-xs text-muted-foreground mt-1">
-                                {export_.progress}%
+                          {export_.status === "processing" &&
+                            export_.progress && (
+                              <div className="mt-2">
+                                <Progress
+                                  value={export_.progress}
+                                  className="h-1"
+                                />
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {export_.progress}%
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                           {export_.status === "completed" && (
-                            <Button variant="ghost" size="sm" className="mt-2 w-full">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="mt-2 w-full"
+                            >
                               <Download className="h-3 w-3 mr-1" />
                               ดาวน์โหลด
                             </Button>
@@ -631,7 +723,9 @@ export function DataTransfer() {
                           <SelectItem value="parts">อะไหล่</SelectItem>
                           <SelectItem value="work-orders">ใบสั่งงาน</SelectItem>
                           <SelectItem value="users">ผู้ใช้งาน</SelectItem>
-                          <SelectItem value="maintenance">การบำรุงรักษา</SelectItem>
+                          <SelectItem value="maintenance">
+                            การบำรุงรักษา
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -642,7 +736,9 @@ export function DataTransfer() {
                         id="file"
                         type="file"
                         accept=".xlsx,.xls,.csv"
-                        onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                        onChange={(e) =>
+                          setImportFile(e.target.files?.[0] || null)
+                        }
                         className="cursor-pointer"
                       />
                       <p className="text-xs text-muted-foreground mt-1">
@@ -652,12 +748,17 @@ export function DataTransfer() {
 
                     <div className="space-y-3">
                       <h4 className="font-medium">ตัวเลือกการนำเข้า</h4>
-                      
+
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="skipDuplicates"
                           checked={importOptions.skipDuplicates}
-                          onCheckedChange={(checked) => setImportOptions({...importOptions, skipDuplicates: !!checked})}
+                          onCheckedChange={(checked) =>
+                            setImportOptions({
+                              ...importOptions,
+                              skipDuplicates: !!checked,
+                            })
+                          }
                         />
                         <Label htmlFor="skipDuplicates">ข้ามข้อมูลที่ซ้ำ</Label>
                       </div>
@@ -666,27 +767,48 @@ export function DataTransfer() {
                         <Checkbox
                           id="updateExisting"
                           checked={importOptions.updateExisting}
-                          onCheckedChange={(checked) => setImportOptions({...importOptions, updateExisting: !!checked})}
+                          onCheckedChange={(checked) =>
+                            setImportOptions({
+                              ...importOptions,
+                              updateExisting: !!checked,
+                            })
+                          }
                         />
-                        <Label htmlFor="updateExisting">อัปเด��ข้อมูลที่มีอยู่</Label>
+                        <Label htmlFor="updateExisting">
+                          อัปเด��ข้อมูลที่มีอยู่
+                        </Label>
                       </div>
 
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="validateOnly"
                           checked={importOptions.validateOnly}
-                          onCheckedChange={(checked) => setImportOptions({...importOptions, validateOnly: !!checked})}
+                          onCheckedChange={(checked) =>
+                            setImportOptions({
+                              ...importOptions,
+                              validateOnly: !!checked,
+                            })
+                          }
                         />
-                        <Label htmlFor="validateOnly">ตรวจสอบข้อมูลเท่านั้น (ไม่นำเข้า)</Label>
+                        <Label htmlFor="validateOnly">
+                          ตรวจสอบข้อมูลเท่านั้น (ไม่นำเข้า)
+                        </Label>
                       </div>
 
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="createBackup"
                           checked={importOptions.createBackup}
-                          onCheckedChange={(checked) => setImportOptions({...importOptions, createBackup: !!checked})}
+                          onCheckedChange={(checked) =>
+                            setImportOptions({
+                              ...importOptions,
+                              createBackup: !!checked,
+                            })
+                          }
                         />
-                        <Label htmlFor="createBackup">สำรองข้อมูลก่อนนำเข้า</Label>
+                        <Label htmlFor="createBackup">
+                          สำรองข้อมูลก่อนนำเข้า
+                        </Label>
                       </div>
                     </div>
 
@@ -716,8 +838,8 @@ export function DataTransfer() {
                       </div>
                     )}
 
-                    <Button 
-                      onClick={handleImport} 
+                    <Button
+                      onClick={handleImport}
                       disabled={!importFile || isImporting}
                       className="w-full"
                     >
@@ -747,33 +869,45 @@ export function DataTransfer() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {importHistory.slice(0, 5).map(import_ => (
+                      {importHistory.slice(0, 5).map((import_) => (
                         <div key={import_.id} className="p-3 border rounded-lg">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium">{import_.fileName}</span>
+                            <span className="text-sm font-medium">
+                              {import_.fileName}
+                            </span>
                             {getStatusBadge(import_.status)}
                           </div>
                           <div className="text-xs text-muted-foreground mb-2">
                             {import_.uploadedDate}
                           </div>
-                          {import_.status === "processing" && import_.progress && (
-                            <div className="mb-2">
-                              <Progress value={import_.progress} className="h-1" />
-                              <div className="text-xs text-muted-foreground mt-1">
-                                {import_.progress}%
+                          {import_.status === "processing" &&
+                            import_.progress && (
+                              <div className="mb-2">
+                                <Progress
+                                  value={import_.progress}
+                                  className="h-1"
+                                />
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {import_.progress}%
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                           {import_.status === "completed" && (
                             <div className="text-xs space-y-1">
-                              <div className="text-success">สำเร็จ: {import_.recordsSuccess} รายการ</div>
+                              <div className="text-success">
+                                สำเร็จ: {import_.recordsSuccess} รายการ
+                              </div>
                               {import_.recordsFailed > 0 && (
-                                <div className="text-destructive">ล้มเหลว: {import_.recordsFailed} รายการ</div>
+                                <div className="text-destructive">
+                                  ล้มเหลว: {import_.recordsFailed} รายการ
+                                </div>
                               )}
                             </div>
                           )}
                           {import_.error && (
-                            <div className="text-xs text-destructive">{import_.error}</div>
+                            <div className="text-xs text-destructive">
+                              {import_.error}
+                            </div>
                           )}
                         </div>
                       ))}
@@ -796,16 +930,23 @@ export function DataTransfer() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-3">
-                    <Button onClick={() => handleBackup("full")} className="h-20 flex-col">
+                    <Button
+                      onClick={() => handleBackup("full")}
+                      className="h-20 flex-col"
+                    >
                       <Database className="h-6 w-6 mb-2" />
                       สำรองทั้งหมด
                     </Button>
-                    <Button variant="outline" onClick={() => handleBackup("partial")} className="h-20 flex-col">
+                    <Button
+                      variant="outline"
+                      onClick={() => handleBackup("partial")}
+                      className="h-20 flex-col"
+                    >
                       <Package className="h-6 w-6 mb-2" />
                       สำรองบางส่วน
                     </Button>
                   </div>
-                  
+
                   <div className="space-y-2 pt-4 border-t">
                     <h4 className="font-medium">ข้อมูลที่จะสำรอง:</h4>
                     <div className="grid grid-cols-2 gap-2 text-sm">
@@ -839,10 +980,12 @@ export function DataTransfer() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {backupHistory.map(backup => (
+                    {backupHistory.map((backup) => (
                       <div key={backup.id} className="p-3 border rounded-lg">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium">{backup.name}</span>
+                          <span className="text-sm font-medium">
+                            {backup.name}
+                          </span>
                           {getStatusBadge(backup.status)}
                         </div>
                         <div className="text-xs text-muted-foreground space-y-1">
@@ -895,7 +1038,7 @@ export function DataTransfer() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {scheduledExports.map(scheduled => (
+                  {scheduledExports.map((scheduled) => (
                     <div key={scheduled.id} className="p-4 border rounded-lg">
                       <div className="flex items-start justify-between">
                         <div className="space-y-2">
@@ -910,7 +1053,9 @@ export function DataTransfer() {
                             กำหนดการ: {scheduled.schedule}
                           </div>
                           <div className="text-sm">
-                            <span className="text-muted-foreground">ส่งถึง: </span>
+                            <span className="text-muted-foreground">
+                              ส่งถึง:{" "}
+                            </span>
                             {scheduled.recipients.join(", ")}
                           </div>
                           <div className="flex gap-4 text-xs text-muted-foreground">
@@ -954,38 +1099,47 @@ export function DataTransfer() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {exportTemplates.map(template => (
-                    <Card key={template.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+                  {exportTemplates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="hover:shadow-lg transition-shadow cursor-pointer"
+                    >
                       <CardContent className="p-4">
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               {getCategoryIcon(template.category)}
-                              <span className="font-medium">{template.name}</span>
+                              <span className="font-medium">
+                                {template.name}
+                              </span>
                             </div>
                             <Button variant="ghost" size="sm">
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </div>
-                          
+
                           <p className="text-sm text-muted-foreground">
                             {template.description}
                           </p>
-                          
+
                           <div className="space-y-2">
                             <div className="flex justify-between text-xs text-muted-foreground">
                               <span>{template.recordCount} รายการ</span>
                               <span>{template.estimatedSize}</span>
                             </div>
-                            
+
                             <div className="flex gap-1">
-                              {template.formats.map(format => (
-                                <Badge key={format} variant="outline" className="text-xs">
+                              {template.formats.map((format) => (
+                                <Badge
+                                  key={format}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
                                   {format.toUpperCase()}
                                 </Badge>
                               ))}
                             </div>
-                            
+
                             <div className="flex gap-1 pt-2">
                               <Button size="sm" className="flex-1">
                                 <Download className="h-3 w-3 mr-1" />

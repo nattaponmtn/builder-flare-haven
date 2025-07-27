@@ -5,11 +5,20 @@
 
     <!-- Primary Meta Tags -->
     <title>CMMS Mobile Pro - ระบบจัดการการบำรุงรักษาบนมือถือ</title>
-    <meta name="title" content="CMMS Mobile Pro - ระบบจัดการการบำรุงรักษาบนมือถือ" />
-    <meta name="description" content="ระบบจัดการการบำรุงรักษาแบบมืออาชีพ รองรับการใช้งานออฟไลน์ และสามารถติดตั้งเป็นแอปได้" />
+    <meta
+      name="title"
+      content="CMMS Mobile Pro - ระบบจัดการการบำรุงรักษาบนมือถือ"
+    />
+    <meta
+      name="description"
+      content="ระบบจัดการการบำรุงรักษาแบบมืออาชีพ รองรับการใช้งานออฟไลน์ และสามารถติดตั้งเป็นแอปได้"
+    />
 
     <!-- Viewport and Mobile Optimization -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="/manifest.json" />
@@ -39,18 +48,27 @@
     <!-- SEO -->
     <meta name="robots" content="index, follow" />
     <meta name="author" content="CMMS Mobile Pro Team" />
-    <meta name="keywords" content="CMMS, maintenance, mobile, PWA, offline, work orders, assets, parts" />
+    <meta
+      name="keywords"
+      content="CMMS, maintenance, mobile, PWA, offline, work orders, assets, parts"
+    />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="CMMS Mobile Pro" />
-    <meta property="og:description" content="ระบบจัดการการบำรุงรักษาแบบมืออาชีพ รองรับการใช้งานออฟไลน์" />
+    <meta
+      property="og:description"
+      content="ระบบจัดการการบำรุงรักษาแบบมืออาชีพ รองรับการใช้งานออฟไลน์"
+    />
     <meta property="og:image" content="/placeholder.svg" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content="CMMS Mobile Pro" />
-    <meta property="twitter:description" content="ระบบจัดการการบำรุงรักษาแบบมืออาชีพ รองรับการใช้งานออฟไลน์" />
+    <meta
+      property="twitter:description"
+      content="ระบบจัดการการบำรุงรักษาแบบมืออาชีพ รองรับการใช้งานออฟไลน์"
+    />
     <meta property="twitter:image" content="/placeholder.svg" />
   </head>
 
@@ -59,14 +77,15 @@
 
     <!-- Service Worker Registration -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
             .then((registration) => {
-              console.log('SW registered: ', registration);
+              console.log("SW registered: ", registration);
             })
             .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
+              console.log("SW registration failed: ", registrationError);
             });
         });
       }
@@ -76,7 +95,13 @@
 
     <!-- Offline fallback -->
     <noscript>
-      <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+      <div
+        style="
+          text-align: center;
+          padding: 50px;
+          font-family: Arial, sans-serif;
+        "
+      >
         <h1>CMMS Mobile Pro</h1>
         <p>กรุณาเปิดใช้งาน JavaScript เพื่อใช้งานแอปพลิเคชัน</p>
         <p>Please enable JavaScript to run this application.</p>

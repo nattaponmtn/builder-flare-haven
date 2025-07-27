@@ -56,18 +56,33 @@ const typeOptions = [
 ];
 
 const assets = [
-  "CAT-320D-001", "PUMP-IR-001", "HARV-001", "FERT-SPR-001",
-  "TRAC-JD-001", "IRRIG-SYS-001", "GEN-CAT-001"
+  "CAT-320D-001",
+  "PUMP-IR-001",
+  "HARV-001",
+  "FERT-SPR-001",
+  "TRAC-JD-001",
+  "IRRIG-SYS-001",
+  "GEN-CAT-001",
 ];
 
 const locations = [
-  "ไร่ A", "ไร่ B", "ไร่ C", "จุดควบคุมน้ำ", "โรงซ่อม", 
-  "อู่เครื่องจักร", "คลังอะไหล่", "สำนักงาน"
+  "ไร่ A",
+  "ไร่ B",
+  "ไร่ C",
+  "จุดควบคุมน้ำ",
+  "โรงซ่อม",
+  "อู่เครื่องจักร",
+  "คลังอะไหล่",
+  "สำนักงาน",
 ];
 
 const technicians = [
-  "สมชาย รักงาน", "สมหญิง ใจดี", "สมศักดิ์ ช่างเก่ง", 
-  "สมใส ขยันดี", "สมคิด ช่วยงาน", "สมบูรณ์ เก่งกาจ"
+  "สมชาย รักงาน",
+  "สมหญิง ใจดี",
+  "สมศักดิ์ ช่างเก่ง",
+  "สมใส ขยันดี",
+  "สมคิด ช่วยงาน",
+  "สมบูรณ์ เก่งกาจ",
 ];
 
 const commonParts = [
@@ -93,53 +108,57 @@ export function CreateWorkOrder() {
     parts: [],
     instructions: "",
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (field: keyof WorkOrderForm, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }));
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const addPart = (partId: string, partName: string) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      parts: [...prev.parts, { id: partId, name: partName, quantity: 1 }]
+      parts: [...prev.parts, { id: partId, name: partName, quantity: 1 }],
     }));
   };
 
   const removePart = (partId: string) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      parts: prev.parts.filter(p => p.id !== partId)
+      parts: prev.parts.filter((p) => p.id !== partId),
     }));
   };
 
   const updatePartQuantity = (partId: string, quantity: number) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      parts: prev.parts.map(p => 
-        p.id === partId ? { ...p, quantity } : p
-      )
+      parts: prev.parts.map((p) => (p.id === partId ? { ...p, quantity } : p)),
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!form.title || !form.description || !form.priority || !form.type || !form.assignee) {
+
+    if (
+      !form.title ||
+      !form.description ||
+      !form.priority ||
+      !form.type ||
+      !form.assignee
+    ) {
       toast.error("กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       // สร้าง ID ใหม่
       const newId = `WO-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`;
-      
+
       // จำลองการบันทึกข้อมูล
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       toast.success(`ใบสั่งงาน ${newId} ถูกสร้างเรียบร้อยแล้ว`);
       navigate("/work-orders");
     } catch (error) {
@@ -150,7 +169,7 @@ export function CreateWorkOrder() {
   };
 
   const getPriorityColor = (priority: string) => {
-    const option = priorityOptions.find(p => p.value === priority);
+    const option = priorityOptions.find((p) => p.value === priority);
     return option?.color || "outline";
   };
 
@@ -168,7 +187,9 @@ export function CreateWorkOrder() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">สร้างใบสั่งงานใหม่</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">
+              สร้างใบสั่งงานใหม่
+            </h1>
             <p className="text-muted-foreground text-sm sm:text-base">
               เพิ่มงานบำรุงรักษาหรือซ่อมแซ��ใหม่
             </p>
@@ -201,7 +222,9 @@ export function CreateWorkOrder() {
                 <Textarea
                   id="description"
                   value={form.description}
-                  onChange={(e) => handleInputChange("description", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("description", e.target.value)
+                  }
                   placeholder="อธิบายรายละเอียดของงานที่ต้องการให้ทำ..."
                   rows={3}
                   className="bg-background/50"
@@ -211,7 +234,12 @@ export function CreateWorkOrder() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>ความสำคัญ *</Label>
-                  <Select value={form.priority} onValueChange={(value) => handleInputChange("priority", value)}>
+                  <Select
+                    value={form.priority}
+                    onValueChange={(value) =>
+                      handleInputChange("priority", value)
+                    }
+                  >
                     <SelectTrigger className="bg-background/50">
                       <SelectValue placeholder="เลือกความสำคัญ" />
                     </SelectTrigger>
@@ -219,7 +247,10 @@ export function CreateWorkOrder() {
                       {priorityOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                           <div className="flex items-center gap-2">
-                            <Badge variant={option.color as any} className="text-xs">
+                            <Badge
+                              variant={option.color as any}
+                              className="text-xs"
+                            >
                               {option.label}
                             </Badge>
                           </div>
@@ -231,7 +262,10 @@ export function CreateWorkOrder() {
 
                 <div className="space-y-2">
                   <Label>ประเภทงาน *</Label>
-                  <Select value={form.type} onValueChange={(value) => handleInputChange("type", value)}>
+                  <Select
+                    value={form.type}
+                    onValueChange={(value) => handleInputChange("type", value)}
+                  >
                     <SelectTrigger className="bg-background/50">
                       <SelectValue placeholder="เลือกประเภทงาน" />
                     </SelectTrigger>
@@ -260,7 +294,12 @@ export function CreateWorkOrder() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>ผู้รับผิดชอบ *</Label>
-                  <Select value={form.assignee} onValueChange={(value) => handleInputChange("assignee", value)}>
+                  <Select
+                    value={form.assignee}
+                    onValueChange={(value) =>
+                      handleInputChange("assignee", value)
+                    }
+                  >
                     <SelectTrigger className="bg-background/50">
                       <SelectValue placeholder="เลือกช่างผู้รับผิดชอบ" />
                     </SelectTrigger>
@@ -282,7 +321,9 @@ export function CreateWorkOrder() {
                       id="dueDate"
                       type="date"
                       value={form.dueDate}
-                      onChange={(e) => handleInputChange("dueDate", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("dueDate", e.target.value)
+                      }
                       className="pl-10 bg-background/50"
                     />
                   </div>
@@ -297,7 +338,9 @@ export function CreateWorkOrder() {
                     id="estimatedHours"
                     type="number"
                     value={form.estimatedHours}
-                    onChange={(e) => handleInputChange("estimatedHours", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("estimatedHours", e.target.value)
+                    }
                     placeholder="เช่น 4"
                     className="pl-10 bg-background/50"
                     min="0.5"
@@ -320,7 +363,10 @@ export function CreateWorkOrder() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>อุปกรณ์/เครื่องจักร</Label>
-                  <Select value={form.asset} onValueChange={(value) => handleInputChange("asset", value)}>
+                  <Select
+                    value={form.asset}
+                    onValueChange={(value) => handleInputChange("asset", value)}
+                  >
                     <SelectTrigger className="bg-background/50">
                       <SelectValue placeholder="เลือกอุปกรณ์" />
                     </SelectTrigger>
@@ -336,7 +382,12 @@ export function CreateWorkOrder() {
 
                 <div className="space-y-2">
                   <Label>สถานที่</Label>
-                  <Select value={form.location} onValueChange={(value) => handleInputChange("location", value)}>
+                  <Select
+                    value={form.location}
+                    onValueChange={(value) =>
+                      handleInputChange("location", value)
+                    }
+                  >
                     <SelectTrigger className="bg-background/50">
                       <SelectValue placeholder="เลือกสถานที่" />
                     </SelectTrigger>
@@ -370,7 +421,7 @@ export function CreateWorkOrder() {
                     variant="outline"
                     size="sm"
                     onClick={() => addPart(part.id, part.name)}
-                    disabled={form.parts.some(p => p.id === part.id)}
+                    disabled={form.parts.some((p) => p.id === part.id)}
                     className="justify-start text-left bg-background/50"
                   >
                     <Plus className="h-3 w-3 mr-2" />
@@ -384,16 +435,28 @@ export function CreateWorkOrder() {
                   <Label>อะไหล่ที่เลือก</Label>
                   <div className="space-y-2">
                     {form.parts.map((part) => (
-                      <div key={part.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
-                        <span className="flex-1 text-sm font-medium">{part.name}</span>
+                      <div
+                        key={part.id}
+                        className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg"
+                      >
+                        <span className="flex-1 text-sm font-medium">
+                          {part.name}
+                        </span>
                         <Input
                           type="number"
                           value={part.quantity}
-                          onChange={(e) => updatePartQuantity(part.id, parseInt(e.target.value) || 1)}
+                          onChange={(e) =>
+                            updatePartQuantity(
+                              part.id,
+                              parseInt(e.target.value) || 1,
+                            )
+                          }
                           className="w-20 h-8 text-center"
                           min="1"
                         />
-                        <span className="text-sm text-muted-foreground">ชิ้น</span>
+                        <span className="text-sm text-muted-foreground">
+                          ชิ้น
+                        </span>
                         <Button
                           type="button"
                           variant="ghost"
@@ -425,7 +488,9 @@ export function CreateWorkOrder() {
                 <Textarea
                   id="instructions"
                   value={form.instructions}
-                  onChange={(e) => handleInputChange("instructions", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("instructions", e.target.value)
+                  }
                   placeholder="คำแนะนำเพิ่มเติม ข้อควรระวัง หรือขั้นตอนพิเศษ..."
                   rows={3}
                   className="bg-background/50"

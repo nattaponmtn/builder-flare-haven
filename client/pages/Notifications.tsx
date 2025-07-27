@@ -69,10 +69,10 @@ const notificationsData = [
     actions: [
       { label: "สร้างใบสั่งงาน", action: "create_wo" },
       { label: "ดูรายละเอียด", action: "view_asset" },
-    ]
+    ],
   },
   {
-    id: "NOTIF-002", 
+    id: "NOTIF-002",
     title: "สต็อกอะไหล่ต่ำ",
     message: "ไส้กรองไฮดรอลิก (HF-2021) เหลือ 8 ชิ้น ต่ำกว่าจุดสั่งซื้อ",
     type: "alert",
@@ -86,7 +86,7 @@ const notificationsData = [
     actions: [
       { label: "สั่งซื้อ", action: "order_part" },
       { label: "ดูสต็อก", action: "view_inventory" },
-    ]
+    ],
   },
   {
     id: "NOTIF-003",
@@ -100,9 +100,7 @@ const notificationsData = [
     isStarred: false,
     relatedId: "WO-2024-001",
     relatedType: "workorder",
-    actions: [
-      { label: "ดูรายงาน", action: "view_report" },
-    ]
+    actions: [{ label: "ดูรายงาน", action: "view_report" }],
   },
   {
     id: "NOTIF-004",
@@ -116,9 +114,7 @@ const notificationsData = [
     isStarred: true,
     relatedId: "BUDGET-2024-01",
     relatedType: "budget",
-    actions: [
-      { label: "ดูรายงาน", action: "view_budget" },
-    ]
+    actions: [{ label: "ดูรายงาน", action: "view_budget" }],
   },
   {
     id: "NOTIF-005",
@@ -132,25 +128,22 @@ const notificationsData = [
     isStarred: false,
     relatedId: "SCH-002",
     relatedType: "schedule",
-    actions: [
-      { label: "ดูตาราง", action: "view_schedule" },
-    ]
+    actions: [{ label: "ดูตาราง", action: "view_schedule" }],
   },
   {
     id: "NOTIF-006",
     title: "ช่างเข้าเวรเพิ่ม",
-    message: "สมศักดิ์ ช่างเก่ง ต้องทำโอเวอร์ไทม์ 3 ชั่วโมง เนื่องจากงานเร่งด่วน",
+    message:
+      "สมศักดิ์ ช่างเก่ง ต้องทำโอเวอร์ไทม์ 3 ชั่วโมง เนื่องจากงานเร่งด่วน",
     type: "warning",
     category: "technician",
-    priority: "ปานกลาง", 
+    priority: "ปานกลาง",
     timestamp: "2024-01-14 16:30",
     isRead: true,
     isStarred: false,
     relatedId: "TECH-003",
     relatedType: "technician",
-    actions: [
-      { label: "ดูรายละเอียด", action: "view_technician" },
-    ]
+    actions: [{ label: "ดูรายละเอียด", action: "view_technician" }],
   },
 ];
 
@@ -186,7 +179,7 @@ const notificationSettings = {
     desktop: true,
     frequency: "immediate",
     quietHours: { start: "22:00", end: "07:00" },
-  }
+  },
 };
 
 export function Notifications() {
@@ -194,7 +187,9 @@ export function Notifications() {
   const [filterType, setFilterType] = useState("ทั้งหมด");
   const [filterPriority, setFilterPriority] = useState("ทั้งหมด");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
+  const [selectedNotifications, setSelectedNotifications] = useState<string[]>(
+    [],
+  );
   const [settings, setSettings] = useState(notificationSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -204,46 +199,52 @@ export function Notifications() {
 
     // Filter by tab
     if (activeTab === "unread") {
-      filtered = filtered.filter(n => !n.isRead);
+      filtered = filtered.filter((n) => !n.isRead);
     } else if (activeTab === "starred") {
-      filtered = filtered.filter(n => n.isStarred);
+      filtered = filtered.filter((n) => n.isStarred);
     }
 
     // Filter by type
     if (filterType !== "ทั้งหมด") {
       const typeMap: Record<string, string> = {
-        "แจ้งเตือน": "warning",
-        "ข้อผิดพลาด": "error", 
-        "สำเร็จ": "success",
-        "ข้อมูล": "info",
-        "เตือนภัย": "alert"
+        แจ้งเตือน: "warning",
+        ข้อผิดพลาด: "error",
+        สำเร็จ: "success",
+        ข้อมูล: "info",
+        เตือนภัย: "alert",
       };
-      filtered = filtered.filter(n => n.type === typeMap[filterType]);
+      filtered = filtered.filter((n) => n.type === typeMap[filterType]);
     }
 
     // Filter by priority
     if (filterPriority !== "ทั้งหมด") {
-      filtered = filtered.filter(n => n.priority === filterPriority);
+      filtered = filtered.filter((n) => n.priority === filterPriority);
     }
 
     // Filter by search
     if (searchTerm) {
-      filtered = filtered.filter(n => 
-        n.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        n.message.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (n) =>
+          n.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          n.message.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
-    return filtered.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return filtered.sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    );
   }, [activeTab, filterType, filterPriority, searchTerm]);
 
   // Statistics
   const stats = useMemo(() => {
     const total = notificationsData.length;
-    const unread = notificationsData.filter(n => !n.isRead).length;
-    const starred = notificationsData.filter(n => n.isStarred).length;
-    const critical = notificationsData.filter(n => n.priority === "สูง" && !n.isRead).length;
-    
+    const unread = notificationsData.filter((n) => !n.isRead).length;
+    const starred = notificationsData.filter((n) => n.isStarred).length;
+    const critical = notificationsData.filter(
+      (n) => n.priority === "สูง" && !n.isRead,
+    ).length;
+
     return { total, unread, starred, critical };
   }, []);
 
@@ -339,13 +340,17 @@ export function Notifications() {
     }
   };
 
-  const updateSettings = (category: string, setting: string, value: boolean) => {
-    setSettings(prev => ({
+  const updateSettings = (
+    category: string,
+    setting: string,
+    value: boolean,
+  ) => {
+    setSettings((prev) => ({
       ...prev,
       [category]: {
         ...prev[category as keyof typeof prev],
-        [setting]: value
-      }
+        [setting]: value,
+      },
     }));
     toast.success("บันทึกการตั้งค่าแล้ว");
   };
@@ -394,12 +399,17 @@ export function Notifications() {
                             <Switch checked={settings.email.enabled} />
                           </div>
                           <div className="grid grid-cols-2 gap-3">
-                            {Object.entries(settings.email).filter(([key]) => key !== "enabled").map(([key, value]) => (
-                              <div key={key} className="flex items-center justify-between">
-                                <Label className="text-sm">{key}</Label>
-                                <Switch checked={value} />
-                              </div>
-                            ))}
+                            {Object.entries(settings.email)
+                              .filter(([key]) => key !== "enabled")
+                              .map(([key, value]) => (
+                                <div
+                                  key={key}
+                                  className="flex items-center justify-between"
+                                >
+                                  <Label className="text-sm">{key}</Label>
+                                  <Switch checked={value} />
+                                </div>
+                              ))}
                           </div>
                         </CardContent>
                       </Card>
@@ -418,12 +428,17 @@ export function Notifications() {
                             <Switch checked={settings.push.enabled} />
                           </div>
                           <div className="grid grid-cols-2 gap-3">
-                            {Object.entries(settings.push).filter(([key]) => key !== "enabled").map(([key, value]) => (
-                              <div key={key} className="flex items-center justify-between">
-                                <Label className="text-sm">{key}</Label>
-                                <Switch checked={value} />
-                              </div>
-                            ))}
+                            {Object.entries(settings.push)
+                              .filter(([key]) => key !== "enabled")
+                              .map(([key, value]) => (
+                                <div
+                                  key={key}
+                                  className="flex items-center justify-between"
+                                >
+                                  <Label className="text-sm">{key}</Label>
+                                  <Switch checked={value} />
+                                </div>
+                              ))}
                           </div>
                         </CardContent>
                       </Card>
@@ -462,11 +477,17 @@ export function Notifications() {
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <Label>เริ่มเวลาเงียบ</Label>
-                            <Input type="time" value={settings.inApp.quietHours.start} />
+                            <Input
+                              type="time"
+                              value={settings.inApp.quietHours.start}
+                            />
                           </div>
                           <div>
                             <Label>สิ้นสุดเวลาเงียบ</Label>
-                            <Input type="time" value={settings.inApp.quietHours.end} />
+                            <Input
+                              type="time"
+                              value={settings.inApp.quietHours.end}
+                            />
                           </div>
                         </div>
                       </CardContent>
@@ -490,32 +511,44 @@ export function Notifications() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Card className="metric-card">
             <CardContent className="p-4 text-center">
-              <div className="text-lg font-bold text-primary">{stats.total}</div>
+              <div className="text-lg font-bold text-primary">
+                {stats.total}
+              </div>
               <div className="text-xs text-muted-foreground">ทั้งหมด</div>
             </CardContent>
           </Card>
           <Card className="metric-card">
             <CardContent className="p-4 text-center">
-              <div className="text-lg font-bold text-warning">{stats.unread}</div>
+              <div className="text-lg font-bold text-warning">
+                {stats.unread}
+              </div>
               <div className="text-xs text-muted-foreground">ยังไม่อ่าน</div>
             </CardContent>
           </Card>
           <Card className="metric-card">
             <CardContent className="p-4 text-center">
-              <div className="text-lg font-bold text-success">{stats.starred}</div>
+              <div className="text-lg font-bold text-success">
+                {stats.starred}
+              </div>
               <div className="text-xs text-muted-foreground">ติดดาว</div>
             </CardContent>
           </Card>
           <Card className="metric-card">
             <CardContent className="p-4 text-center">
-              <div className="text-lg font-bold text-destructive">{stats.critical}</div>
+              <div className="text-lg font-bold text-destructive">
+                {stats.critical}
+              </div>
               <div className="text-xs text-muted-foreground">เร่งด่วน</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Main Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="all">ทั้งหมด</TabsTrigger>
             <TabsTrigger value="unread">ยังไม่อ่าน</TabsTrigger>
@@ -550,7 +583,10 @@ export function Notifications() {
                       <SelectItem value="เตือนภัย">เตือนภัย</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={filterPriority} onValueChange={setFilterPriority}>
+                  <Select
+                    value={filterPriority}
+                    onValueChange={setFilterPriority}
+                  >
                     <SelectTrigger className="w-40">
                       <SelectValue />
                     </SelectTrigger>
@@ -568,9 +604,9 @@ export function Notifications() {
 
           {/* Notifications List */}
           <TabsContent value={activeTab} className="space-y-3">
-            {filteredNotifications.map(notification => (
-              <Card 
-                key={notification.id} 
+            {filteredNotifications.map((notification) => (
+              <Card
+                key={notification.id}
                 className={`card-elevated border-l-4 ${getTypeColor(notification.type)} ${
                   !notification.isRead ? "bg-muted/20" : ""
                 }`}
@@ -586,17 +622,28 @@ export function Notifications() {
                         </div>
                         <div className="space-y-1 flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className={`font-medium text-sm ${!notification.isRead ? "font-semibold" : ""}`}>
+                            <h3
+                              className={`font-medium text-sm ${!notification.isRead ? "font-semibold" : ""}`}
+                            >
                               {notification.title}
                             </h3>
-                            <Badge className={getPriorityColor(notification.priority)} variant="outline">
+                            <Badge
+                              className={getPriorityColor(
+                                notification.priority,
+                              )}
+                              variant="outline"
+                            >
                               {notification.priority}
                             </Badge>
                             {!notification.isRead && (
-                              <Badge variant="destructive" className="text-xs">ใหม่</Badge>
+                              <Badge variant="destructive" className="text-xs">
+                                ใหม่
+                              </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground">{notification.message}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {notification.message}
+                          </p>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span>{notification.timestamp}</span>
                             <span>หมวด: {notification.category}</span>
@@ -610,7 +657,9 @@ export function Notifications() {
                           onClick={() => markAsStarred(notification.id)}
                           className="p-1 h-auto"
                         >
-                          <Star className={`h-4 w-4 ${notification.isStarred ? "fill-yellow-400 text-yellow-400" : ""}`} />
+                          <Star
+                            className={`h-4 w-4 ${notification.isStarred ? "fill-yellow-400 text-yellow-400" : ""}`}
+                          />
                         </Button>
                         {!notification.isRead && (
                           <Button
@@ -641,7 +690,9 @@ export function Notifications() {
                             key={index}
                             variant="outline"
                             size="sm"
-                            onClick={() => handleAction(notification.id, action.action)}
+                            onClick={() =>
+                              handleAction(notification.id, action.action)
+                            }
                           >
                             {action.label}
                           </Button>
@@ -657,11 +708,15 @@ export function Notifications() {
               <Card className="card-elevated">
                 <CardContent className="p-12 text-center">
                   <Bell className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-medium mb-2">ไม่มีการแจ้งเตือน</h3>
+                  <h3 className="text-lg font-medium mb-2">
+                    ไม่มีการแจ้งเตือน
+                  </h3>
                   <p className="text-muted-foreground">
-                    {activeTab === "unread" ? "ไม่มีการแจ้งเตือนที่ยังไม่ได้อ่าน" :
-                     activeTab === "starred" ? "ไม่มีการแจ้งเตือนที่ติดดาว" :
-                     "ไม่มีการแจ้งเตือนในหมวดนี้"}
+                    {activeTab === "unread"
+                      ? "ไม่มีการแจ้งเตือนที่ยังไม่ได้อ่าน"
+                      : activeTab === "starred"
+                        ? "ไม่มีการแจ้งเตือนที่ติดดาว"
+                        : "ไม่มีการแจ้งเตือนในหมวดนี้"}
                   </p>
                 </CardContent>
               </Card>

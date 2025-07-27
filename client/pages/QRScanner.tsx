@@ -175,8 +175,8 @@ const partsDatabase = {
 export function QRScanner() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const preselectedAsset = searchParams.get('preselect');
-  
+  const preselectedAsset = searchParams.get("preselect");
+
   const [activeTab, setActiveTab] = useState("scanner");
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -194,12 +194,12 @@ export function QRScanner() {
 
   // รวมข้อมูลทั้งหมดสำหรับการค้นหา
   const allItems = useMemo(() => {
-    const assets = Object.values(equipmentDatabase).map(item => ({
+    const assets = Object.values(equipmentDatabase).map((item) => ({
       ...item,
       itemType: "asset" as const,
       qrUrl: `/qr-scanner?code=${item.qrCode}`,
     }));
-    const parts = Object.values(partsDatabase).map(item => ({
+    const parts = Object.values(partsDatabase).map((item) => ({
       ...item,
       itemType: "part" as const,
       qrUrl: `/qr-scanner?code=${item.qrCode}`,
@@ -210,40 +210,43 @@ export function QRScanner() {
   // ค้นหาข้อมูลจาก QR Code
   const searchResult = useMemo(() => {
     if (!scannedCode) return null;
-    
+
     // ค้นหาจาก QR Code
     let found = Object.values(equipmentDatabase).find(
-      equipment => equipment.qrCode === scannedCode || equipment.id === scannedCode
+      (equipment) =>
+        equipment.qrCode === scannedCode || equipment.id === scannedCode,
     );
-    
+
     if (found) {
       return { ...found, type: "asset" };
     }
-    
+
     // ค้นหาจาก Parts
     found = Object.values(partsDatabase).find(
-      part => part.qrCode === scannedCode || part.id === scannedCode
+      (part) => part.qrCode === scannedCode || part.id === scannedCode,
     );
-    
+
     if (found) {
       return { ...found, type: "part" };
     }
-    
+
     return null;
   }, [scannedCode]);
 
   // ฟิลเตอร์รายการตามการค้นหา
   const filteredItems = useMemo(() => {
     if (!searchTerm) return allItems;
-    
-    return allItems.filter(item => {
+
+    return allItems.filter((item) => {
       const searchLower = searchTerm.toLowerCase();
       return (
         item.name.toLowerCase().includes(searchLower) ||
         item.id.toLowerCase().includes(searchLower) ||
         item.brand.toLowerCase().includes(searchLower) ||
-        (item.itemType === "asset" && item.type.toLowerCase().includes(searchLower)) ||
-        (item.itemType === "part" && item.category.toLowerCase().includes(searchLower))
+        (item.itemType === "asset" &&
+          item.type.toLowerCase().includes(searchLower)) ||
+        (item.itemType === "part" &&
+          item.category.toLowerCase().includes(searchLower))
       );
     });
   }, [allItems, searchTerm]);
@@ -252,13 +255,13 @@ export function QRScanner() {
   const simulateQRScan = (code: string) => {
     setScannedCode(code);
     setIsCameraActive(false);
-    
+
     // เพิ่มลงประวัติ
-    setScanHistory(prev => {
-      const newHistory = [code, ...prev.filter(c => c !== code)].slice(0, 10);
+    setScanHistory((prev) => {
+      const newHistory = [code, ...prev.filter((c) => c !== code)].slice(0, 10);
       return newHistory;
     });
-    
+
     toast.success("สแกน QR Code เรียบร้อยแ���้ว");
   };
 
@@ -268,7 +271,7 @@ export function QRScanner() {
       toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
       return;
     }
-    
+
     toast.success(`สร้าง QR Code สำหรับ ${newQRData.title} เรียบร้อยแล้ว`);
     setGenerateDialogOpen(false);
     setNewQRData({ type: "asset", id: "", title: "", description: "" });
@@ -320,7 +323,10 @@ export function QRScanner() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Dialog open={generateDialogOpen} onOpenChange={setGenerateDialogOpen}>
+            <Dialog
+              open={generateDialogOpen}
+              onOpenChange={setGenerateDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Plus className="h-4 w-4 mr-2" />
@@ -334,7 +340,12 @@ export function QRScanner() {
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium">ประเภท</label>
-                    <Select value={newQRData.type} onValueChange={(value) => setNewQRData(prev => ({ ...prev, type: value }))}>
+                    <Select
+                      value={newQRData.type}
+                      onValueChange={(value) =>
+                        setNewQRData((prev) => ({ ...prev, type: value }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -350,7 +361,12 @@ export function QRScanner() {
                     <label className="text-sm font-medium">รหัส/ID</label>
                     <Input
                       value={newQRData.id}
-                      onChange={(e) => setNewQRData(prev => ({ ...prev, id: e.target.value }))}
+                      onChange={(e) =>
+                        setNewQRData((prev) => ({
+                          ...prev,
+                          id: e.target.value,
+                        }))
+                      }
                       placeholder="เช่น TRACT-004"
                     />
                   </div>
@@ -358,7 +374,12 @@ export function QRScanner() {
                     <label className="text-sm font-medium">ชื่อ/หัวข้อ</label>
                     <Input
                       value={newQRData.title}
-                      onChange={(e) => setNewQRData(prev => ({ ...prev, title: e.target.value }))}
+                      onChange={(e) =>
+                        setNewQRData((prev) => ({
+                          ...prev,
+                          title: e.target.value,
+                        }))
+                      }
                       placeholder="เช่น รถแทรกเตอร์ใหม่"
                     />
                   </div>
@@ -366,14 +387,26 @@ export function QRScanner() {
                     <label className="text-sm font-medium">รายละเอียด</label>
                     <Textarea
                       value={newQRData.description}
-                      onChange={(e) => setNewQRData(prev => ({ ...prev, description: e.target.value }))}
+                      onChange={(e) =>
+                        setNewQRData((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
                       placeholder="รายละเอียดเพิ่มเติม..."
                       rows={3}
                     />
                   </div>
                   <div className="flex gap-3">
-                    <Button onClick={handleGenerateQR} className="flex-1">สร้าง QR Code</Button>
-                    <Button variant="outline" onClick={() => setGenerateDialogOpen(false)}>ยกเลิก</Button>
+                    <Button onClick={handleGenerateQR} className="flex-1">
+                      สร้าง QR Code
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setGenerateDialogOpen(false)}
+                    >
+                      ยกเลิก
+                    </Button>
                   </div>
                 </div>
               </DialogContent>
@@ -386,7 +419,11 @@ export function QRScanner() {
         </div>
 
         {/* Main Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="scanner">สแกน</TabsTrigger>
             <TabsTrigger value="search">ค้นหา</TabsTrigger>
@@ -419,7 +456,9 @@ export function QRScanner() {
                     <div className="absolute inset-0 bg-muted flex items-center justify-center">
                       <div className="text-center">
                         <Camera className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                        <p className="text-muted-foreground">กดเริ่มสแกนเพื่อเปิดกล้อง</p>
+                        <p className="text-muted-foreground">
+                          กดเริ่มสแกนเพื่อเปิดกล้อง
+                        </p>
                       </div>
                     </div>
                   )}
@@ -468,7 +507,9 @@ export function QRScanner() {
                     <div className="h-px bg-border flex-1" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">ป้อนรหัส QR Code</label>
+                    <label className="text-sm font-medium">
+                      ป้อนรหัส QR Code
+                    </label>
                     <div className="flex gap-2">
                       <Input
                         placeholder="เช่น QR-TRACT-001"
@@ -497,21 +538,23 @@ export function QRScanner() {
                 <div className="space-y-3">
                   <label className="text-sm font-medium">สแกนทดสอบ</label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {Object.values(equipmentDatabase).slice(0, 4).map((equipment) => (
-                      <Button
-                        key={equipment.id}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          simulateQRScan(equipment.qrCode);
-                          setActiveTab("result");
-                        }}
-                        className="justify-start text-left"
-                      >
-                        <QrCode className="h-4 w-4 mr-2" />
-                        {equipment.name}
-                      </Button>
-                    ))}
+                    {Object.values(equipmentDatabase)
+                      .slice(0, 4)
+                      .map((equipment) => (
+                        <Button
+                          key={equipment.id}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            simulateQRScan(equipment.qrCode);
+                            setActiveTab("result");
+                          }}
+                          className="justify-start text-left"
+                        >
+                          <QrCode className="h-4 w-4 mr-2" />
+                          {equipment.name}
+                        </Button>
+                      ))}
                   </div>
                 </div>
               </CardContent>
@@ -537,7 +580,7 @@ export function QRScanner() {
                     className="pl-10"
                   />
                 </div>
-                
+
                 <div className="space-y-3">
                   {filteredItems.map((item) => (
                     <div
@@ -562,7 +605,10 @@ export function QRScanner() {
                             </Badge>
                           </div>
                           <div className="text-sm text-muted-foreground">
-                            {item.id} • {item.brand} • {item.itemType === "asset" ? item.location : `สต็อก: ${item.stockQuantity}`}
+                            {item.id} • {item.brand} •{" "}
+                            {item.itemType === "asset"
+                              ? item.location
+                              : `สต็อก: ${item.stockQuantity}`}
                           </div>
                         </div>
                         <Button variant="ghost" size="sm">
@@ -571,11 +617,13 @@ export function QRScanner() {
                       </div>
                     </div>
                   ))}
-                  
+
                   {filteredItems.length === 0 && searchTerm && (
                     <div className="text-center py-8">
                       <FileSearch className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                      <p className="text-muted-foreground">ไม่พบผลลัพธ์ที่ตรงกับ "{searchTerm}"</p>
+                      <p className="text-muted-foreground">
+                        ไม่พบผลลัพธ์ที่ตรงกับ "{searchTerm}"
+                      </p>
                     </div>
                   )}
                 </div>
@@ -601,12 +649,17 @@ export function QRScanner() {
                         <div className="space-y-2 flex-1">
                           <div className="flex items-center gap-2">
                             {getStatusIcon(searchResult.status)}
-                            <h3 className="text-lg font-semibold">{searchResult.name}</h3>
+                            <h3 className="text-lg font-semibold">
+                              {searchResult.name}
+                            </h3>
                           </div>
                           <div className="text-sm text-muted-foreground">
-                            {searchResult.id} • {searchResult.brand} {searchResult.model}
+                            {searchResult.id} • {searchResult.brand}{" "}
+                            {searchResult.model}
                           </div>
-                          <div className={`text-sm font-medium ${getStatusColor(searchResult.status)}`}>
+                          <div
+                            className={`text-sm font-medium ${getStatusColor(searchResult.status)}`}
+                          >
                             {searchResult.status}
                           </div>
                         </div>
@@ -623,19 +676,33 @@ export function QRScanner() {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                         <div className="p-3 bg-muted/30 rounded-lg">
                           <div className="text-muted-foreground">สถานที่</div>
-                          <div className="font-medium">{searchResult.location}</div>
+                          <div className="font-medium">
+                            {searchResult.location}
+                          </div>
                         </div>
                         <div className="p-3 bg-muted/30 rounded-lg">
-                          <div className="text-muted-foreground">ชั่วโมงทำงาน</div>
-                          <div className="font-medium">{searchResult.operatingHours.toLocaleString()} ชม.</div>
+                          <div className="text-muted-foreground">
+                            ชั่วโมงทำงาน
+                          </div>
+                          <div className="font-medium">
+                            {searchResult.operatingHours.toLocaleString()} ชม.
+                          </div>
                         </div>
                         <div className="p-3 bg-muted/30 rounded-lg">
-                          <div className="text-muted-foreground">บำรุงรักษาล่าสุด</div>
-                          <div className="font-medium">{searchResult.lastMaintenance}</div>
+                          <div className="text-muted-foreground">
+                            บำรุงรักษาล่าสุด
+                          </div>
+                          <div className="font-medium">
+                            {searchResult.lastMaintenance}
+                          </div>
                         </div>
                         <div className="p-3 bg-muted/30 rounded-lg">
-                          <div className="text-muted-foreground">บำรุงรักษาครั้งต่อไป</div>
-                          <div className={`font-medium ${searchResult.nextMaintenance === "เกินกำหนดแล้ว" ? "text-destructive" : ""}`}>
+                          <div className="text-muted-foreground">
+                            บำรุงรักษาครั้งต่อไป
+                          </div>
+                          <div
+                            className={`font-medium ${searchResult.nextMaintenance === "เกินกำหนดแล้ว" ? "text-destructive" : ""}`}
+                          >
                             {searchResult.nextMaintenance}
                           </div>
                         </div>
@@ -645,7 +712,9 @@ export function QRScanner() {
                         <div className="p-3 bg-warning/10 border border-warning/20 rounded-lg">
                           <div className="flex items-center gap-2 text-warning">
                             <AlertTriangle className="h-4 w-4" />
-                            <span className="font-medium">มีงานค้างอยู่ {searchResult.pendingTasks} งาน</span>
+                            <span className="font-medium">
+                              มีงานค้างอยู่ {searchResult.pendingTasks} งาน
+                            </span>
                           </div>
                         </div>
                       )}
@@ -658,7 +727,10 @@ export function QRScanner() {
                           </Button>
                         </Link>
                         <Link to={`/work-orders?asset=${searchResult.id}`}>
-                          <Button variant="outline" className="flex-1 sm:flex-none">
+                          <Button
+                            variant="outline"
+                            className="flex-1 sm:flex-none"
+                          >
                             <FileText className="h-4 w-4 mr-2" />
                             ประวัติงาน
                           </Button>
@@ -678,7 +750,9 @@ export function QRScanner() {
                     <CardContent className="space-y-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-2 flex-1">
-                          <h3 className="text-lg font-semibold">{searchResult.name}</h3>
+                          <h3 className="text-lg font-semibold">
+                            {searchResult.name}
+                          </h3>
                           <div className="text-sm text-muted-foreground">
                             {searchResult.partNumber} • {searchResult.brand}
                           </div>
@@ -698,20 +772,32 @@ export function QRScanner() {
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                         <div className="p-3 bg-muted/30 rounded-lg">
-                          <div className="text-muted-foreground">สต็อกปัจจุบัน</div>
-                          <div className="font-medium">{searchResult.stockQuantity} ชิ้น</div>
+                          <div className="text-muted-foreground">
+                            สต็อกปัจจุบัน
+                          </div>
+                          <div className="font-medium">
+                            {searchResult.stockQuantity} ชิ้น
+                          </div>
                         </div>
                         <div className="p-3 bg-muted/30 rounded-lg">
                           <div className="text-muted-foreground">ตำแหน่ง</div>
-                          <div className="font-medium">{searchResult.location}</div>
+                          <div className="font-medium">
+                            {searchResult.location}
+                          </div>
                         </div>
                         <div className="p-3 bg-muted/30 rounded-lg">
                           <div className="text-muted-foreground">ราคา</div>
-                          <div className="font-medium">฿{searchResult.unitPrice.toLocaleString()}</div>
+                          <div className="font-medium">
+                            ฿{searchResult.unitPrice.toLocaleString()}
+                          </div>
                         </div>
                         <div className="p-3 bg-muted/30 rounded-lg">
-                          <div className="text-muted-foreground">อุปกรณ์ที่ใช้ได้</div>
-                          <div className="font-medium">{searchResult.compatibleAssets.length} รายการ</div>
+                          <div className="text-muted-foreground">
+                            อุปกรณ์ที่ใช้ได้
+                          </div>
+                          <div className="font-medium">
+                            {searchResult.compatibleAssets.length} รายการ
+                          </div>
                         </div>
                       </div>
 
@@ -720,7 +806,10 @@ export function QRScanner() {
                           <Package className="h-4 w-4 mr-2" />
                           เบิกจ่าย
                         </Button>
-                        <Button variant="outline" className="flex-1 sm:flex-none">
+                        <Button
+                          variant="outline"
+                          className="flex-1 sm:flex-none"
+                        >
                           <FileText className="h-4 w-4 mr-2" />
                           ประวัติการใช้
                         </Button>
@@ -740,7 +829,9 @@ export function QRScanner() {
                   <CardContent className="space-y-4">
                     <div className="flex items-center justify-center p-8 bg-white rounded-lg border">
                       <div className="w-32 h-32 bg-black flex items-center justify-center text-white text-xs">
-                        QR Code<br/>{scannedCode}
+                        QR Code
+                        <br />
+                        {scannedCode}
                       </div>
                     </div>
                     <div className="flex gap-2 justify-center">
@@ -756,10 +847,14 @@ export function QRScanner() {
                         <Share2 className="h-4 w-4 mr-2" />
                         แชร์
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => {
-                        navigator.clipboard.writeText(scannedCode);
-                        toast.success("คัดลอกรหัสแล้ว");
-                      }}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          navigator.clipboard.writeText(scannedCode);
+                          toast.success("คัดลอกรหัสแล้ว");
+                        }}
+                      >
                         <Copy className="h-4 w-4 mr-2" />
                         คัดลอก
                       </Button>
@@ -772,10 +867,9 @@ export function QRScanner() {
                 <CardContent className="text-center py-12">
                   <QrCode className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
                   <p className="text-muted-foreground">
-                    {scannedCode 
+                    {scannedCode
                       ? `ไม่พบข้อมูลสำหรับรหัส: ${scannedCode}`
-                      : "ยังไม่มีการสแกน QR Code"
-                    }
+                      : "ยังไม่มีการสแกน QR Code"}
                   </p>
                   <Button
                     variant="outline"
@@ -802,8 +896,13 @@ export function QRScanner() {
                 {scanHistory.length > 0 ? (
                   <div className="space-y-3">
                     {scanHistory.map((code, index) => {
-                      const item = Object.values(equipmentDatabase).find(eq => eq.qrCode === code) ||
-                                  Object.values(partsDatabase).find(part => part.qrCode === code);
+                      const item =
+                        Object.values(equipmentDatabase).find(
+                          (eq) => eq.qrCode === code,
+                        ) ||
+                        Object.values(partsDatabase).find(
+                          (part) => part.qrCode === code,
+                        );
                       return (
                         <div
                           key={index}
@@ -816,8 +915,12 @@ export function QRScanner() {
                           <div className="flex items-center gap-3">
                             <QrCode className="h-4 w-4 text-muted-foreground" />
                             <div>
-                              <div className="font-medium">{item ? item.name : code}</div>
-                              <div className="text-sm text-muted-foreground">{code}</div>
+                              <div className="font-medium">
+                                {item ? item.name : code}
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {code}
+                              </div>
                             </div>
                           </div>
                           <Button variant="ghost" size="sm">
@@ -830,7 +933,9 @@ export function QRScanner() {
                 ) : (
                   <div className="text-center py-8">
                     <History className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                    <p className="text-muted-foreground">ยังไม่มีประวัติการสแกน</p>
+                    <p className="text-muted-foreground">
+                      ยังไม่มีประวัติการสแกน
+                    </p>
                   </div>
                 )}
               </CardContent>

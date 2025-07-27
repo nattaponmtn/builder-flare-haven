@@ -45,19 +45,19 @@ export function Dashboard() {
   }, []);
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('th-TH', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+    return date.toLocaleTimeString("th-TH", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     });
   };
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('th-TH', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return date.toLocaleDateString("th-TH", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -168,8 +168,16 @@ export function Dashboard() {
   ];
 
   const activeAlerts = [
-    { message: "มีงาน 3 รายการเกินกำหนดแล้ว", type: "error", time: "5 นาทีที่แล้ว" },
-    { message: "อะไหล่หมดคลัง: ไ��้กรองน้ำมัน", type: "warning", time: "10 นาทีที่แล้ว" },
+    {
+      message: "มีงาน 3 รายการเกินกำหนดแล้ว",
+      type: "error",
+      time: "5 นาทีที่แล้ว",
+    },
+    {
+      message: "อะไหล่หมดคลัง: ไ��้กรองน้ำมัน",
+      type: "warning",
+      time: "10 นาทีที่แล้ว",
+    },
     { message: "ช่างสมใสเริ่มงานใหม่", type: "info", time: "15 นาทีที่แล้ว" },
   ];
 
@@ -228,23 +236,38 @@ export function Dashboard() {
             <div className="flex items-start gap-3">
               <Bell className="h-5 w-5 text-warning shrink-0 mt-0.5" />
               <div className="flex-1">
-                <h3 className="font-medium text-warning mb-2">การแจ้งเตือนสำคัญ</h3>
+                <h3 className="font-medium text-warning mb-2">
+                  การแจ้งเตือนสำคัญ
+                </h3>
                 <div className="space-y-1">
                   {activeAlerts.slice(0, 2).map((alert, index) => (
-                    <div key={index} className="flex items-center justify-between text-sm">
-                      <span className={
-                        alert.type === "error" ? "text-destructive" :
-                        alert.type === "warning" ? "text-warning" : 
-                        "text-muted-foreground"
-                      }>
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-sm"
+                    >
+                      <span
+                        className={
+                          alert.type === "error"
+                            ? "text-destructive"
+                            : alert.type === "warning"
+                              ? "text-warning"
+                              : "text-muted-foreground"
+                        }
+                      >
                         {alert.message}
                       </span>
-                      <span className="text-xs text-muted-foreground">{alert.time}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {alert.time}
+                      </span>
                     </div>
                   ))}
                 </div>
                 {activeAlerts.length > 2 && (
-                  <Button variant="ghost" size="sm" className="mt-2 h-auto p-0 text-xs">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-2 h-auto p-0 text-xs"
+                  >
                     ดูทั้งหมด ({activeAlerts.length} รายการ)
                   </Button>
                 )}
@@ -296,10 +319,13 @@ export function Dashboard() {
                   </h3>
                   <div
                     className={`p-2 rounded-lg ${
-                      metric.color === "text-destructive" ? "bg-destructive/10" : 
-                      metric.color === "text-success" ? "bg-success/10" : 
-                      metric.color === "text-warning" ? "bg-warning/10" : 
-                      "bg-primary/10"
+                      metric.color === "text-destructive"
+                        ? "bg-destructive/10"
+                        : metric.color === "text-success"
+                          ? "bg-success/10"
+                          : metric.color === "text-warning"
+                            ? "bg-warning/10"
+                            : "bg-primary/10"
                     }`}
                   >
                     <Icon className={`h-4 w-4 ${metric.color}`} />
@@ -344,18 +370,30 @@ export function Dashboard() {
                   <div key={metric.title} className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Icon className={`h-4 w-4 ${metric.color}`} />
-                      <span className="text-sm font-medium">{metric.title}</span>
+                      <span className="text-sm font-medium">
+                        {metric.title}
+                      </span>
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-xl font-bold">{metric.value}</span>
-                        <span className="text-sm text-muted-foreground">เป้า: {metric.target}</span>
+                        <span className="text-xl font-bold">
+                          {metric.value}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          เป้า: {metric.target}
+                        </span>
                       </div>
-                      <Progress 
-                        value={metric.title.includes("อัตรา") ? 87 : 
-                               metric.title.includes("ประสิทธิภาพ") ? 94 :
-                               metric.title.includes("เวลา") ? 75 : 90} 
-                        className="h-2" 
+                      <Progress
+                        value={
+                          metric.title.includes("อัตรา")
+                            ? 87
+                            : metric.title.includes("ประสิทธิภาพ")
+                              ? 94
+                              : metric.title.includes("เวลา")
+                                ? 75
+                                : 90
+                        }
+                        className="h-2"
                       />
                     </div>
                   </div>
@@ -388,7 +426,9 @@ export function Dashboard() {
               <Link key={wo.id} to={`/work-orders/${wo.id}`}>
                 <div
                   className={`group cursor-pointer p-4 rounded-lg border hover:border-primary/50 transition-all duration-200 ${
-                    index === 0 ? "bg-gradient-to-r from-primary/5 to-transparent" : "hover:bg-muted/30"
+                    index === 0
+                      ? "bg-gradient-to-r from-primary/5 to-transparent"
+                      : "hover:bg-muted/30"
                   }`}
                 >
                   <div className="space-y-3">
@@ -421,11 +461,13 @@ export function Dashboard() {
                         {wo.status}
                       </Badge>
                     </div>
-                    
+
                     {/* Progress and Time Info */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">ความคืบหน้า</span>
+                        <span className="text-muted-foreground">
+                          ความคืบหน้า
+                        </span>
                         <span className="font-medium">{wo.progress}%</span>
                       </div>
                       <Progress value={wo.progress} className="h-2" />
@@ -451,11 +493,13 @@ export function Dashboard() {
               <div>
                 <h3 className="font-medium">ประสิทธิภาพสัปดาห์นี้</h3>
                 <p className="text-2xl font-bold text-success">+12%</p>
-                <p className="text-xs text-muted-foreground">เมื่อเทียบกับสัปดาห์ก่อน</p>
+                <p className="text-xs text-muted-foreground">
+                  เมื่อเทียบกับสัปดาห์ก่อน
+                </p>
               </div>
             </div>
           </div>
-          
+
           <div className="card-elevated rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-warning/10 rounded-lg">
@@ -464,11 +508,13 @@ export function Dashboard() {
               <div>
                 <h3 className="font-medium">เวลาเฉลี่ยต่องาน</h3>
                 <p className="text-2xl font-bold text-warning">2.4 ชม.</p>
-                <p className="text-xs text-muted-foreground">ลดลง 0.3 ชม. จากเดือนก่อน</p>
+                <p className="text-xs text-muted-foreground">
+                  ลดลง 0.3 ชม. จากเดือนก่อน
+                </p>
               </div>
             </div>
           </div>
-          
+
           <div className="card-elevated rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
@@ -477,7 +523,9 @@ export function Dashboard() {
               <div>
                 <h3 className="font-medium">ช่างที่มีภาระงานสูง</h3>
                 <p className="text-2xl font-bold text-primary">2 คน</p>
-                <p className="text-xs text-muted-foreground">ควรปรับสมดุลภาระงาน</p>
+                <p className="text-xs text-muted-foreground">
+                  ควรปรับสมดุลภาระงาน
+                </p>
               </div>
             </div>
           </div>

@@ -177,9 +177,7 @@ export function AssetDetail() {
       <div className="min-h-screen">
         <div className="p-4 text-center">
           <h1 className="text-2xl font-bold">ไม่พบข้อมูลอุปกรณ์</h1>
-          <p className="text-muted-foreground mt-2">
-            อุปกรณ์ {id} ไม่มีในระบบ
-          </p>
+          <p className="text-muted-foreground mt-2">อุปกรณ์ {id} ไม่มีในระบบ</p>
           <Link to="/assets">
             <Button className="mt-4">กลับสู่รายการอุปกรณ์</Button>
           </Link>
@@ -253,7 +251,9 @@ export function AssetDetail() {
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <span className="font-mono">{asset.id}</span>
               <span>{asset.tagId}</span>
-              <span>{asset.brand} {asset.model}</span>
+              <span>
+                {asset.brand} {asset.model}
+              </span>
               <span className={getConditionColor(asset.condition)}>
                 สภาพ: {asset.condition}
               </span>
@@ -278,19 +278,27 @@ export function AssetDetail() {
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-primary">{asset.operatingHours.toLocaleString()}</div>
+            <div className="text-lg font-bold text-primary">
+              {asset.operatingHours.toLocaleString()}
+            </div>
             <div className="text-xs text-muted-foreground">ชั่วโมงทำงาน</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-success">{asset.uptime}%</div>
+            <div className="text-lg font-bold text-success">
+              {asset.uptime}%
+            </div>
             <div className="text-xs text-muted-foreground">Uptime</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-warning">{asset.pendingTasks}</div>
+            <div className="text-lg font-bold text-warning">
+              {asset.pendingTasks}
+            </div>
             <div className="text-xs text-muted-foreground">งานค้าง</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-primary">{asset.totalWorkOrders}</div>
+            <div className="text-lg font-bold text-primary">
+              {asset.totalWorkOrders}
+            </div>
             <div className="text-xs text-muted-foreground">ใบสั่งงาน</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
@@ -300,13 +308,19 @@ export function AssetDetail() {
             <div className="text-xs text-muted-foreground">มูลค่าปัจจุบัน</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-primary">{asset.performanceMetrics.efficiency}%</div>
+            <div className="text-lg font-bold text-primary">
+              {asset.performanceMetrics.efficiency}%
+            </div>
             <div className="text-xs text-muted-foreground">ประสิทธิภาพ</div>
           </div>
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">ภาพรวม</TabsTrigger>
             <TabsTrigger value="maintenance">บำรุงรักษา</TabsTrigger>
@@ -329,7 +343,9 @@ export function AssetDetail() {
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-muted-foreground">ประเภทอุปกรณ์:</span>
+                      <span className="text-muted-foreground">
+                        ประเภทอุปกรณ์:
+                      </span>
                       <div className="font-medium">{asset.equipmentType}</div>
                     </div>
                     <div>
@@ -342,7 +358,9 @@ export function AssetDetail() {
                     </div>
                     <div>
                       <span className="text-muted-foreground">ผู้ใช้งาน:</span>
-                      <div className="font-medium">{asset.assignedOperator}</div>
+                      <div className="font-medium">
+                        {asset.assignedOperator}
+                      </div>
                     </div>
                     <div>
                       <span className="text-muted-foreground">แผนก:</span>
@@ -368,14 +386,22 @@ export function AssetDetail() {
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <span className="text-muted-foreground">ราคาซื้อ:</span>
-                      <div className="font-medium">฿{asset.purchasePrice.toLocaleString()}</div>
+                      <div className="font-medium">
+                        ฿{asset.purchasePrice.toLocaleString()}
+                      </div>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">มูลค่าปัจจุบัน:</span>
-                      <div className="font-medium">฿{asset.currentValue.toLocaleString()}</div>
+                      <span className="text-muted-foreground">
+                        มูลค่าปัจจุบัน:
+                      </span>
+                      <div className="font-medium">
+                        ฿{asset.currentValue.toLocaleString()}
+                      </div>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">การคิดค่าเสื่อม:</span>
+                      <span className="text-muted-foreground">
+                        การคิดค่าเสื่อม:
+                      </span>
                       <div className="font-medium">{asset.depreciation}%</div>
                     </div>
                     <div>
@@ -383,12 +409,19 @@ export function AssetDetail() {
                       <div className="font-medium">{asset.purchaseDate}</div>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">ประกันหมดอายุ:</span>
+                      <span className="text-muted-foreground">
+                        ประกันหมดอายุ:
+                      </span>
                       <div className="font-medium">{asset.warrantyExpiry}</div>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">ค่าบำรุง/ปี:</span>
-                      <div className="font-medium">฿{asset.performanceMetrics.maintenanceCost.toLocaleString()}</div>
+                      <span className="text-muted-foreground">
+                        ค่าบำรุง/ปี:
+                      </span>
+                      <div className="font-medium">
+                        ฿
+                        {asset.performanceMetrics.maintenanceCost.toLocaleString()}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -408,7 +441,13 @@ export function AssetDetail() {
                       <div key={index} className="p-3 bg-muted/30 rounded-lg">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-medium">{maintenance.title}</h4>
-                          <Badge variant={maintenance.priority === "สูง" ? "destructive" : "outline"}>
+                          <Badge
+                            variant={
+                              maintenance.priority === "สูง"
+                                ? "destructive"
+                                : "outline"
+                            }
+                          >
                             {maintenance.priority}
                           </Badge>
                         </div>
@@ -416,7 +455,10 @@ export function AssetDetail() {
                           <div>กำหนดเสร็จ: {maintenance.dueDate}</div>
                           <div>ประเภท: {maintenance.type}</div>
                           <div>ประมาณเวลา: {maintenance.estimatedDuration}</div>
-                          <div>ประมาณค่าใช้จ่าย: ฿{maintenance.estimatedCost.toLocaleString()}</div>
+                          <div>
+                            ประมาณค่าใช้จ่าย: ฿
+                            {maintenance.estimatedCost.toLocaleString()}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -442,13 +484,19 @@ export function AssetDetail() {
                       <div className="flex items-start justify-between mb-3">
                         <div className="space-y-1">
                           <h4 className="font-medium">{record.title}</h4>
-                          <p className="text-sm text-muted-foreground">{record.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {record.description}
+                          </p>
                         </div>
                         <div className="text-right">
-                          <div className={`inline-flex px-2 py-1 rounded text-xs border ${getMaintenanceTypeColor(record.type)}`}>
+                          <div
+                            className={`inline-flex px-2 py-1 rounded text-xs border ${getMaintenanceTypeColor(record.type)}`}
+                          >
                             {record.type}
                           </div>
-                          <div className="text-sm text-muted-foreground mt-1">{record.date}</div>
+                          <div className="text-sm text-muted-foreground mt-1">
+                            {record.date}
+                          </div>
                         </div>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
@@ -457,24 +505,38 @@ export function AssetDetail() {
                           <div className="font-medium">{record.technician}</div>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">ระยะเวลา:</span>
+                          <span className="text-muted-foreground">
+                            ระยะเวลา:
+                          </span>
                           <div className="font-medium">{record.duration}</div>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">ค่าใช้จ่าย:</span>
-                          <div className="font-medium">฿{record.cost.toLocaleString()}</div>
+                          <span className="text-muted-foreground">
+                            ค่าใช้จ่าย:
+                          </span>
+                          <div className="font-medium">
+                            ฿{record.cost.toLocaleString()}
+                          </div>
                         </div>
                         <div>
                           <span className="text-muted-foreground">สถานะ:</span>
-                          <div className="font-medium text-success">{record.status}</div>
+                          <div className="font-medium text-success">
+                            {record.status}
+                          </div>
                         </div>
                       </div>
                       {record.parts.length > 0 && (
                         <div className="mt-3">
-                          <span className="text-sm text-muted-foreground">อะไหล่ที่ใช้:</span>
+                          <span className="text-sm text-muted-foreground">
+                            อะไหล่ที่ใช้:
+                          </span>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {record.parts.map((part, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs">
+                              <Badge
+                                key={idx}
+                                variant="outline"
+                                className="text-xs"
+                              >
                                 {part}
                               </Badge>
                             ))}
@@ -503,35 +565,59 @@ export function AssetDetail() {
                     <div>
                       <div className="flex justify-between mb-1">
                         <span className="text-sm">ประสิทธิภาพ</span>
-                        <span className="text-sm font-medium">{asset.performanceMetrics.efficiency}%</span>
+                        <span className="text-sm font-medium">
+                          {asset.performanceMetrics.efficiency}%
+                        </span>
                       </div>
-                      <Progress value={asset.performanceMetrics.efficiency} className="h-2" />
+                      <Progress
+                        value={asset.performanceMetrics.efficiency}
+                        className="h-2"
+                      />
                     </div>
                     <div>
                       <div className="flex justify-between mb-1">
                         <span className="text-sm">อัตราการใช้งาน</span>
-                        <span className="text-sm font-medium">{asset.performanceMetrics.utilizationRate}%</span>
+                        <span className="text-sm font-medium">
+                          {asset.performanceMetrics.utilizationRate}%
+                        </span>
                       </div>
-                      <Progress value={asset.performanceMetrics.utilizationRate} className="h-2" />
+                      <Progress
+                        value={asset.performanceMetrics.utilizationRate}
+                        className="h-2"
+                      />
                     </div>
                     <div>
                       <div className="flex justify-between mb-1">
                         <span className="text-sm">Uptime</span>
-                        <span className="text-sm font-medium">{asset.uptime}%</span>
+                        <span className="text-sm font-medium">
+                          {asset.uptime}%
+                        </span>
                       </div>
                       <Progress value={asset.uptime} className="h-2" />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="text-sm text-muted-foreground">การใช้เชื้อเพลิง</div>
-                      <div className="text-lg font-bold">{asset.performanceMetrics.fuelConsumption}</div>
-                      <div className="text-xs text-muted-foreground">ลิตร/ชม.</div>
+                      <div className="text-sm text-muted-foreground">
+                        การใช้เชื้อเพลิง
+                      </div>
+                      <div className="text-lg font-bold">
+                        {asset.performanceMetrics.fuelConsumption}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        ลิตร/ชม.
+                      </div>
                     </div>
                     <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="text-sm text-muted-foreground">Downtime</div>
-                      <div className="text-lg font-bold text-warning">{asset.performanceMetrics.downtime}%</div>
-                      <div className="text-xs text-muted-foreground">เฉลี่ย</div>
+                      <div className="text-sm text-muted-foreground">
+                        Downtime
+                      </div>
+                      <div className="text-lg font-bold text-warning">
+                        {asset.performanceMetrics.downtime}%
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        เฉลี่ย
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -550,15 +636,23 @@ export function AssetDetail() {
                       <div key={index} className="p-3 bg-muted/30 rounded-lg">
                         <div className="flex justify-between items-center mb-2">
                           <span className="font-medium">{stat.month}</span>
-                          <span className="text-sm text-muted-foreground">{stat.hours} ชม.</span>
+                          <span className="text-sm text-muted-foreground">
+                            {stat.hours} ชม.
+                          </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                           <div>
-                            <span className="text-muted-foreground">ค่าใช้จ่าย:</span>
-                            <div className="font-medium">฿{stat.cost.toLocaleString()}</div>
+                            <span className="text-muted-foreground">
+                              ค่าใช้จ่าย:
+                            </span>
+                            <div className="font-medium">
+                              ฿{stat.cost.toLocaleString()}
+                            </div>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">Downtime:</span>
+                            <span className="text-muted-foreground">
+                              Downtime:
+                            </span>
                             <div className="font-medium">{stat.downtime}%</div>
                           </div>
                         </div>
@@ -588,7 +682,10 @@ export function AssetDetail() {
               <CardContent>
                 <div className="space-y-3">
                   {asset.documents.map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 border rounded-lg"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-primary/10 rounded-lg">
                           <FileText className="h-5 w-5 text-primary" />
@@ -596,7 +693,8 @@ export function AssetDetail() {
                         <div>
                           <h4 className="font-medium">{doc.name}</h4>
                           <div className="text-sm text-muted-foreground">
-                            {doc.type} • {doc.size} • อัปโหลดเมื่อ {doc.uploadDate}
+                            {doc.type} • {doc.size} • อัปโหลดเมื่อ{" "}
+                            {doc.uploadDate}
                           </div>
                         </div>
                       </div>
@@ -627,7 +725,10 @@ export function AssetDetail() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {Object.entries(asset.specifications).map(([key, value]) => (
-                    <div key={key} className="flex justify-between p-3 bg-muted/30 rounded-lg">
+                    <div
+                      key={key}
+                      className="flex justify-between p-3 bg-muted/30 rounded-lg"
+                    >
                       <span className="text-muted-foreground">{key}:</span>
                       <span className="font-medium">{value}</span>
                     </div>

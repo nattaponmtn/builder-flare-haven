@@ -143,50 +143,80 @@ export function WorkOrders() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Get unique values for filter options
-  const statusOptions = ["All", ...Array.from(new Set(workOrders.map(wo => wo.status)))];
-  const priorityOptions = ["All", ...Array.from(new Set(workOrders.map(wo => wo.priority)))];
-  const assigneeOptions = ["All", ...Array.from(new Set(workOrders.map(wo => wo.assignee)))];
-  const typeOptions = ["All", ...Array.from(new Set(workOrders.map(wo => wo.type)))];
-  const locationOptions = ["All", ...Array.from(new Set(workOrders.map(wo => wo.location)))];
+  const statusOptions = [
+    "All",
+    ...Array.from(new Set(workOrders.map((wo) => wo.status))),
+  ];
+  const priorityOptions = [
+    "All",
+    ...Array.from(new Set(workOrders.map((wo) => wo.priority))),
+  ];
+  const assigneeOptions = [
+    "All",
+    ...Array.from(new Set(workOrders.map((wo) => wo.assignee))),
+  ];
+  const typeOptions = [
+    "All",
+    ...Array.from(new Set(workOrders.map((wo) => wo.type))),
+  ];
+  const locationOptions = [
+    "All",
+    ...Array.from(new Set(workOrders.map((wo) => wo.location))),
+  ];
 
-  const filteredWorkOrders = workOrders.filter((wo) => {
-    const matchesSearch =
-      wo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      wo.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      wo.assignee.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      wo.asset.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      wo.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = filters.status === "All" || wo.status === filters.status;
-    const matchesPriority = filters.priority === "All" || wo.priority === filters.priority;
-    const matchesAssignee = filters.assignee === "All" || wo.assignee === filters.assignee;
-    const matchesType = filters.type === "All" || wo.type === filters.type;
-    const matchesLocation = filters.location === "All" || wo.location === filters.location;
+  const filteredWorkOrders = workOrders
+    .filter((wo) => {
+      const matchesSearch =
+        wo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wo.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wo.assignee.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wo.asset.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wo.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return matchesSearch && matchesStatus && matchesPriority && matchesAssignee && matchesType && matchesLocation;
-  }).sort((a, b) => {
-    let comparison = 0;
-    switch (sortBy) {
-      case "dueDate":
-        comparison = new Date(a.dueDate.split('/').reverse().join('-')).getTime() - 
-                    new Date(b.dueDate.split('/').reverse().join('-')).getTime();
-        break;
-      case "priority":
-        const priorityOrder = { "วิกฤติ": 4, "สูง": 3, "ปานกลาง": 2, "ต่ำ": 1 };
-        comparison = (priorityOrder[a.priority as keyof typeof priorityOrder] || 0) - 
-                    (priorityOrder[b.priority as keyof typeof priorityOrder] || 0);
-        break;
-      case "status":
-        comparison = a.status.localeCompare(b.status, 'th');
-        break;
-      case "title":
-        comparison = a.title.localeCompare(b.title, 'th');
-        break;
-      default:
-        comparison = 0;
-    }
-    return sortOrder === "desc" ? -comparison : comparison;
-  });
+      const matchesStatus =
+        filters.status === "All" || wo.status === filters.status;
+      const matchesPriority =
+        filters.priority === "All" || wo.priority === filters.priority;
+      const matchesAssignee =
+        filters.assignee === "All" || wo.assignee === filters.assignee;
+      const matchesType = filters.type === "All" || wo.type === filters.type;
+      const matchesLocation =
+        filters.location === "All" || wo.location === filters.location;
+
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesPriority &&
+        matchesAssignee &&
+        matchesType &&
+        matchesLocation
+      );
+    })
+    .sort((a, b) => {
+      let comparison = 0;
+      switch (sortBy) {
+        case "dueDate":
+          comparison =
+            new Date(a.dueDate.split("/").reverse().join("-")).getTime() -
+            new Date(b.dueDate.split("/").reverse().join("-")).getTime();
+          break;
+        case "priority":
+          const priorityOrder = { วิกฤติ: 4, สูง: 3, ปานกลาง: 2, ต่ำ: 1 };
+          comparison =
+            (priorityOrder[a.priority as keyof typeof priorityOrder] || 0) -
+            (priorityOrder[b.priority as keyof typeof priorityOrder] || 0);
+          break;
+        case "status":
+          comparison = a.status.localeCompare(b.status, "th");
+          break;
+        case "title":
+          comparison = a.title.localeCompare(b.title, "th");
+          break;
+        default:
+          comparison = 0;
+      }
+      return sortOrder === "desc" ? -comparison : comparison;
+    });
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -228,7 +258,7 @@ export function WorkOrders() {
   };
 
   const updateFilter = (key: keyof FilterState, value: string) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const clearAllFilters = () => {
@@ -243,13 +273,18 @@ export function WorkOrders() {
     setSearchTerm("");
   };
 
-  const activeFilterCount = Object.values(filters).filter(value => value !== "All").length;
+  const activeFilterCount = Object.values(filters).filter(
+    (value) => value !== "All",
+  ).length;
 
   const getStatusCounts = () => {
-    const counts = workOrders.reduce((acc, wo) => {
-      acc[wo.status] = (acc[wo.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const counts = workOrders.reduce(
+      (acc, wo) => {
+        acc[wo.status] = (acc[wo.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
     return counts;
   };
 
@@ -287,19 +322,42 @@ export function WorkOrders() {
         {/* Status Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { status: "รอดำเนินการ", count: statusCounts["รอดำเนินการ"] || 0, color: "bg-slate-100 text-slate-700" },
-            { status: "กำลังดำเนินการ", count: statusCounts["กำลังดำเนิ��การ"] || 0, color: "bg-warning/10 text-warning" },
-            { status: "เสร็จสิ้น", count: statusCounts["เสร็จสิ้น"] || 0, color: "bg-success/10 text-success" },
-            { status: "เกินกำหนด", count: statusCounts["เกินกำหนด"] || 0, color: "bg-destructive/10 text-destructive" },
+            {
+              status: "รอดำเนินการ",
+              count: statusCounts["รอดำเนินการ"] || 0,
+              color: "bg-slate-100 text-slate-700",
+            },
+            {
+              status: "กำลังดำเนินการ",
+              count: statusCounts["กำลังดำเนิ��การ"] || 0,
+              color: "bg-warning/10 text-warning",
+            },
+            {
+              status: "เสร็จสิ้น",
+              count: statusCounts["เสร็จสิ้น"] || 0,
+              color: "bg-success/10 text-success",
+            },
+            {
+              status: "เกินกำหนด",
+              count: statusCounts["เกินกำหนด"] || 0,
+              color: "bg-destructive/10 text-destructive",
+            },
           ].map((item) => (
             <div
               key={item.status}
               className={`card-elevated rounded-xl p-4 text-center cursor-pointer transition-all hover:scale-105 ${
                 filters.status === item.status ? "ring-2 ring-primary" : ""
               }`}
-              onClick={() => updateFilter("status", filters.status === item.status ? "All" : item.status)}
+              onClick={() =>
+                updateFilter(
+                  "status",
+                  filters.status === item.status ? "All" : item.status,
+                )
+              }
             >
-              <div className={`text-2xl font-bold ${item.color}`}>{item.count}</div>
+              <div className={`text-2xl font-bold ${item.color}`}>
+                {item.count}
+              </div>
               <div className="text-sm text-muted-foreground">{item.status}</div>
             </div>
           ))}
@@ -320,11 +378,18 @@ export function WorkOrders() {
             <div className="flex gap-2">
               <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" size="sm" className="bg-background/50 relative">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-background/50 relative"
+                  >
                     <SlidersHorizontal className="h-4 w-4 mr-2" />
                     ตัวกรอง
                     {activeFilterCount > 0 && (
-                      <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs">
+                      <Badge
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs"
+                      >
                         {activeFilterCount}
                       </Badge>
                     )}
@@ -350,12 +415,17 @@ export function WorkOrders() {
                     <div className="grid grid-cols-1 gap-3">
                       <div>
                         <Label className="text-xs">สถานะ</Label>
-                        <Select value={filters.status} onValueChange={(value) => updateFilter("status", value)}>
+                        <Select
+                          value={filters.status}
+                          onValueChange={(value) =>
+                            updateFilter("status", value)
+                          }
+                        >
                           <SelectTrigger className="h-8">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {statusOptions.map(status => (
+                            {statusOptions.map((status) => (
                               <SelectItem key={status} value={status}>
                                 {status === "All" ? "ทั้งหมด" : status}
                               </SelectItem>
@@ -366,12 +436,17 @@ export function WorkOrders() {
 
                       <div>
                         <Label className="text-xs">ควา��สำคัญ</Label>
-                        <Select value={filters.priority} onValueChange={(value) => updateFilter("priority", value)}>
+                        <Select
+                          value={filters.priority}
+                          onValueChange={(value) =>
+                            updateFilter("priority", value)
+                          }
+                        >
                           <SelectTrigger className="h-8">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {priorityOptions.map(priority => (
+                            {priorityOptions.map((priority) => (
                               <SelectItem key={priority} value={priority}>
                                 {priority === "All" ? "ทั้งหมด" : priority}
                               </SelectItem>
@@ -382,12 +457,17 @@ export function WorkOrders() {
 
                       <div>
                         <Label className="text-xs">ผู้รับผิดชอบ</Label>
-                        <Select value={filters.assignee} onValueChange={(value) => updateFilter("assignee", value)}>
+                        <Select
+                          value={filters.assignee}
+                          onValueChange={(value) =>
+                            updateFilter("assignee", value)
+                          }
+                        >
                           <SelectTrigger className="h-8">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {assigneeOptions.map(assignee => (
+                            {assigneeOptions.map((assignee) => (
                               <SelectItem key={assignee} value={assignee}>
                                 {assignee === "All" ? "ทั้งหมด" : assignee}
                               </SelectItem>
@@ -398,12 +478,15 @@ export function WorkOrders() {
 
                       <div>
                         <Label className="text-xs">ประเภทงาน</Label>
-                        <Select value={filters.type} onValueChange={(value) => updateFilter("type", value)}>
+                        <Select
+                          value={filters.type}
+                          onValueChange={(value) => updateFilter("type", value)}
+                        >
                           <SelectTrigger className="h-8">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {typeOptions.map(type => (
+                            {typeOptions.map((type) => (
                               <SelectItem key={type} value={type}>
                                 {type === "All" ? "ทั้งหมด" : type}
                               </SelectItem>
@@ -414,12 +497,17 @@ export function WorkOrders() {
 
                       <div>
                         <Label className="text-xs">สถานที่</Label>
-                        <Select value={filters.location} onValueChange={(value) => updateFilter("location", value)}>
+                        <Select
+                          value={filters.location}
+                          onValueChange={(value) =>
+                            updateFilter("location", value)
+                          }
+                        >
                           <SelectTrigger className="h-8">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {locationOptions.map(location => (
+                            {locationOptions.map((location) => (
                               <SelectItem key={location} value={location}>
                                 {location === "All" ? "ทั้งหมด" : location}
                               </SelectItem>
@@ -432,11 +520,14 @@ export function WorkOrders() {
                 </PopoverContent>
               </Popover>
 
-              <Select value={`${sortBy}-${sortOrder}`} onValueChange={(value) => {
-                const [field, order] = value.split('-');
-                setSortBy(field);
-                setSortOrder(order as "asc" | "desc");
-              }}>
+              <Select
+                value={`${sortBy}-${sortOrder}`}
+                onValueChange={(value) => {
+                  const [field, order] = value.split("-");
+                  setSortBy(field);
+                  setSortOrder(order as "asc" | "desc");
+                }}
+              >
                 <SelectTrigger className="w-40 bg-background/50">
                   <SelectValue />
                 </SelectTrigger>
@@ -455,24 +546,29 @@ export function WorkOrders() {
           {/* Active Filters Display */}
           {activeFilterCount > 0 && (
             <div className="flex flex-wrap gap-2">
-              <span className="text-sm text-muted-foreground">ตัวกรองที่ใช้:</span>
-              {Object.entries(filters).map(([key, value]) => 
-                value !== "All" && (
-                  <Badge key={key} variant="secondary" className="text-xs">
-                    {key === "status" && "สถานะ: "}
-                    {key === "priority" && "ความสำคัญ: "}
-                    {key === "assignee" && "ผู้รับผิดชอบ: "}
-                    {key === "type" && "ประเภท: "}
-                    {key === "location" && "สถานที่: "}
-                    {value}
-                    <button
-                      onClick={() => updateFilter(key as keyof FilterState, "All")}
-                      className="ml-1 hover:text-destructive"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )
+              <span className="text-sm text-muted-foreground">
+                ตัวกรองที่ใช้:
+              </span>
+              {Object.entries(filters).map(
+                ([key, value]) =>
+                  value !== "All" && (
+                    <Badge key={key} variant="secondary" className="text-xs">
+                      {key === "status" && "สถานะ: "}
+                      {key === "priority" && "ความสำคัญ: "}
+                      {key === "assignee" && "ผู้รับผิดชอบ: "}
+                      {key === "type" && "ประเภท: "}
+                      {key === "location" && "สถานที่: "}
+                      {value}
+                      <button
+                        onClick={() =>
+                          updateFilter(key as keyof FilterState, "All")
+                        }
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ),
               )}
             </div>
           )}
@@ -486,8 +582,11 @@ export function WorkOrders() {
               className={`card-elevated rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
                 wo.status === "เกินกำหนด" ? "ring-2 ring-destructive/20" : ""
               } ${
-                wo.priority === "วิกฤติ" ? "border-l-4 border-l-destructive" : 
-                wo.priority === "สูง" ? "border-l-4 border-l-warning" : ""
+                wo.priority === "วิกฤติ"
+                  ? "border-l-4 border-l-destructive"
+                  : wo.priority === "สูง"
+                    ? "border-l-4 border-l-warning"
+                    : ""
               }`}
             >
               <div className="p-4 sm:p-5">

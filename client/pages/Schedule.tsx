@@ -188,10 +188,30 @@ const scheduleData = [
 
 // Technicians data
 const technicians = [
-  { id: "TECH-001", name: "สมชาย รักงาน", department: "ช่างเครื่องยนต์", workload: 85 },
-  { id: "TECH-002", name: "สมหญิง ใจดี", department: "ช่างไฟฟ้า", workload: 70 },
-  { id: "TECH-003", name: "สมศักดิ์ ช่างเก่ง", department: "ช่างเครื่องจักร", workload: 95 },
-  { id: "TECH-004", name: "สมคิด ช่วยงาน", department: "ช่างทั่วไป", workload: 60 },
+  {
+    id: "TECH-001",
+    name: "สมชาย รักงาน",
+    department: "ช่างเครื่องยนต์",
+    workload: 85,
+  },
+  {
+    id: "TECH-002",
+    name: "สมหญิง ใจดี",
+    department: "ช่างไฟฟ้า",
+    workload: 70,
+  },
+  {
+    id: "TECH-003",
+    name: "สมศักดิ์ ช่างเก่ง",
+    department: "ช่างเครื่องจักร",
+    workload: 95,
+  },
+  {
+    id: "TECH-004",
+    name: "สมคิด ช่วยงาน",
+    department: "ช่างทั่วไป",
+    workload: 60,
+  },
 ];
 
 export function Schedule() {
@@ -221,17 +241,24 @@ export function Schedule() {
 
   // Filter schedules
   const filteredSchedules = useMemo(() => {
-    return scheduleData.filter(schedule => {
-      const matchesSearch = !searchTerm || 
+    return scheduleData.filter((schedule) => {
+      const matchesSearch =
+        !searchTerm ||
         schedule.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         schedule.asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         schedule.assignee.name.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesStatus = filterStatus === "ทั้งหมด" || schedule.status === filterStatus;
-      const matchesPriority = filterPriority === "ทั้งหมด" || schedule.priority === filterPriority;
-      const matchesAssignee = filterAssignee === "ทั้งหมด" || schedule.assignee.name === filterAssignee;
-      
-      return matchesSearch && matchesStatus && matchesPriority && matchesAssignee;
+
+      const matchesStatus =
+        filterStatus === "ทั้งหมด" || schedule.status === filterStatus;
+      const matchesPriority =
+        filterPriority === "ทั้งหมด" || schedule.priority === filterPriority;
+      const matchesAssignee =
+        filterAssignee === "ทั้งหมด" ||
+        schedule.assignee.name === filterAssignee;
+
+      return (
+        matchesSearch && matchesStatus && matchesPriority && matchesAssignee
+      );
     });
   }, [searchTerm, filterStatus, filterPriority, filterAssignee]);
 
@@ -240,11 +267,14 @@ export function Schedule() {
     const today = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
-    
+
     // Get schedules for current month view
-    const monthSchedules = scheduleData.filter(schedule => {
+    const monthSchedules = scheduleData.filter((schedule) => {
       const scheduleDate = new Date(schedule.startDate);
-      return scheduleDate.getMonth() === currentMonth && scheduleDate.getFullYear() === currentYear;
+      return (
+        scheduleDate.getMonth() === currentMonth &&
+        scheduleDate.getFullYear() === currentYear
+      );
     });
 
     return monthSchedules;
@@ -253,12 +283,20 @@ export function Schedule() {
   // Statistics
   const stats = useMemo(() => {
     const total = scheduleData.length;
-    const completed = scheduleData.filter(s => s.status === "เสร็จสิ้น").length;
-    const inProgress = scheduleData.filter(s => s.status === "กำลังดำเนินการ").length;
-    const pending = scheduleData.filter(s => s.status === "รอดำเนินการ").length;
-    const overdue = scheduleData.filter(s => s.isOverdue).length;
-    const today = scheduleData.filter(s => s.startDate === new Date().toISOString().split('T')[0]).length;
-    
+    const completed = scheduleData.filter(
+      (s) => s.status === "เสร็จสิ้น",
+    ).length;
+    const inProgress = scheduleData.filter(
+      (s) => s.status === "กำลังดำเนินการ",
+    ).length;
+    const pending = scheduleData.filter(
+      (s) => s.status === "รอดำเนินการ",
+    ).length;
+    const overdue = scheduleData.filter((s) => s.isOverdue).length;
+    const today = scheduleData.filter(
+      (s) => s.startDate === new Date().toISOString().split("T")[0],
+    ).length;
+
     return { total, completed, inProgress, pending, overdue, today };
   }, []);
 
@@ -271,9 +309,10 @@ export function Schedule() {
     const daysInMonth = lastDay.getDate();
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay()); // Start from Sunday
-    
+
     const days = [];
-    for (let i = 0; i < 42; i++) { // 6 weeks * 7 days
+    for (let i = 0; i < 42; i++) {
+      // 6 weeks * 7 days
       const day = new Date(startDate);
       day.setDate(startDate.getDate() + i);
       days.push(day);
@@ -282,8 +321,8 @@ export function Schedule() {
   };
 
   const getSchedulesForDate = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
-    return calendarData.filter(schedule => schedule.startDate === dateStr);
+    const dateStr = date.toISOString().split("T")[0];
+    return calendarData.filter((schedule) => schedule.startDate === dateStr);
   };
 
   const getStatusColor = (status: string) => {
@@ -319,11 +358,16 @@ export function Schedule() {
   };
 
   const handleAddSchedule = () => {
-    if (!newSchedule.title || !newSchedule.asset || !newSchedule.assignee || !newSchedule.startDate) {
+    if (
+      !newSchedule.title ||
+      !newSchedule.asset ||
+      !newSchedule.assignee ||
+      !newSchedule.startDate
+    ) {
       toast.error("กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
       return;
     }
-    
+
     toast.success("เพิ่มตารางงานเรียบร้อยแล้ว");
     setAddScheduleOpen(false);
     setNewSchedule({
@@ -344,8 +388,18 @@ export function Schedule() {
   };
 
   const monthNames = [
-    "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-    "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    "มกราคม",
+    "กุมภาพันธ์",
+    "มีนาคม",
+    "เมษายน",
+    "พฤษภาคม",
+    "มิถุนายน",
+    "กรกฎาคม",
+    "สิงหาคม",
+    "กันยายน",
+    "ตุลาคม",
+    "พฤศจิกายน",
+    "ธันวาคม",
   ];
 
   const dayNames = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
@@ -378,44 +432,74 @@ export function Schedule() {
                     <Label>หัวข้องาน *</Label>
                     <Input
                       value={newSchedule.title}
-                      onChange={(e) => setNewSchedule(prev => ({ ...prev, title: e.target.value }))}
+                      onChange={(e) =>
+                        setNewSchedule((prev) => ({
+                          ...prev,
+                          title: e.target.value,
+                        }))
+                      }
                       placeholder="เช่น ตรวจสอบเครื่องยนต์"
                     />
                   </div>
                   <div>
                     <Label>อุปกรณ์ *</Label>
-                    <Select value={newSchedule.asset} onValueChange={(value) => setNewSchedule(prev => ({ ...prev, asset: value }))}>
+                    <Select
+                      value={newSchedule.asset}
+                      onValueChange={(value) =>
+                        setNewSchedule((prev) => ({ ...prev, asset: value }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="เลือกอุปกรณ์" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="TRACT-001">รถแทรกเตอร์ Kubota M7060</SelectItem>
-                        <SelectItem value="PUMP-003">ปั๊มน้ำไฟฟ้า Grundfos CR5-8</SelectItem>
-                        <SelectItem value="HARV-003">เครื่องเก็บเกี่ยว John Deere S660</SelectItem>
+                        <SelectItem value="TRACT-001">
+                          รถแทรกเตอร์ Kubota M7060
+                        </SelectItem>
+                        <SelectItem value="PUMP-003">
+                          ปั๊มน้ำไฟฟ้า Grundfos CR5-8
+                        </SelectItem>
+                        <SelectItem value="HARV-003">
+                          เครื่องเก็บเกี่ยว John Deere S660
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
                     <Label>ผู้รับผิดชอบ *</Label>
-                    <Select value={newSchedule.assignee} onValueChange={(value) => setNewSchedule(prev => ({ ...prev, assignee: value }))}>
+                    <Select
+                      value={newSchedule.assignee}
+                      onValueChange={(value) =>
+                        setNewSchedule((prev) => ({ ...prev, assignee: value }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="เลือกช่าง" />
                       </SelectTrigger>
                       <SelectContent>
-                        {technicians.map(tech => (
-                          <SelectItem key={tech.id} value={tech.id}>{tech.name}</SelectItem>
+                        {technicians.map((tech) => (
+                          <SelectItem key={tech.id} value={tech.id}>
+                            {tech.name}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
                     <Label>ประเภทงาน</Label>
-                    <Select value={newSchedule.type} onValueChange={(value) => setNewSchedule(prev => ({ ...prev, type: value }))}>
+                    <Select
+                      value={newSchedule.type}
+                      onValueChange={(value) =>
+                        setNewSchedule((prev) => ({ ...prev, type: value }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ป้องกัน">บำรุงรักษาเชิงป้องกัน</SelectItem>
+                        <SelectItem value="ป้องกัน">
+                          บำรุงรักษาเชิงป้องกัน
+                        </SelectItem>
                         <SelectItem value="แก้ไข">งานซ่อมแซม</SelectItem>
                         <SelectItem value="ตรวจสอบ">การตรวจสอบ</SelectItem>
                       </SelectContent>
@@ -423,7 +507,12 @@ export function Schedule() {
                   </div>
                   <div>
                     <Label>ความสำคัญ</Label>
-                    <Select value={newSchedule.priority} onValueChange={(value) => setNewSchedule(prev => ({ ...prev, priority: value }))}>
+                    <Select
+                      value={newSchedule.priority}
+                      onValueChange={(value) =>
+                        setNewSchedule((prev) => ({ ...prev, priority: value }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -440,7 +529,12 @@ export function Schedule() {
                     <Input
                       type="date"
                       value={newSchedule.startDate}
-                      onChange={(e) => setNewSchedule(prev => ({ ...prev, startDate: e.target.value }))}
+                      onChange={(e) =>
+                        setNewSchedule((prev) => ({
+                          ...prev,
+                          startDate: e.target.value,
+                        }))
+                      }
                     />
                   </div>
                   <div>
@@ -448,7 +542,12 @@ export function Schedule() {
                     <Input
                       type="time"
                       value={newSchedule.startTime}
-                      onChange={(e) => setNewSchedule(prev => ({ ...prev, startTime: e.target.value }))}
+                      onChange={(e) =>
+                        setNewSchedule((prev) => ({
+                          ...prev,
+                          startTime: e.target.value,
+                        }))
+                      }
                     />
                   </div>
                   <div>
@@ -456,7 +555,12 @@ export function Schedule() {
                     <Input
                       type="number"
                       value={newSchedule.duration}
-                      onChange={(e) => setNewSchedule(prev => ({ ...prev, duration: e.target.value }))}
+                      onChange={(e) =>
+                        setNewSchedule((prev) => ({
+                          ...prev,
+                          duration: e.target.value,
+                        }))
+                      }
                       placeholder="2"
                       step="0.5"
                       min="0.5"
@@ -466,7 +570,12 @@ export function Schedule() {
                     <Label>รายละเอียด</Label>
                     <Textarea
                       value={newSchedule.description}
-                      onChange={(e) => setNewSchedule(prev => ({ ...prev, description: e.target.value }))}
+                      onChange={(e) =>
+                        setNewSchedule((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
                       placeholder="อธิบายรายละเอียดงาน..."
                       rows={2}
                     />
@@ -475,7 +584,12 @@ export function Schedule() {
                     <Label>สถานที่</Label>
                     <Input
                       value={newSchedule.location}
-                      onChange={(e) => setNewSchedule(prev => ({ ...prev, location: e.target.value }))}
+                      onChange={(e) =>
+                        setNewSchedule((prev) => ({
+                          ...prev,
+                          location: e.target.value,
+                        }))
+                      }
                       placeholder="เช่น ไร่ A, โรงซ่อม"
                     />
                   </div>
@@ -485,7 +599,10 @@ export function Schedule() {
                     <Plus className="h-4 w-4 mr-2" />
                     เพิ่มตารางงาน
                   </Button>
-                  <Button variant="outline" onClick={() => setAddScheduleOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setAddScheduleOpen(false)}
+                  >
                     ยกเลิก
                   </Button>
                 </div>
@@ -513,25 +630,37 @@ export function Schedule() {
             <div className="text-xs text-muted-foreground">งานวันนี้</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-warning">{stats.inProgress}</div>
+            <div className="text-lg font-bold text-warning">
+              {stats.inProgress}
+            </div>
             <div className="text-xs text-muted-foreground">กำลังดำเนินการ</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-secondary">{stats.pending}</div>
+            <div className="text-lg font-bold text-secondary">
+              {stats.pending}
+            </div>
             <div className="text-xs text-muted-foreground">รอดำเนินการ</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-success">{stats.completed}</div>
+            <div className="text-lg font-bold text-success">
+              {stats.completed}
+            </div>
             <div className="text-xs text-muted-foreground">เสร็จสิ้น</div>
           </div>
           <div className="metric-card rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-destructive">{stats.overdue}</div>
+            <div className="text-lg font-bold text-destructive">
+              {stats.overdue}
+            </div>
             <div className="text-xs text-muted-foreground">เกินกำหนด</div>
           </div>
         </div>
 
         {/* Main Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="calendar">ปฏิทิน</TabsTrigger>
             <TabsTrigger value="list">รายการ</TabsTrigger>
@@ -549,13 +678,22 @@ export function Schedule() {
                     ปฏิทินงานบำรุงรักษา
                   </CardTitle>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => navigateMonth("prev")}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigateMonth("prev")}
+                    >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <span className="text-lg font-semibold min-w-40 text-center">
-                      {monthNames[currentDate.getMonth()]} {currentDate.getFullYear() + 543}
+                      {monthNames[currentDate.getMonth()]}{" "}
+                      {currentDate.getFullYear() + 543}
                     </span>
-                    <Button variant="outline" size="sm" onClick={() => navigateMonth("next")}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigateMonth("next")}
+                    >
                       <ChevronRight className="h-4 w-4" />
                     </Button>
                   </div>
@@ -564,20 +702,25 @@ export function Schedule() {
               <CardContent>
                 {/* Day headers */}
                 <div className="grid grid-cols-7 gap-1 mb-2">
-                  {dayNames.map(day => (
-                    <div key={day} className="p-2 text-center text-sm font-medium text-muted-foreground">
+                  {dayNames.map((day) => (
+                    <div
+                      key={day}
+                      className="p-2 text-center text-sm font-medium text-muted-foreground"
+                    >
                       {day}
                     </div>
                   ))}
                 </div>
-                
+
                 {/* Calendar grid */}
                 <div className="grid grid-cols-7 gap-1">
                   {getDaysInMonth(currentDate).map((date, index) => {
-                    const isCurrentMonth = date.getMonth() === currentDate.getMonth();
-                    const isToday = date.toDateString() === new Date().toDateString();
+                    const isCurrentMonth =
+                      date.getMonth() === currentDate.getMonth();
+                    const isToday =
+                      date.toDateString() === new Date().toDateString();
                     const daySchedules = getSchedulesForDate(date);
-                    
+
                     return (
                       <div
                         key={index}
@@ -585,24 +728,25 @@ export function Schedule() {
                           isCurrentMonth ? "bg-background" : "bg-muted/30"
                         } ${isToday ? "ring-2 ring-primary" : ""}`}
                       >
-                        <div className={`text-sm font-medium text-center mb-1 ${
-                          isCurrentMonth ? "" : "text-muted-foreground"
-                        }`}>
+                        <div
+                          className={`text-sm font-medium text-center mb-1 ${
+                            isCurrentMonth ? "" : "text-muted-foreground"
+                          }`}
+                        >
                           {date.getDate()}
                         </div>
                         <div className="space-y-1">
-                          {daySchedules.slice(0, 2).map(schedule => (
+                          {daySchedules.slice(0, 2).map((schedule) => (
                             <div
                               key={schedule.id}
-                              className={`text-xs p-1 rounded text-center cursor-pointer hover:opacity-80 ${
-                                getStatusColor(schedule.status)
-                              }`}
+                              className={`text-xs p-1 rounded text-center cursor-pointer hover:opacity-80 ${getStatusColor(
+                                schedule.status,
+                              )}`}
                               title={`${schedule.title} - ${schedule.assignee.name}`}
                             >
-                              {schedule.title.length > 15 
-                                ? schedule.title.substring(0, 15) + "..." 
-                                : schedule.title
-                              }
+                              {schedule.title.length > 15
+                                ? schedule.title.substring(0, 15) + "..."
+                                : schedule.title}
                             </div>
                           ))}
                           {daySchedules.length > 2 && (
@@ -635,24 +779,34 @@ export function Schedule() {
                     />
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <Select
+                      value={filterStatus}
+                      onValueChange={setFilterStatus}
+                    >
                       <SelectTrigger className="w-40">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="ทั้งหมด">สถานะทั้งหมด</SelectItem>
                         <SelectItem value="รอดำเนินการ">รอดำเนินการ</SelectItem>
-                        <SelectItem value="กำลังดำเนินการ">กำลังดำเนินการ</SelectItem>
+                        <SelectItem value="กำลังดำเนินการ">
+                          กำลังดำเนินการ
+                        </SelectItem>
                         <SelectItem value="เสร็จสิ้น">เสร็จสิ้น</SelectItem>
                         <SelectItem value="เกินกำหนด">เกินกำหนด</SelectItem>
                       </SelectContent>
                     </Select>
-                    <Select value={filterPriority} onValueChange={setFilterPriority}>
+                    <Select
+                      value={filterPriority}
+                      onValueChange={setFilterPriority}
+                    >
                       <SelectTrigger className="w-40">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ทั้งหมด">ความสำคัญทั้งหมด</SelectItem>
+                        <SelectItem value="ทั้งหมด">
+                          ความสำคัญทั้งหมด
+                        </SelectItem>
                         <SelectItem value="วิกฤติ">วิกฤติ</SelectItem>
                         <SelectItem value="สูง">สูง</SelectItem>
                         <SelectItem value="ปานกลาง">ปานกลาง</SelectItem>
@@ -666,25 +820,43 @@ export function Schedule() {
 
             {/* Schedule List */}
             <div className="space-y-3">
-              {filteredSchedules.map(schedule => (
-                <Card key={schedule.id} className={`card-elevated ${
-                  schedule.isOverdue ? "ring-2 ring-destructive/20 border-l-4 border-l-destructive" : 
-                  schedule.priority === "วิกฤติ" ? "border-l-4 border-l-destructive" :
-                  schedule.priority === "สูง" ? "border-l-4 border-l-warning" : ""
-                }`}>
+              {filteredSchedules.map((schedule) => (
+                <Card
+                  key={schedule.id}
+                  className={`card-elevated ${
+                    schedule.isOverdue
+                      ? "ring-2 ring-destructive/20 border-l-4 border-l-destructive"
+                      : schedule.priority === "วิกฤติ"
+                        ? "border-l-4 border-l-destructive"
+                        : schedule.priority === "สูง"
+                          ? "border-l-4 border-l-warning"
+                          : ""
+                  }`}
+                >
                   <CardContent className="p-4">
                     <div className="space-y-4">
                       {/* Header */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-2 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-semibold text-sm sm:text-base">{schedule.title}</h3>
-                            <Badge className={getPriorityColor(schedule.priority)}>{schedule.priority}</Badge>
-                            <Badge className={getStatusColor(schedule.status)} variant="secondary">
+                            <h3 className="font-semibold text-sm sm:text-base">
+                              {schedule.title}
+                            </h3>
+                            <Badge
+                              className={getPriorityColor(schedule.priority)}
+                            >
+                              {schedule.priority}
+                            </Badge>
+                            <Badge
+                              className={getStatusColor(schedule.status)}
+                              variant="secondary"
+                            >
                               {schedule.status}
                             </Badge>
                           </div>
-                          <p className="text-sm text-muted-foreground">{schedule.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {schedule.description}
+                          </p>
                         </div>
                         <div className="flex gap-2">
                           <Button variant="ghost" size="sm">
@@ -700,34 +872,50 @@ export function Schedule() {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                         <div className="p-2 bg-muted/30 rounded-lg">
                           <div className="text-muted-foreground">อุปกรณ์</div>
-                          <div className="font-medium">{schedule.asset.name}</div>
+                          <div className="font-medium">
+                            {schedule.asset.name}
+                          </div>
                         </div>
                         <div className="p-2 bg-muted/30 rounded-lg">
-                          <div className="text-muted-foreground">ผู้รับผิดชอบ</div>
-                          <div className="font-medium">{schedule.assignee.name}</div>
+                          <div className="text-muted-foreground">
+                            ผู้รับผิดชอบ
+                          </div>
+                          <div className="font-medium">
+                            {schedule.assignee.name}
+                          </div>
                         </div>
                         <div className="p-2 bg-muted/30 rounded-lg">
-                          <div className="text-muted-foreground">วันที่ กำหนด</div>
-                          <div className="font-medium">{schedule.startDate} {schedule.startTime}</div>
+                          <div className="text-muted-foreground">
+                            วันที่ กำหนด
+                          </div>
+                          <div className="font-medium">
+                            {schedule.startDate} {schedule.startTime}
+                          </div>
                         </div>
                         <div className="p-2 bg-muted/30 rounded-lg">
                           <div className="text-muted-foreground">ระยะเวลา</div>
-                          <div className="font-medium">{schedule.estimatedDuration} ชม.</div>
+                          <div className="font-medium">
+                            {schedule.estimatedDuration} ชม.
+                          </div>
                         </div>
                       </div>
 
                       {/* Progress and Actions */}
                       <div className="flex items-center justify-between pt-3 border-t">
                         <div className="flex items-center gap-3">
-                          <span className="text-sm text-muted-foreground">ความคืบหน้า:</span>
+                          <span className="text-sm text-muted-foreground">
+                            ความคืบหน้า:
+                          </span>
                           <div className="flex items-center gap-2">
                             <div className="w-20 bg-muted rounded-full h-2">
-                              <div 
-                                className="bg-primary h-2 rounded-full transition-all" 
+                              <div
+                                className="bg-primary h-2 rounded-full transition-all"
                                 style={{ width: `${schedule.completionRate}%` }}
                               />
                             </div>
-                            <span className="text-sm font-medium">{schedule.completionRate}%</span>
+                            <span className="text-sm font-medium">
+                              {schedule.completionRate}%
+                            </span>
                           </div>
                         </div>
                         <div className="flex gap-2">
@@ -768,38 +956,64 @@ export function Schedule() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {technicians.map(tech => (
+                  {technicians.map((tech) => (
                     <div key={tech.id} className="p-4 border rounded-lg">
                       <div className="flex items-center justify-between mb-3">
                         <div>
                           <h4 className="font-medium">{tech.name}</h4>
-                          <p className="text-sm text-muted-foreground">{tech.department}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {tech.department}
+                          </p>
                         </div>
                         <div className="text-right">
-                          <div className={`text-lg font-bold ${
-                            tech.workload >= 90 ? "text-destructive" :
-                            tech.workload >= 80 ? "text-warning" :
-                            "text-success"
-                          }`}>
+                          <div
+                            className={`text-lg font-bold ${
+                              tech.workload >= 90
+                                ? "text-destructive"
+                                : tech.workload >= 80
+                                  ? "text-warning"
+                                  : "text-success"
+                            }`}
+                          >
                             {tech.workload}%
                           </div>
-                          <div className="text-sm text-muted-foreground">ภาระงาน</div>
+                          <div className="text-sm text-muted-foreground">
+                            ภาระงาน
+                          </div>
                         </div>
                       </div>
                       <div className="space-y-2">
                         <div className="w-full bg-muted rounded-full h-3">
-                          <div 
+                          <div
                             className={`h-3 rounded-full transition-all ${
-                              tech.workload >= 90 ? "bg-destructive" :
-                              tech.workload >= 80 ? "bg-warning" :
-                              "bg-success"
+                              tech.workload >= 90
+                                ? "bg-destructive"
+                                : tech.workload >= 80
+                                  ? "bg-warning"
+                                  : "bg-success"
                             }`}
                             style={{ width: `${tech.workload}%` }}
                           />
                         </div>
                         <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>งานที่มอบหมาย: {scheduleData.filter(s => s.assignee.name === tech.name).length}</span>
-                          <span>งานสำเร็จ: {scheduleData.filter(s => s.assignee.name === tech.name && s.status === "เสร็จสิ้น").length}</span>
+                          <span>
+                            งานที่มอบหมาย:{" "}
+                            {
+                              scheduleData.filter(
+                                (s) => s.assignee.name === tech.name,
+                              ).length
+                            }
+                          </span>
+                          <span>
+                            งานสำเร็จ:{" "}
+                            {
+                              scheduleData.filter(
+                                (s) =>
+                                  s.assignee.name === tech.name &&
+                                  s.status === "เสร็จสิ้น",
+                              ).length
+                            }
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -823,11 +1037,15 @@ export function Schedule() {
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div className="p-3 bg-muted/30 rounded-lg">
                       <div className="text-2xl font-bold text-success">92%</div>
-                      <div className="text-sm text-muted-foreground">งานเสร็จตรงเวลา</div>
+                      <div className="text-sm text-muted-foreground">
+                        งานเสร็จตรงเวลา
+                      </div>
                     </div>
                     <div className="p-3 bg-muted/30 rounded-lg">
                       <div className="text-2xl font-bold text-primary">2.1</div>
-                      <div className="text-sm text-muted-foreground">เวลาเฉลี่ย (ชม.)</div>
+                      <div className="text-sm text-muted-foreground">
+                        เวลาเฉลี่ย (ชม.)
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -848,7 +1066,10 @@ export function Schedule() {
                         <span>15/20</span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
-                        <div className="bg-primary h-2 rounded-full" style={{ width: "75%" }} />
+                        <div
+                          className="bg-primary h-2 rounded-full"
+                          style={{ width: "75%" }}
+                        />
                       </div>
                     </div>
                     <div>
@@ -857,7 +1078,10 @@ export function Schedule() {
                         <span>18/20</span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
-                        <div className="bg-success h-2 rounded-full" style={{ width: "90%" }} />
+                        <div
+                          className="bg-success h-2 rounded-full"
+                          style={{ width: "90%" }}
+                        />
                       </div>
                     </div>
                   </div>

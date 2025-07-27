@@ -74,7 +74,7 @@ const usersData = [
     lastLogin: "2024-01-15 14:30",
     createdAt: "2023-01-01",
     permissions: ["all"],
-    avatar: ""
+    avatar: "",
   },
   {
     id: "USR-002",
@@ -89,7 +89,7 @@ const usersData = [
     lastLogin: "2024-01-15 10:15",
     createdAt: "2023-02-15",
     permissions: ["work_orders", "assets", "parts"],
-    avatar: ""
+    avatar: "",
   },
   {
     id: "USR-003",
@@ -104,7 +104,7 @@ const usersData = [
     lastLogin: "2024-01-15 08:45",
     createdAt: "2023-01-15",
     permissions: ["work_orders", "assets", "parts", "reports", "users_view"],
-    avatar: ""
+    avatar: "",
   },
   {
     id: "USR-004",
@@ -119,7 +119,7 @@ const usersData = [
     lastLogin: "2024-01-10 16:20",
     createdAt: "2023-03-01",
     permissions: ["work_orders", "assets"],
-    avatar: ""
+    avatar: "",
   },
   {
     id: "USR-005",
@@ -134,8 +134,8 @@ const usersData = [
     lastLogin: "2024-01-14 15:30",
     createdAt: "2023-06-01",
     permissions: ["reports_view"],
-    avatar: ""
-  }
+    avatar: "",
+  },
 ];
 
 // Role configurations
@@ -144,26 +144,33 @@ const roleConfigs = {
     name: "ผู้ดูแลระบบ",
     color: "bg-destructive text-destructive-foreground",
     permissions: ["all"],
-    description: "สิทธิ์เต็มในการจัดการระบบทั้งหมด"
+    description: "สิทธิ์เต็มในการจัดการระบบทั้งหมด",
   },
   manager: {
     name: "หัวหน้า",
     color: "bg-primary text-primary-foreground",
-    permissions: ["work_orders", "assets", "parts", "reports", "users_view", "schedule"],
-    description: "จัดการงานและดูรายงาน"
+    permissions: [
+      "work_orders",
+      "assets",
+      "parts",
+      "reports",
+      "users_view",
+      "schedule",
+    ],
+    description: "จัดการงานและดูรายงาน",
   },
   technician: {
     name: "ช่างเทคนิค",
     color: "bg-warning text-warning-foreground",
     permissions: ["work_orders", "assets", "parts"],
-    description: "ดำเนินงานซ่อมบำรุง"
+    description: "ดำเนินงานซ่อมบำรุง",
   },
   viewer: {
     name: "ผู้ดูข้อมูล",
     color: "bg-secondary text-secondary-foreground",
     permissions: ["reports_view"],
-    description: "ดูข้อมูลและรายงานเท่านั้น"
-  }
+    description: "ดูข้อมูลและรายงานเท่านั้น",
+  },
 };
 
 // All available permissions
@@ -177,7 +184,7 @@ const allPermissions = [
   { id: "users", name: "จัดการผู้ใช้", category: "ระบบ" },
   { id: "users_view", name: "ดูรายการผู้ใช้", category: "ระบบ" },
   { id: "settings", name: "ตั้งค่าระบบ", category: "ระบบ" },
-  { id: "all", name: "สิทธิ์ทั้งหมด", category: "ระบบ" }
+  { id: "all", name: "สิทธิ์ทั้งหมด", category: "ระบบ" },
 ];
 
 export function Users() {
@@ -201,27 +208,34 @@ export function Users() {
     phone: "",
     password: "",
     confirmPassword: "",
-    permissions: [] as string[]
+    permissions: [] as string[],
   });
 
   const filteredUsers = useMemo(() => {
-    return usersData.filter(user => {
-      const matchesSearch = user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          user.username.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = statusFilter === "all" || user.status === statusFilter;
+    return usersData.filter((user) => {
+      const matchesSearch =
+        user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.username.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        statusFilter === "all" || user.status === statusFilter;
       const matchesRole = roleFilter === "all" || user.role === roleFilter;
-      
+
       return matchesSearch && matchesStatus && matchesRole;
     });
   }, [searchTerm, statusFilter, roleFilter]);
 
   const handleCreateUser = () => {
-    if (!formData.username || !formData.email || !formData.fullName || !formData.password) {
+    if (
+      !formData.username ||
+      !formData.email ||
+      !formData.fullName ||
+      !formData.password
+    ) {
       toast.error("กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
       return;
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("รหัสผ่านไม่ตรงกัน");
       return;
@@ -239,7 +253,7 @@ export function Users() {
       phone: "",
       password: "",
       confirmPassword: "",
-      permissions: []
+      permissions: [],
     });
   };
 
@@ -255,7 +269,7 @@ export function Users() {
       phone: user.phone,
       password: "",
       confirmPassword: "",
-      permissions: user.permissions
+      permissions: user.permissions,
     });
     setIsEditDialogOpen(true);
   };
@@ -282,17 +296,26 @@ export function Users() {
 
   const handleToggleUserStatus = (userId: string, currentStatus: string) => {
     const newStatus = currentStatus === "active" ? "inactive" : "active";
-    toast.success(`${newStatus === "active" ? "เปิดใช้งาน" : "ปิดใช้งาน"}ผู้ใช้เรียบร้อยแล้ว`);
+    toast.success(
+      `${newStatus === "active" ? "เปิดใช้งาน" : "ปิดใช้งาน"}ผู้ใช้เรียบร้อยแล้ว`,
+    );
   };
 
   const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
   };
 
   const getStatusBadge = (status: string) => {
-    return status === "active" 
-      ? <Badge className="bg-success text-success-foreground">ใช้งาน</Badge>
-      : <Badge variant="secondary">ไม่ใช้งาน</Badge>;
+    return status === "active" ? (
+      <Badge className="bg-success text-success-foreground">ใช้งาน</Badge>
+    ) : (
+      <Badge variant="secondary">ไม่ใช้งาน</Badge>
+    );
   };
 
   const getRoleBadge = (role: string) => {
@@ -311,7 +334,10 @@ export function Users() {
               จัดการสิทธิ์และข้อมูลผู้ใช้งานในระบบ
             </p>
           </div>
-          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <Dialog
+            open={isCreateDialogOpen}
+            onOpenChange={setIsCreateDialogOpen}
+          >
             <DialogTrigger asChild>
               <Button>
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -329,7 +355,9 @@ export function Users() {
                     <Input
                       id="username"
                       value={formData.username}
-                      onChange={(e) => setFormData({...formData, username: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, username: e.target.value })
+                      }
                       placeholder="username"
                     />
                   </div>
@@ -339,18 +367,22 @@ export function Users() {
                       id="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       placeholder="email@company.com"
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <Label htmlFor="fullName">ชื่อ-นามสกุล *</Label>
                   <Input
                     id="fullName"
                     value={formData.fullName}
-                    onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
                     placeholder="ชื่อ นามสกุล"
                   />
                 </div>
@@ -358,13 +390,20 @@ export function Users() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <Label htmlFor="role">บทบาท</Label>
-                    <Select value={formData.role} onValueChange={(value) => setFormData({...formData, role: value})}>
+                    <Select
+                      value={formData.role}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, role: value })
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         {Object.entries(roleConfigs).map(([key, config]) => (
-                          <SelectItem key={key} value={key}>{config.name}</SelectItem>
+                          <SelectItem key={key} value={key}>
+                            {config.name}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -374,7 +413,9 @@ export function Users() {
                     <Input
                       id="department"
                       value={formData.department}
-                      onChange={(e) => setFormData({...formData, department: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, department: e.target.value })
+                      }
                       placeholder="ชื่อแผนก"
                     />
                   </div>
@@ -386,7 +427,9 @@ export function Users() {
                     <Input
                       id="position"
                       value={formData.position}
-                      onChange={(e) => setFormData({...formData, position: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, position: e.target.value })
+                      }
                       placeholder="ตำแหน่งงาน"
                     />
                   </div>
@@ -395,7 +438,9 @@ export function Users() {
                     <Input
                       id="phone"
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                       placeholder="081-234-5678"
                     />
                   </div>
@@ -408,7 +453,9 @@ export function Users() {
                       id="password"
                       type="password"
                       value={formData.password}
-                      onChange={(e) => setFormData({...formData, password: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
                       placeholder="รหัสผ่าน"
                     />
                   </div>
@@ -418,7 +465,12 @@ export function Users() {
                       id="confirmPassword"
                       type="password"
                       value={formData.confirmPassword}
-                      onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          confirmPassword: e.target.value,
+                        })
+                      }
                       placeholder="ยืนยันรหัสผ่าน"
                     />
                   </div>
@@ -428,7 +480,10 @@ export function Users() {
                   <Button onClick={handleCreateUser} className="flex-1">
                     สร้างผู้ใช้งาน
                   </Button>
-                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsCreateDialogOpen(false)}
+                  >
                     ยกเลิก
                   </Button>
                 </div>
@@ -438,7 +493,11 @@ export function Users() {
         </div>
 
         {/* Main Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="users">ผู้ใช้งาน</TabsTrigger>
             <TabsTrigger value="roles">บทบาทและสิทธิ์</TabsTrigger>
@@ -477,7 +536,9 @@ export function Users() {
                     <SelectContent>
                       <SelectItem value="all">บทบาททั้งหมด</SelectItem>
                       {Object.entries(roleConfigs).map(([key, config]) => (
-                        <SelectItem key={key} value={key}>{config.name}</SelectItem>
+                        <SelectItem key={key} value={key}>
+                          {config.name}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -487,14 +548,19 @@ export function Users() {
 
             {/* Users List */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {filteredUsers.map(user => (
-                <Card key={user.id} className="hover:shadow-lg transition-shadow">
+              {filteredUsers.map((user) => (
+                <Card
+                  key={user.id}
+                  className="hover:shadow-lg transition-shadow"
+                >
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-3">
                         <Avatar>
                           <AvatarImage src={user.avatar} />
-                          <AvatarFallback>{getInitials(user.fullName)}</AvatarFallback>
+                          <AvatarFallback>
+                            {getInitials(user.fullName)}
+                          </AvatarFallback>
                         </Avatar>
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
@@ -522,21 +588,28 @@ export function Users() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center gap-1">
-                        <Button variant="ghost" size="sm" onClick={() => handleEditUser(user)}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEditUser(user)}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        
-                        <Button 
-                          variant="ghost" 
+
+                        <Button
+                          variant="ghost"
                           size="sm"
-                          onClick={() => handleToggleUserStatus(user.id, user.status)}
-                        >
-                          {user.status === "active" ? 
-                            <Lock className="h-4 w-4" /> : 
-                            <Unlock className="h-4 w-4" />
+                          onClick={() =>
+                            handleToggleUserStatus(user.id, user.status)
                           }
+                        >
+                          {user.status === "active" ? (
+                            <Lock className="h-4 w-4" />
+                          ) : (
+                            <Unlock className="h-4 w-4" />
+                          )}
                         </Button>
 
                         <AlertDialog>
@@ -547,15 +620,19 @@ export function Users() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>ยืนยันการลบผู้ใช้งาน</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                ยืนยันการลบผู้ใช้งาน
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                คุณต้องการลบผู้ใช้งาน "{user.fullName}" ใช่หรือไม่? 
-                                การกระทำนี้ไม่สามารถยกเลิกได้
+                                คุณต้องการลบผู้ใช้งาน "{user.fullName}"
+                                ใช่หรือไม่? การกระทำนี้ไม่สามารถยกเลิกได้
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDeleteUser(user.id)}>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteUser(user.id)}
+                              >
                                 ลบผู้ใช้งาน
                               </AlertDialogAction>
                             </AlertDialogFooter>
@@ -573,7 +650,9 @@ export function Users() {
                 <CardContent className="p-8 text-center">
                   <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                   <h3 className="text-lg font-medium mb-2">ไม่พบผู้ใช้งาน</h3>
-                  <p className="text-muted-foreground">ลองปรับเปลี่ยนเงื่อนไขการค้นหา</p>
+                  <p className="text-muted-foreground">
+                    ลองปรับเปลี่ยนเงื่อนไขการค้นหา
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -592,20 +671,32 @@ export function Users() {
                       </CardTitle>
                       <Badge className={config.color}>{roleKey}</Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">{config.description}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {config.description}
+                    </p>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       <div>
-                        <h4 className="text-sm font-medium mb-2">สิทธิ์การใช้งาน:</h4>
+                        <h4 className="text-sm font-medium mb-2">
+                          สิทธิ์การใช้งาน:
+                        </h4>
                         <div className="space-y-1">
                           {config.permissions.includes("all") ? (
-                            <Badge variant="destructive" className="mr-1 mb-1">สิทธิ์ทั้งหมด</Badge>
+                            <Badge variant="destructive" className="mr-1 mb-1">
+                              สิทธิ์ทั้งหมด
+                            </Badge>
                           ) : (
-                            config.permissions.map(permission => {
-                              const permissionInfo = allPermissions.find(p => p.id === permission);
+                            config.permissions.map((permission) => {
+                              const permissionInfo = allPermissions.find(
+                                (p) => p.id === permission,
+                              );
                               return permissionInfo ? (
-                                <Badge key={permission} variant="outline" className="mr-1 mb-1">
+                                <Badge
+                                  key={permission}
+                                  variant="outline"
+                                  className="mr-1 mb-1"
+                                >
                                   {permissionInfo.name}
                                 </Badge>
                               ) : null;
@@ -613,10 +704,12 @@ export function Users() {
                           )}
                         </div>
                       </div>
-                      
+
                       <div className="pt-3 border-t">
                         <div className="text-sm text-muted-foreground">
-                          ผู้ใช้ในบทบาทนี้: {usersData.filter(u => u.role === roleKey).length} คน
+                          ผู้ใช้ในบทบาทนี้:{" "}
+                          {usersData.filter((u) => u.role === roleKey).length}{" "}
+                          คน
                         </div>
                       </div>
                     </div>
@@ -637,23 +730,38 @@ export function Users() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {usersData.filter(u => u.status === "active").map(user => (
-                    <div key={user.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback className="text-xs">{getInitials(user.fullName)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium text-sm">{user.fullName}</div>
-                          <div className="text-xs text-muted-foreground">@{user.username}</div>
+                  {usersData
+                    .filter((u) => u.status === "active")
+                    .map((user) => (
+                      <div
+                        key={user.id}
+                        className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarFallback className="text-xs">
+                              {getInitials(user.fullName)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium text-sm">
+                              {user.fullName}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              @{user.username}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-medium">
+                            {user.lastLogin}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            เข้าใช้งานล่าสุด
+                          </div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-sm font-medium">{user.lastLogin}</div>
-                        <div className="text-xs text-muted-foreground">เข้าใช้งานล่าสุด</div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -673,7 +781,9 @@ export function Users() {
                   <Input
                     id="edit-username"
                     value={formData.username}
-                    onChange={(e) => setFormData({...formData, username: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, username: e.target.value })
+                    }
                     placeholder="username"
                   />
                 </div>
@@ -683,18 +793,22 @@ export function Users() {
                     id="edit-email"
                     type="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     placeholder="email@company.com"
                   />
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="edit-fullName">ชื่อ-นามสกุล *</Label>
                 <Input
                   id="edit-fullName"
                   value={formData.fullName}
-                  onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
                   placeholder="ชื่อ นามสกุล"
                 />
               </div>
@@ -702,13 +816,20 @@ export function Users() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label htmlFor="edit-role">บทบาท</Label>
-                  <Select value={formData.role} onValueChange={(value) => setFormData({...formData, role: value})}>
+                  <Select
+                    value={formData.role}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, role: value })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(roleConfigs).map(([key, config]) => (
-                        <SelectItem key={key} value={key}>{config.name}</SelectItem>
+                        <SelectItem key={key} value={key}>
+                          {config.name}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -718,7 +839,9 @@ export function Users() {
                   <Input
                     id="edit-department"
                     value={formData.department}
-                    onChange={(e) => setFormData({...formData, department: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, department: e.target.value })
+                    }
                     placeholder="ชื่อแผนก"
                   />
                 </div>
@@ -730,7 +853,9 @@ export function Users() {
                   <Input
                     id="edit-position"
                     value={formData.position}
-                    onChange={(e) => setFormData({...formData, position: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, position: e.target.value })
+                    }
                     placeholder="ตำแหน่งงาน"
                   />
                 </div>
@@ -739,7 +864,9 @@ export function Users() {
                   <Input
                     id="edit-phone"
                     value={formData.phone}
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
                     placeholder="081-234-5678"
                   />
                 </div>
@@ -752,7 +879,9 @@ export function Users() {
                     id="edit-password"
                     type="password"
                     value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                     placeholder="ใส่หากต้องการเปลี่ยน"
                   />
                 </div>
@@ -762,7 +891,12 @@ export function Users() {
                     id="edit-confirmPassword"
                     type="password"
                     value={formData.confirmPassword}
-                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        confirmPassword: e.target.value,
+                      })
+                    }
                     placeholder="ยืนยันรหัสผ่าน"
                   />
                 </div>
@@ -772,7 +906,10 @@ export function Users() {
                 <Button onClick={handleUpdateUser} className="flex-1">
                   บันทึกการเปลี่ยนแปลง
                 </Button>
-                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsEditDialogOpen(false)}
+                >
                   ยกเลิก
                 </Button>
               </div>
