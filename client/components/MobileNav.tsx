@@ -95,7 +95,7 @@ export function MobileNav() {
           </h1>
         </div>
         <div className="flex items-center gap-2">
-          <NotificationSystem />
+          <NotificationBell />
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="p-2 hover:bg-primary/10 rounded-lg transition-all duration-200 active:scale-95 relative"
