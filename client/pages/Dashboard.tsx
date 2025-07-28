@@ -166,11 +166,11 @@ export function Dashboard() {
     },
     {
       title: "ตรวจสอบสต็อก",
-      description: "จัดการคลังอะไหล่",
+      description: "��ัดการคลังอะไหล่",
       icon: Package,
       color: "bg-gradient-to-br from-orange-500 to-orange-600",
       href: "/parts",
-      badge: criticalAlertsCount > 0 ? String(criticalAlertsCount) : undefined
+      badge: metrics.lowStockParts > 0 ? String(metrics.lowStockParts) : undefined
     },
     {
       title: "รายงานสถิติ",
