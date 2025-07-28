@@ -75,6 +75,14 @@ const ProtectedRoute = () => {
 
 const AppRoutes = () => {
   const { session } = useAuth();
+  const navigate = useNavigate();
+
+  // Handle navigation after sign out
+  useEffect(() => {
+    if (!session) {
+      navigate("/");
+    }
+  }, [session, navigate]);
 
   return (
     <div className="min-h-screen bg-background">
