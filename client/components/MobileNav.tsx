@@ -50,6 +50,7 @@ export function MobileNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { metrics, criticalAlerts } = useSupabaseData();
   const { criticalAlertsCount } = useInventory();
+  const { signOut, user } = useAuth();
 
   // Calculate notification counts
   const notificationCounts = {
