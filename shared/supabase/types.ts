@@ -48,6 +48,34 @@ export interface FlexiblePart extends BaseEntity {
   [key: string]: any;
 }
 
+// Database operation response types
+export interface DatabaseResponse<T> {
+  data: T[] | null;
+  error?: any;
+  count?: number;
+}
+
+export interface QueryOptions {
+  select?: string;
+  filters?: Record<string, any>;
+  orderBy?: string;
+  ascending?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+// Database operations interface
+export interface DatabaseOperations<T extends DatabaseRecord> {
+  getAll(options?: QueryOptions): Promise<DatabaseResponse<T>>;
+  getById(id: string | number): Promise<{ data: T | null; error: any }>;
+  getByField(field: string, value: any, options?: QueryOptions): Promise<DatabaseResponse<T>>;
+  create(data: Partial<T>): Promise<{ data: T | null; error: any }>;
+  update(id: string | number, data: Partial<T>): Promise<{ data: T | null; error: any }>;
+  delete(id: string | number): Promise<{ error: any }>;
+  count(filters?: Record<string, any>): Promise<{ count: number | null; error: any }>;
+  search(column: string, searchTerm: string, options?: QueryOptions): Promise<DatabaseResponse<T>>;
+}
+
 export interface FlexibleInventory extends BaseEntity {
   part_id?: string | number;
   quantity?: number;
