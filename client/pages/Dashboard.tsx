@@ -34,7 +34,8 @@ import {
   Database,
   Smartphone,
   Wifi,
-  WifiOff
+  WifiOff,
+  ClipboardList
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -150,7 +151,7 @@ export function Dashboard() {
   const quickActions: QuickAction[] = [
     {
       title: "สร้างใบสั่งงาน",
-      description: "เพิ่มงานบำรุงรักษาใหม่",
+      description: "เพิ่มง���นบำรุงรักษาใหม่",
       icon: Plus,
       color: "bg-gradient-to-br from-blue-500 to-blue-600",
       href: "/work-orders/new",
@@ -276,7 +277,7 @@ export function Dashboard() {
                 )}
                 <AlertDescription className={isOnline ? 'text-green-800' : 'text-red-800'}>
                   {isOnline 
-                    ? 'ระบบทำงานปกติ - ข้อมูลซิงค์แบบเรียลไทม์' 
+                    ? 'ระบบทำงานปกติ - ��้อมูลซิงค์แบบเรียลไทม์' 
                     : 'ทำงานในโหมดออฟไลน์ - ข้อมูลจะซิงค์เมื่อกลับมาออนไลน์'
                   }
                 </AlertDescription>
