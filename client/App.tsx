@@ -11,6 +11,7 @@ import {
   Route,
   Navigate,
   Outlet,
+  useNavigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import LoginPage from "./pages/Index";
