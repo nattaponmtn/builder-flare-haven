@@ -201,7 +201,7 @@ export default function LoginPage() {
                         <LogIn className="h-10 w-10 text-white" />
                       </div>
                       <CardTitle className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                        เข้าสู่ระบบ
+                        เข้าสู่ระ��บ
                       </CardTitle>
                       <p className="text-gray-500 text-sm mt-2">
                         กรุณาใส่ข้อมูลเพื่อเข้าใช้งานระบบ
@@ -356,7 +356,7 @@ export default function LoginPage() {
                       transition={{ delay: 0.5 }}
                       className="text-gray-600"
                     >
-                      กำลังไปย���งหน้าหลัก...
+                      กำลังไปยังแดชบอร์ด...
                     </motion.p>
                   </CardContent>
                 </Card>
