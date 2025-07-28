@@ -116,14 +116,6 @@ const AppRoutes = () => {
 
 // Prevent duplicate root creation during HMR
 const container = document.getElementById("root")!;
-<<<<<<< HEAD
-if (!container._reactRootContainer) {
-  const root = createRoot(container);
-  container._reactRootContainer = root;
-  root.render(<App />);
-} else {
-  container._reactRootContainer.render(<App />);
-=======
 const containerWithRoot = container as HTMLElement & { _reactRootContainer?: any };
 
 if (!containerWithRoot._reactRootContainer) {
@@ -132,5 +124,4 @@ if (!containerWithRoot._reactRootContainer) {
   root.render(<App />);
 } else {
   containerWithRoot._reactRootContainer.render(<App />);
->>>>>>> origin/main
 }
