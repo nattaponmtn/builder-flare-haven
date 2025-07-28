@@ -46,6 +46,7 @@ interface WorkOrder {
   asset_id: string;
   location_id: string;
   system_id: string;
+  pm_template_id: string;
   assigned_to_user_id: string;
   requested_by_user_id: string;
   created_at: string;
@@ -53,9 +54,14 @@ interface WorkOrder {
   completed_at: string;
   wo_number: string;
   estimated_hours: number;
+  assigned_to: string;
+  requested_by: string;
   total_cost: number;
   labor_cost: number;
   parts_cost: number;
+  actual_hours: number;
+  updated_at: string;
+  company_id: string;
 }
 
 interface Part {
@@ -98,6 +104,20 @@ interface Company {
   phone: string;
   address: string;
   is_active: boolean;
+  parent_company_id: string;
+}
+
+interface Notification {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  type: string;
+  is_read: boolean;
+  reference_type: string;
+  reference_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface DashboardData {
@@ -109,6 +129,7 @@ interface DashboardData {
   companies: Company[];
   equipmentTypes: EquipmentType[];
   pmTemplates: PMTemplate[];
+  notifications: Notification[];
   loading: boolean;
   error: string | null;
 }
@@ -124,6 +145,7 @@ export function useSupabaseData() {
     companies: [],
     equipmentTypes: [],
     pmTemplates: [],
+    notifications: [],
     loading: true,
     error: null,
   });
@@ -152,6 +174,7 @@ export function useSupabaseData() {
         const companiesService = createTableService('companies');
         const equipmentTypesService = createTableService('equipment_types');
         const pmTemplatesService = createTableService('pm_templates');
+        const notificationsService = createTableService('notifications');
 
         // Fetch data from all tables with better error handling
         const results = await Promise.allSettled([
@@ -163,6 +186,7 @@ export function useSupabaseData() {
           companiesService.getAll(),
           equipmentTypesService.getAll(),
           pmTemplatesService.getAll(),
+          session?.user ? notificationsService.getByField('user_id', session.user.id) : Promise.resolve({ data: [], error: null }),
         ]);
 
         // Process results
@@ -175,6 +199,7 @@ export function useSupabaseData() {
           companiesResult,
           equipmentTypesResult,
           pmTemplatesResult,
+          notificationsResult,
         ] = results.map(result =>
           result.status === 'fulfilled' ? result.value : { data: [], error: result.reason }
         );
@@ -189,6 +214,7 @@ export function useSupabaseData() {
           companies: companiesResult.data?.length || 0,
           equipmentTypes: equipmentTypesResult.data?.length || 0,
           pmTemplates: pmTemplatesResult.data?.length || 0,
+          notifications: notificationsResult.data?.length || 0,
         });
 
         // Check for critical errors (but don't fail completely)
@@ -201,6 +227,7 @@ export function useSupabaseData() {
           companiesResult.error,
           equipmentTypesResult.error,
           pmTemplatesResult.error,
+          notificationsResult.error,
         ].filter(Boolean);
 
         if (errors.length > 0) {
@@ -217,6 +244,7 @@ export function useSupabaseData() {
           companies: (companiesResult.data || []) as Company[],
           equipmentTypes: (equipmentTypesResult.data || []) as EquipmentType[],
           pmTemplates: (pmTemplatesResult.data || []) as PMTemplate[],
+          notifications: (notificationsResult.data || []) as Notification[],
           loading: false,
           error: errors.length > 0 ? `Partial data load: ${errors.length} tables had issues` : null,
         });
@@ -276,24 +304,39 @@ export function useSupabaseData() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 
-  // Critical alerts (low stock parts)
-  const criticalAlerts = data.parts
+  // Critical alerts - combine notifications with low stock alerts
+  const lowStockAlerts = data.parts
     .filter(p => p.stock_quantity <= p.min_stock_level)
     .map(part => ({
-      id: part.id,
-      message: `สต็อกต่ำ: ${part.name} (เหลือ ${part.stock_quantity} ชิ้น)`,
+      id: `stock-${part.id}`,
+      title: 'สต็อกต่ำ',
+      message: `${part.name} (เหลือ ${part.stock_quantity} ชิ้น)`,
+      type: 'stock_alert',
       severity: part.stock_quantity === 0 ? 'CRITICAL' : 'WARNING',
-      partName: part.name,
-      currentStock: part.stock_quantity,
-      minLevel: part.min_stock_level,
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
     }));
+
+  // Combine with actual notifications from database
+  const criticalAlerts = [
+    ...data.notifications
+      .filter(n => !n.is_read && (n.type === 'critical' || n.type === 'urgent'))
+      .map(notification => ({
+        id: notification.id,
+        title: notification.title,
+        message: notification.message,
+        type: notification.type,
+        severity: 'CRITICAL',
+        created_at: notification.created_at,
+      })),
+    ...lowStockAlerts
+  ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   return {
     ...data,
     metrics,
     recentWorkOrders,
     criticalAlerts,
+    unreadNotificationsCount: data.notifications.filter(n => !n.is_read).length,
     refresh,
   };
 }
