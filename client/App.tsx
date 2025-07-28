@@ -14,6 +14,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
+import { useEffect } from "react";
 import LoginPage from "./pages/Index";
 import { Dashboard } from "./pages/Dashboard";
 import { WorkOrders } from "./pages/WorkOrders";
