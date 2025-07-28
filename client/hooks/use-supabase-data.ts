@@ -176,16 +176,20 @@ export function useSupabaseData() {
         const pmTemplatesService = createTableService('pm_templates');
         const notificationsService = createTableService('notifications');
 
+        // Get user's company ID for filtering if available
+        const userCompanyId = userProfile?.company_id;
+
         // Fetch data from all tables with better error handling
+        // Apply company filtering where applicable
         const results = await Promise.allSettled([
-          assetsService.getAll(),
-          workOrdersService.getAll(),
-          partsService.getAll(),
-          locationsService.getAll(),
-          systemsService.getAll(),
-          companiesService.getAll(),
-          equipmentTypesService.getAll(),
-          pmTemplatesService.getAll(),
+          userCompanyId ? assetsService.getByField('company_id', userCompanyId) : assetsService.getAll(),
+          userCompanyId ? workOrdersService.getByField('company_id', userCompanyId) : workOrdersService.getAll(),
+          partsService.getAll(), // Parts might be global or company-specific depending on schema
+          userCompanyId ? locationsService.getByField('company_id', userCompanyId) : locationsService.getAll(),
+          userCompanyId ? systemsService.getByField('company_id', userCompanyId) : systemsService.getAll(),
+          companiesService.getAll(), // Users might need to see all companies or just their own
+          userCompanyId ? equipmentTypesService.getByField('company_id', userCompanyId) : equipmentTypesService.getAll(),
+          userCompanyId ? pmTemplatesService.getByField('company_id', userCompanyId) : pmTemplatesService.getAll(),
           session?.user ? notificationsService.getByField('user_id', session.user.id) : Promise.resolve({ data: [], error: null }),
         ]);
 
