@@ -41,7 +41,7 @@ const navItems = [
   { path: "/notifications", label: "การแจ้งเตือน", icon: Bell },
   { path: "/users", label: "ผู้ใช้งาน", icon: Users },
   { path: "/settings", label: "ตั้งค่า", icon: Settings },
-  { path: "/data-transfer", label: "จัดการข้อมูล", icon: Download },
+  { path: "/data-transfer", label: "จัดการข้อมู��", icon: Download },
   { path: "/qr-scanner", label: "QR ทั่วไป", icon: QrCode },
 ];
 
@@ -168,6 +168,18 @@ export function MobileNav() {
                 </Link>
               );
             })}
+
+            {/* Logout Button */}
+            <div className="pt-4 border-t border-border/50 mt-4">
+              <Button
+                variant="ghost"
+                onClick={signOut}
+                className="w-full justify-start p-3 sm:p-4 text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <LogOut size={18} className="mr-3" />
+                <span className="font-medium text-sm">ออกจากระบบ</span>
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
