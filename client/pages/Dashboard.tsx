@@ -35,7 +35,7 @@ import {
   Smartphone,
   Wifi,
   WifiOff,
-  ClipboardList
+  ClipboardList,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -72,14 +72,11 @@ export function Dashboard() {
     unreadNotificationsCount,
     loading,
     error,
-    refresh
+    refresh,
   } = useSupabaseData();
 
-  const {
-    criticalAlertsCount,
-    partsNeedingReorder,
-    dashboardData
-  } = useInventory();
+  const { criticalAlertsCount, partsNeedingReorder, dashboardData } =
+    useInventory();
 
   const { user, userProfile } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -94,13 +91,13 @@ export function Dashboard() {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
       clearInterval(timer);
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
@@ -109,32 +106,56 @@ export function Dashboard() {
     {
       title: "ใบสั่งงานวันนี้",
       value: metrics.totalWorkOrders || 0,
-      change: metrics.completedWorkOrders ? `${metrics.completedWorkOrders} เสร็จแล้ว` : "0 เสร็จแล้ว",
+      change: metrics.completedWorkOrders
+        ? `${metrics.completedWorkOrders} เสร็จแล้ว`
+        : "0 เสร็จแล้ว",
       trend: "up",
       icon: ClipboardList,
       color: "from-blue-500 to-blue-600",
-      percentage: metrics.totalWorkOrders ? Math.round((metrics.completedWorkOrders / metrics.totalWorkOrders) * 100) : 0,
-      description: "งานบำรุงรักษาทั้งหมด"
+      percentage: metrics.totalWorkOrders
+        ? Math.round(
+            (metrics.completedWorkOrders / metrics.totalWorkOrders) * 100,
+          )
+        : 0,
+      description: "งานบำรุงรักษาทั้งหมด",
     },
     {
       title: "อุปกรณ์ใช้งานได้",
       value: `${metrics.totalAssets - metrics.faultyAssets || 0}/${metrics.totalAssets || 0}`,
-      change: metrics.faultyAssets ? `${metrics.faultyAssets} ชำรุด` : "ทั้งหมดปกติ",
+      change: metrics.faultyAssets
+        ? `${metrics.faultyAssets} ชำรุด`
+        : "ทั้งหมดปกติ",
       trend: metrics.faultyAssets > 0 ? "down" : "up",
       icon: Settings,
       color: "from-green-500 to-emerald-600",
-      percentage: metrics.totalAssets ? Math.round(((metrics.totalAssets - metrics.faultyAssets) / metrics.totalAssets) * 100) : 100,
-      description: "สถานะการทำงาน"
+      percentage: metrics.totalAssets
+        ? Math.round(
+            ((metrics.totalAssets - metrics.faultyAssets) /
+              metrics.totalAssets) *
+              100,
+          )
+        : 100,
+      description: "สถานะการทำงาน",
     },
     {
       title: "คลังอะไหล่",
       value: metrics.lowStockParts || 0,
-      change: metrics.outOfStockParts > 0 ? `${metrics.outOfStockParts} หมดสต็อก` : "สต็อกเพียงพอ",
+      change:
+        metrics.outOfStockParts > 0
+          ? `${metrics.outOfStockParts} หมดสต็อก`
+          : "สต็อกเพียงพอ",
       trend: metrics.lowStockParts > 0 ? "down" : "stable",
       icon: Package,
       color: "from-orange-500 to-orange-600",
-      percentage: metrics.totalParts > 0 ? Math.round(((metrics.totalParts - metrics.lowStockParts) / metrics.totalParts) * 100) : 100,
-      description: "รายการเตือนสต็อก"
+      percentage:
+        metrics.totalParts > 0
+          ? Math.round(
+              ((metrics.totalParts - metrics.lowStockParts) /
+                metrics.totalParts) *
+                100,
+            )
+          : 100,
+      description: "รายการเตือนสต็อก",
     },
     {
       title: "ประสิทธิภาพ",
@@ -144,8 +165,8 @@ export function Dashboard() {
       icon: TrendingUp,
       color: "from-purple-500 to-purple-600",
       percentage: 94,
-      description: "Overall Equipment Effectiveness"
-    }
+      description: "Overall Equipment Effectiveness",
+    },
   ];
 
   // Quick actions with modern icons
@@ -170,7 +191,8 @@ export function Dashboard() {
       icon: Package,
       color: "bg-gradient-to-br from-orange-500 to-orange-600",
       href: "/parts",
-      badge: metrics.lowStockParts > 0 ? String(metrics.lowStockParts) : undefined
+      badge:
+        metrics.lowStockParts > 0 ? String(metrics.lowStockParts) : undefined,
     },
     {
       title: "รายงานสถิติ",
@@ -178,7 +200,7 @@ export function Dashboard() {
       icon: BarChart3,
       color: "bg-gradient-to-br from-purple-500 to-purple-600",
       href: "/reports",
-    }
+    },
   ];
 
   if (loading) {
@@ -203,9 +225,8 @@ export function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       <div className="p-4 sm:p-6 pb-20 md:pb-6 space-y-6 max-w-7xl mx-auto">
-        
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           className="flex flex-col space-y-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -214,19 +235,27 @@ export function Dashboard() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                สวัสดี, {userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'ผู้ใช้งาน'}! 👋
+                สวัสดี,{" "}
+                {userProfile
+                  ? `${userProfile.first_name} ${userProfile.last_name}`
+                  : user?.user_metadata?.full_name ||
+                    user?.email?.split("@")[0] ||
+                    "ผู้ใช้งาน"}
+                ! 👋
               </h1>
               {userProfile && (
                 <p className="text-sm text-slate-500 mt-1">
-                  {userProfile.role} | {userProfile.department} | {userProfile.employee_code}
+                  {userProfile.role} | {userProfile.department} |{" "}
+                  {userProfile.employee_code}
                 </p>
               )}
               <p className="text-slate-600 mt-2 flex items-center gap-2">
-                วันนี้ {currentTime.toLocaleDateString('th-TH', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
+                วันนี้{" "}
+                {currentTime.toLocaleDateString("th-TH", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
                 })}
                 <span className="mx-2">•</span>
                 <div className="flex items-center gap-1">
@@ -244,11 +273,11 @@ export function Dashboard() {
                 </div>
               </p>
             </div>
-            
+
             <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={refresh}
                 className="border-slate-200 hover:border-slate-300 transition-colors"
               >
@@ -258,8 +287,11 @@ export function Dashboard() {
               <Link to="/notifications">
                 <Button variant="outline" size="sm" className="relative">
                   <Bell className="h-4 w-4" />
-                  {(unreadNotificationsCount > 0) && (
-                    <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                  {unreadNotificationsCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs"
+                    >
                       {unreadNotificationsCount}
                     </Badge>
                   )}
@@ -274,18 +306,21 @@ export function Dashboard() {
             animate={{ opacity: 1, height: "auto" }}
             className="overflow-hidden"
           >
-            <Alert className={`border-0 ${isOnline ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+            <Alert
+              className={`border-0 ${isOnline ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}
+            >
               <div className="flex items-center gap-2">
                 {isOnline ? (
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 ) : (
                   <AlertTriangle className="h-4 w-4 text-red-600" />
                 )}
-                <AlertDescription className={isOnline ? 'text-green-800' : 'text-red-800'}>
-                  {isOnline 
-                    ? 'ระบบทำงานปกติ - ข้อมูลซิงค์แบบเรียลไทม์' 
-                    : 'ทำงานในโหมดออฟไลน์ - ข้อมูลจะซิงค์เมื่อกลับมาออนไลน์'
-                  }
+                <AlertDescription
+                  className={isOnline ? "text-green-800" : "text-red-800"}
+                >
+                  {isOnline
+                    ? "ระบบทำงานปกติ - ข้อมูลซิงค์แบบเรียลไทม์"
+                    : "ทำงานในโหมดออฟไลน์ - ข้อมูลจะซิงค์เมื่อกลับมาออนไลน์"}
                 </AlertDescription>
               </div>
             </Alert>
@@ -293,7 +328,7 @@ export function Dashboard() {
         </motion.div>
 
         {/* Metrics Grid */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -309,42 +344,63 @@ export function Dashboard() {
               className="group"
             >
               <Card className="relative overflow-hidden border-0 bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-5 group-hover:opacity-10 transition-opacity`} />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-5 group-hover:opacity-10 transition-opacity`}
+                />
                 <CardContent className="p-6 relative">
                   <div className="flex items-start justify-between">
                     <div className="space-y-3 flex-1">
                       <div className="flex items-center gap-3">
-                        <div className={`p-3 rounded-xl bg-gradient-to-br ${metric.color} shadow-lg`}>
+                        <div
+                          className={`p-3 rounded-xl bg-gradient-to-br ${metric.color} shadow-lg`}
+                        >
                           <metric.icon className="h-5 w-5 text-white" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-slate-600">{metric.title}</p>
-                          <p className="text-xs text-slate-500">{metric.description}</p>
+                          <p className="text-sm font-medium text-slate-600">
+                            {metric.title}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            {metric.description}
+                          </p>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <div className="flex items-baseline gap-2">
-                          <h3 className="text-2xl font-bold text-slate-900">{metric.value}</h3>
+                          <h3 className="text-2xl font-bold text-slate-900">
+                            {metric.value}
+                          </h3>
                           <div className="flex items-center gap-1">
-                            {metric.trend === "up" && <TrendingUp className="h-3 w-3 text-green-500" />}
-                            {metric.trend === "down" && <TrendingDown className="h-3 w-3 text-red-500" />}
-                            <span className={`text-xs font-medium ${
-                              metric.trend === "up" ? "text-green-600" : 
-                              metric.trend === "down" ? "text-red-600" : "text-slate-500"
-                            }`}>
+                            {metric.trend === "up" && (
+                              <TrendingUp className="h-3 w-3 text-green-500" />
+                            )}
+                            {metric.trend === "down" && (
+                              <TrendingDown className="h-3 w-3 text-red-500" />
+                            )}
+                            <span
+                              className={`text-xs font-medium ${
+                                metric.trend === "up"
+                                  ? "text-green-600"
+                                  : metric.trend === "down"
+                                    ? "text-red-600"
+                                    : "text-slate-500"
+                              }`}
+                            >
                               {metric.change}
                             </span>
                           </div>
                         </div>
-                        
+
                         {metric.percentage !== undefined && (
                           <div className="space-y-1">
-                            <Progress 
-                              value={metric.percentage} 
+                            <Progress
+                              value={metric.percentage}
                               className="h-2 bg-slate-100"
                             />
-                            <p className="text-xs text-slate-500">{metric.percentage}% ประสิทธิภาพ</p>
+                            <p className="text-xs text-slate-500">
+                              {metric.percentage}% ประสิทธิภาพ
+                            </p>
                           </div>
                         )}
                       </div>
@@ -384,11 +440,16 @@ export function Dashboard() {
                       <Card className="relative overflow-hidden border-0 hover:shadow-lg transition-all duration-300 cursor-pointer group bg-gradient-to-br from-white to-slate-50">
                         <CardContent className="p-6 text-center">
                           <div className="relative inline-flex">
-                            <div className={`p-4 rounded-2xl ${action.color} shadow-lg group-hover:shadow-xl transition-all`}>
+                            <div
+                              className={`p-4 rounded-2xl ${action.color} shadow-lg group-hover:shadow-xl transition-all`}
+                            >
                               <action.icon className="h-6 w-6 text-white" />
                             </div>
                             {action.badge && (
-                              <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                              <Badge
+                                variant="destructive"
+                                className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs"
+                              >
                                 {action.badge}
                               </Badge>
                             )}
@@ -412,7 +473,6 @@ export function Dashboard() {
 
         {/* Recent Activities & Alerts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
           {/* Recent Work Orders */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -427,7 +487,11 @@ export function Dashboard() {
                     งานล่าสุด
                   </CardTitle>
                   <Link to="/work-orders">
-                    <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-blue-600 hover:text-blue-700"
+                    >
                       ดูทั้งหมด
                       <ArrowRight className="h-4 w-4 ml-1" />
                     </Button>
@@ -436,37 +500,52 @@ export function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {recentWorkOrders?.slice(0, 5).map((workOrder: any, index: number) => (
-                    <motion.div
-                      key={workOrder.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.05 * index }}
-                      className="p-4 rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all group cursor-pointer"
-                    >
-                      <Link to={`/work-orders/${workOrder.id}`}>
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h4 className="font-medium text-slate-900 group-hover:text-blue-600 transition-colors">
-                              {workOrder.title}
-                            </h4>
-                            <p className="text-sm text-slate-600 mt-1 line-clamp-2">
-                              {workOrder.description}
-                            </p>
-                            <div className="flex items-center gap-3 mt-2">
-                              <Badge variant={workOrder.priority === 'high' ? 'destructive' : 'secondary'} className="text-xs">
-                                {workOrder.priority === 'high' ? 'สูง' : workOrder.priority === 'medium' ? 'กลาง' : 'ต่ำ'}
-                              </Badge>
-                              <span className="text-xs text-slate-500">
-                                {new Date(workOrder.created_at).toLocaleDateString('th-TH')}
-                              </span>
+                  {recentWorkOrders
+                    ?.slice(0, 5)
+                    .map((workOrder: any, index: number) => (
+                      <motion.div
+                        key={workOrder.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.05 * index }}
+                        className="p-4 rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all group cursor-pointer"
+                      >
+                        <Link to={`/work-orders/${workOrder.id}`}>
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <h4 className="font-medium text-slate-900 group-hover:text-blue-600 transition-colors">
+                                {workOrder.title}
+                              </h4>
+                              <p className="text-sm text-slate-600 mt-1 line-clamp-2">
+                                {workOrder.description}
+                              </p>
+                              <div className="flex items-center gap-3 mt-2">
+                                <Badge
+                                  variant={
+                                    workOrder.priority === "high"
+                                      ? "destructive"
+                                      : "secondary"
+                                  }
+                                  className="text-xs"
+                                >
+                                  {workOrder.priority === "high"
+                                    ? "สูง"
+                                    : workOrder.priority === "medium"
+                                      ? "กลาง"
+                                      : "ต่ำ"}
+                                </Badge>
+                                <span className="text-xs text-slate-500">
+                                  {new Date(
+                                    workOrder.created_at,
+                                  ).toLocaleDateString("th-TH")}
+                                </span>
+                              </div>
                             </div>
+                            <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
                           </div>
-                          <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
-                        </div>
-                      </Link>
-                    </motion.div>
-                  )) || (
+                        </Link>
+                      </motion.div>
+                    )) || (
                     <div className="text-center py-8">
                       <FileText className="h-12 w-12 mx-auto text-slate-300 mb-3" />
                       <p className="text-slate-500">ไม่มีใบสั่งงานล่าสุด</p>
@@ -491,7 +570,11 @@ export function Dashboard() {
                     การแจ้งเตือนสำคัญ
                   </CardTitle>
                   <Link to="/notifications">
-                    <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-blue-600 hover:text-blue-700"
+                    >
                       ดูทั้งหมด
                       <ArrowRight className="h-4 w-4 ml-1" />
                     </Button>
@@ -500,30 +583,40 @@ export function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {criticalAlerts?.slice(0, 5).map((alert: any, index: number) => (
-                    <motion.div
-                      key={alert.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.05 * index }}
-                      className="p-4 rounded-lg border-l-4 border-red-400 bg-red-50 hover:bg-red-100 transition-colors"
-                    >
-                      <div className="flex items-start gap-3">
-                        <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-red-900">{alert.title}</h4>
-                          <p className="text-sm text-red-700 mt-1">{alert.message}</p>
-                          <span className="text-xs text-red-600 mt-2 block">
-                            {new Date(alert.created_at).toLocaleString('th-TH')}
-                          </span>
+                  {criticalAlerts
+                    ?.slice(0, 5)
+                    .map((alert: any, index: number) => (
+                      <motion.div
+                        key={alert.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.05 * index }}
+                        className="p-4 rounded-lg border-l-4 border-red-400 bg-red-50 hover:bg-red-100 transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-red-900">
+                              {alert.title}
+                            </h4>
+                            <p className="text-sm text-red-700 mt-1">
+                              {alert.message}
+                            </p>
+                            <span className="text-xs text-red-600 mt-2 block">
+                              {new Date(alert.created_at).toLocaleString(
+                                "th-TH",
+                              )}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  )) || (
+                      </motion.div>
+                    )) || (
                     <div className="text-center py-8">
                       <Shield className="h-12 w-12 mx-auto text-slate-300 mb-3" />
                       <p className="text-slate-500">ไม่มีการแจ้งเตือนสำคัญ</p>
-                      <p className="text-xs text-slate-400 mt-1">ระบบทำงานปกติ</p>
+                      <p className="text-xs text-slate-400 mt-1">
+                        ระบบทำงานปกติ
+                      </p>
                     </div>
                   )}
                 </div>
@@ -545,9 +638,9 @@ export function Dashboard() {
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription className="text-red-800">
                   เกิดข้อผิดพลาดในการโหลดข้อมูล: {error.message}
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={refresh}
                     className="ml-2 text-red-700 hover:text-red-800"
                   >

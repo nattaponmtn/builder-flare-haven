@@ -25,7 +25,7 @@ import {
   Database,
   Zap,
   Wifi,
-  WifiOff
+  WifiOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -40,28 +40,63 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
-  { path: "/dashboard", label: "แดชบอร์ด", icon: LayoutDashboard, category: "main" },
-  { path: "/work-orders", label: "ใบสั่งงาน", icon: ClipboardList, category: "work" },
-  { path: "/preventive-maintenance", label: "PM System", icon: Shield, category: "work" },
+  {
+    path: "/dashboard",
+    label: "แดชบอร์ด",
+    icon: LayoutDashboard,
+    category: "main",
+  },
+  {
+    path: "/work-orders",
+    label: "ใบสั่งงาน",
+    icon: ClipboardList,
+    category: "work",
+  },
+  {
+    path: "/preventive-maintenance",
+    label: "PM System",
+    icon: Shield,
+    category: "work",
+  },
   { path: "/assets", label: "อุปกรณ์", icon: Wrench, category: "assets" },
   { path: "/parts", label: "คลังอะไหล่", icon: Package, category: "assets" },
-  { path: "/inventory", label: "จัดการสต็อก", icon: Database, category: "assets" },
-  { path: "/schedule", label: "ตารางงาน", icon: Calendar, category: "planning" },
+  {
+    path: "/inventory",
+    label: "จัดการสต็อก",
+    icon: Database,
+    category: "assets",
+  },
+  {
+    path: "/schedule",
+    label: "ตารางงาน",
+    icon: Calendar,
+    category: "planning",
+  },
   { path: "/reports", label: "รายงาน", icon: BarChart3, category: "planning" },
-  { path: "/notifications", label: "การแจ้งเตือน", icon: Bell, category: "system" },
+  {
+    path: "/notifications",
+    label: "การแจ้งเตือน",
+    icon: Bell,
+    category: "system",
+  },
   { path: "/users", label: "ผู้ใ��้งาน", icon: Users, category: "system" },
   { path: "/settings", label: "ตั้งค่า", icon: Settings, category: "system" },
   { path: "/qr-scanner", label: "สแกน QR", icon: QrCode, category: "tools" },
-  { path: "/pm-qr-scanner", label: "PM Scanner", icon: QrCode, category: "tools" },
+  {
+    path: "/pm-qr-scanner",
+    label: "PM Scanner",
+    icon: QrCode,
+    category: "tools",
+  },
 ];
 
 const categoryLabels = {
   main: "หลัก",
-  work: "งานบำรุงรักษา", 
+  work: "งานบำรุงรักษา",
   assets: "ทรัพย์สิน",
   planning: "วางแผน",
   system: "ระบบ",
-  tools: "เครื่องมือ"
+  tools: "เครื่องมือ",
 };
 
 export function MobileNav() {
@@ -77,18 +112,19 @@ export function MobileNav() {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   // Calculate notification counts
   const notificationCounts = {
-    workOrders: (metrics.overdueWorkOrders || 0) + (metrics.pendingWorkOrders || 0),
+    workOrders:
+      (metrics.overdueWorkOrders || 0) + (metrics.pendingWorkOrders || 0),
     assets: metrics.faultyAssets || 0,
     parts: (metrics.lowStockParts || 0) + (metrics.outOfStockParts || 0),
     alerts: criticalAlertsCount || 0,
@@ -111,33 +147,47 @@ export function MobileNav() {
   };
 
   const getUserInitials = () => {
-    const name = user?.user_metadata?.full_name || user?.email || 'User';
-    return name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase();
+    const name = user?.user_metadata?.full_name || user?.email || "User";
+    return name
+      .split(" ")
+      .map((n: string) => n[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
   };
 
-  const totalNotifications = Object.values(notificationCounts).reduce((sum, count) => sum + count, 0);
+  const totalNotifications = Object.values(notificationCounts).reduce(
+    (sum, count) => sum + count,
+    0,
+  );
 
   // Group nav items by category
-  const groupedNavItems = navItems.reduce((groups: Record<string, typeof navItems>, item) => {
-    if (!groups[item.category]) {
-      groups[item.category] = [];
-    }
-    groups[item.category].push(item);
-    return groups;
-  }, {});
+  const groupedNavItems = navItems.reduce(
+    (groups: Record<string, typeof navItems>, item) => {
+      if (!groups[item.category]) {
+        groups[item.category] = [];
+      }
+      groups[item.category].push(item);
+      return groups;
+    },
+    {},
+  );
 
   return (
     <>
       {/* Mobile Header */}
       <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/50 p-4 flex items-center justify-between md:hidden sticky top-0 z-40 shadow-sm">
-        <motion.div 
+        <motion.div
           className="flex items-center gap-3"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
           <div className="relative">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Cog className="w-5 h-5 text-white animate-spin" style={{ animationDuration: '3s' }} />
+              <Cog
+                className="w-5 h-5 text-white animate-spin"
+                style={{ animationDuration: "3s" }}
+              />
             </div>
             <div className="absolute inset-0 bg-blue-400/30 rounded-xl blur-lg"></div>
           </div>
@@ -169,10 +219,14 @@ export function MobileNav() {
               animate={{ rotate: isMenuOpen ? 180 : 0 }}
               transition={{ duration: 0.2 }}
             >
-              {isMenuOpen ? <X size={22} className="text-slate-600" /> : <Menu size={22} className="text-slate-600" />}
+              {isMenuOpen ? (
+                <X size={22} className="text-slate-600" />
+              ) : (
+                <Menu size={22} className="text-slate-600" />
+              )}
             </motion.div>
             {totalNotifications > 0 && !isMenuOpen && (
-              <motion.span 
+              <motion.span
                 className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
@@ -210,7 +264,10 @@ export function MobileNav() {
               <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-200">
                 <div className="relative">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <Cog className="w-6 h-6 text-white animate-spin" style={{ animationDuration: '3s' }} />
+                    <Cog
+                      className="w-6 h-6 text-white animate-spin"
+                      style={{ animationDuration: "3s" }}
+                    />
                   </div>
                   <div className="absolute inset-0 bg-blue-400/30 rounded-xl blur-lg"></div>
                 </div>
@@ -223,7 +280,7 @@ export function MobileNav() {
               </div>
 
               {/* User Profile */}
-              <motion.div 
+              <motion.div
                 className="mb-6 p-4 bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl border border-slate-200"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -238,13 +295,17 @@ export function MobileNav() {
                   </Avatar>
                   <div className="flex-1">
                     <h3 className="font-semibold text-slate-900">
-                      {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'ผู้ใช้ง��น'}
+                      {user?.user_metadata?.full_name ||
+                        user?.email?.split("@")[0] ||
+                        "ผู้ใช้ง��น"}
                     </h3>
                     <p className="text-sm text-slate-600">{user?.email}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400' : 'bg-red-400'}`} />
+                      <div
+                        className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-400" : "bg-red-400"}`}
+                      />
                       <span className="text-xs text-slate-500">
-                        {isOnline ? 'ออนไลน์' : 'ออฟไลน์'}
+                        {isOnline ? "ออนไลน์" : "ออฟไลน์"}
                       </span>
                     </div>
                   </div>
@@ -253,86 +314,114 @@ export function MobileNav() {
 
               {/* Navigation Menu */}
               <div className="space-y-6">
-                {Object.entries(groupedNavItems).map(([category, items], categoryIndex) => (
-                  <motion.div
-                    key={category}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 + categoryIndex * 0.05 }}
-                  >
-                    <h4 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
-                      {categoryLabels[category as keyof typeof categoryLabels]}
-                    </h4>
-                    <div className="space-y-1">
-                      {items.map((item, itemIndex) => {
-                        const Icon = item.icon;
-                        const isActive = location.pathname === item.path;
-                        const notificationCount = getNotificationCount(item.path);
-                        
-                        return (
-                          <motion.div
-                            key={item.path}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.1 + categoryIndex * 0.05 + itemIndex * 0.02 }}
-                          >
-                            <Link
-                              to={item.path}
-                              onClick={() => setIsMenuOpen(false)}
-                              className={cn(
-                                "group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 relative overflow-hidden",
-                                isActive
-                                  ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg"
-                                  : "hover:bg-slate-100 text-slate-700 hover:text-slate-900"
-                              )}
-                            >
-                              <div className={cn(
-                                "p-2 rounded-lg transition-all",
-                                isActive 
-                                  ? "bg-white/20" 
-                                  : "bg-slate-200 group-hover:bg-slate-300"
-                              )}>
-                                <Icon size={18} className={isActive ? "text-white" : "text-slate-600"} />
-                              </div>
-                              
-                              <div className="flex-1">
-                                <span className="font-medium text-sm">{item.label}</span>
-                                {notificationCount > 0 && (
-                                  <Badge
-                                    variant={isActive ? "secondary" : "destructive"}
-                                    className="ml-2 h-5 w-5 p-0 flex items-center justify-center text-xs"
-                                  >
-                                    {notificationCount > 9 ? "9+" : notificationCount}
-                                  </Badge>
-                                )}
-                              </div>
-                              
-                              <ChevronRight 
-                                size={16} 
-                                className={cn(
-                                  "transition-transform group-hover:translate-x-1",
-                                  isActive ? "text-white" : "text-slate-400"
-                                )} 
-                              />
+                {Object.entries(groupedNavItems).map(
+                  ([category, items], categoryIndex) => (
+                    <motion.div
+                      key={category}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 + categoryIndex * 0.05 }}
+                    >
+                      <h4 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                        {
+                          categoryLabels[
+                            category as keyof typeof categoryLabels
+                          ]
+                        }
+                      </h4>
+                      <div className="space-y-1">
+                        {items.map((item, itemIndex) => {
+                          const Icon = item.icon;
+                          const isActive = location.pathname === item.path;
+                          const notificationCount = getNotificationCount(
+                            item.path,
+                          );
 
-                              {isActive && (
-                                <motion.div
-                                  className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-indigo-600/20"
-                                  layoutId="activeBackground"
-                                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                          return (
+                            <motion.div
+                              key={item.path}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{
+                                delay:
+                                  0.1 + categoryIndex * 0.05 + itemIndex * 0.02,
+                              }}
+                            >
+                              <Link
+                                to={item.path}
+                                onClick={() => setIsMenuOpen(false)}
+                                className={cn(
+                                  "group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 relative overflow-hidden",
+                                  isActive
+                                    ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg"
+                                    : "hover:bg-slate-100 text-slate-700 hover:text-slate-900",
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    "p-2 rounded-lg transition-all",
+                                    isActive
+                                      ? "bg-white/20"
+                                      : "bg-slate-200 group-hover:bg-slate-300",
+                                  )}
+                                >
+                                  <Icon
+                                    size={18}
+                                    className={
+                                      isActive ? "text-white" : "text-slate-600"
+                                    }
+                                  />
+                                </div>
+
+                                <div className="flex-1">
+                                  <span className="font-medium text-sm">
+                                    {item.label}
+                                  </span>
+                                  {notificationCount > 0 && (
+                                    <Badge
+                                      variant={
+                                        isActive ? "secondary" : "destructive"
+                                      }
+                                      className="ml-2 h-5 w-5 p-0 flex items-center justify-center text-xs"
+                                    >
+                                      {notificationCount > 9
+                                        ? "9+"
+                                        : notificationCount}
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                <ChevronRight
+                                  size={16}
+                                  className={cn(
+                                    "transition-transform group-hover:translate-x-1",
+                                    isActive ? "text-white" : "text-slate-400",
+                                  )}
                                 />
-                              )}
-                            </Link>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-                  </motion.div>
-                ))}
+
+                                {isActive && (
+                                  <motion.div
+                                    className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-indigo-600/20"
+                                    layoutId="activeBackground"
+                                    transition={{
+                                      type: "spring",
+                                      stiffness: 300,
+                                      damping: 30,
+                                    }}
+                                  />
+                                )}
+                              </Link>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  ),
+                )}
               </div>
 
               {/* Logout Button */}
-              <motion.div 
+              <motion.div
                 className="pt-6 mt-8 border-t border-slate-200"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -347,7 +436,10 @@ export function MobileNav() {
                     <LogOut size={18} className="text-red-600" />
                   </div>
                   <span className="font-medium text-sm">ออกจากระบบ</span>
-                  <ChevronRight size={16} className="ml-auto text-red-400 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight
+                    size={16}
+                    className="ml-auto text-red-400 group-hover:translate-x-1 transition-transform"
+                  />
                 </Button>
               </motion.div>
             </div>
@@ -362,7 +454,10 @@ export function MobileNav() {
           <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-200">
             <div className="relative">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Cog className="w-6 h-6 text-white animate-spin" style={{ animationDuration: '3s' }} />
+                <Cog
+                  className="w-6 h-6 text-white animate-spin"
+                  style={{ animationDuration: "3s" }}
+                />
               </div>
               <div className="absolute inset-0 bg-blue-400/30 rounded-xl blur-lg"></div>
             </div>
@@ -371,7 +466,9 @@ export function MobileNav() {
                 CMMS Pro
               </h2>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-500">Maintenance System</span>
+                <span className="text-sm text-slate-500">
+                  Maintenance System
+                </span>
                 <NotificationSystem />
               </div>
             </div>
@@ -389,7 +486,7 @@ export function MobileNav() {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path;
                     const notificationCount = getNotificationCount(item.path);
-                    
+
                     return (
                       <Link
                         key={item.path}
@@ -398,20 +495,29 @@ export function MobileNav() {
                           "group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 relative overflow-hidden",
                           isActive
                             ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg"
-                            : "hover:bg-slate-100 text-slate-700 hover:text-slate-900"
+                            : "hover:bg-slate-100 text-slate-700 hover:text-slate-900",
                         )}
                       >
-                        <div className={cn(
-                          "p-2 rounded-lg transition-all",
-                          isActive 
-                            ? "bg-white/20" 
-                            : "bg-slate-200 group-hover:bg-slate-300"
-                        )}>
-                          <Icon size={18} className={isActive ? "text-white" : "text-slate-600"} />
+                        <div
+                          className={cn(
+                            "p-2 rounded-lg transition-all",
+                            isActive
+                              ? "bg-white/20"
+                              : "bg-slate-200 group-hover:bg-slate-300",
+                          )}
+                        >
+                          <Icon
+                            size={18}
+                            className={
+                              isActive ? "text-white" : "text-slate-600"
+                            }
+                          />
                         </div>
-                        
+
                         <div className="flex-1">
-                          <span className="font-medium text-sm">{item.label}</span>
+                          <span className="font-medium text-sm">
+                            {item.label}
+                          </span>
                           {notificationCount > 0 && (
                             <Badge
                               variant={isActive ? "secondary" : "destructive"}
@@ -421,13 +527,13 @@ export function MobileNav() {
                             </Badge>
                           )}
                         </div>
-                        
-                        <ChevronRight 
-                          size={16} 
+
+                        <ChevronRight
+                          size={16}
                           className={cn(
                             "transition-transform group-hover:translate-x-1",
-                            isActive ? "text-white" : "text-slate-400"
-                          )} 
+                            isActive ? "text-white" : "text-slate-400",
+                          )}
                         />
                       </Link>
                     );
@@ -448,7 +554,10 @@ export function MobileNav() {
                 <LogOut size={18} className="text-red-600" />
               </div>
               <span className="font-medium text-sm">ออกจากระบบ</span>
-              <ChevronRight size={16} className="ml-auto text-red-400 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight
+                size={16}
+                className="ml-auto text-red-400 group-hover:translate-x-1 transition-transform"
+              />
             </Button>
           </div>
         </div>
@@ -461,7 +570,7 @@ export function MobileNav() {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             const notificationCount = getNotificationCount(item.path);
-            
+
             return (
               <Link
                 key={item.path}
@@ -470,7 +579,7 @@ export function MobileNav() {
                   "flex flex-col items-center p-3 rounded-xl transition-all duration-200 min-w-0 flex-1 relative",
                   isActive
                     ? "text-blue-600 bg-blue-50 scale-105"
-                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-50",
                 )}
               >
                 <div className="relative">

@@ -3,8 +3,8 @@
  * Comprehensive service for managing work orders with full database integration
  */
 
-import { createTableService } from './supabase/database-service';
-import type { DatabaseRecord } from './supabase/types';
+import { createTableService } from "./supabase/database-service";
+import type { DatabaseRecord } from "./supabase/types";
 
 export interface WorkOrder extends DatabaseRecord {
   id: string;
@@ -111,7 +111,7 @@ export interface CreateWorkOrderData {
   scheduled_date?: string;
   estimated_hours?: number;
   company_id: string;
-  tasks?: Omit<WorkOrderTask, 'id' | 'work_order_id'>[];
+  tasks?: Omit<WorkOrderTask, "id" | "work_order_id">[];
 }
 
 export interface UpdateWorkOrderData extends Partial<CreateWorkOrderData> {
@@ -124,12 +124,12 @@ export interface UpdateWorkOrderData extends Partial<CreateWorkOrderData> {
 }
 
 export class WorkOrderService {
-  private workOrdersService = createTableService('work_orders');
-  private tasksService = createTableService('work_order_tasks');
-  private assetsService = createTableService('assets');
-  private locationsService = createTableService('locations');
-  private systemsService = createTableService('systems');
-  private userProfilesService = createTableService('user_profiles');
+  private workOrdersService = createTableService("work_orders");
+  private tasksService = createTableService("work_order_tasks");
+  private assetsService = createTableService("assets");
+  private locationsService = createTableService("locations");
+  private systemsService = createTableService("systems");
+  private userProfilesService = createTableService("user_profiles");
 
   /**
    * Generate unique work order number
@@ -138,26 +138,26 @@ export class WorkOrderService {
     try {
       const currentYear = new Date().getFullYear();
       const prefix = `WO${currentYear}-`;
-      
+
       const result = await this.workOrdersService.getAll({
         filters: { company_id: companyId },
-        orderBy: 'created_at',
+        orderBy: "created_at",
         ascending: false,
-        limit: 1
+        limit: 1,
       });
-      
+
       let number = 1;
       if (result.data && result.data.length > 0) {
         const lastWO = result.data[0] as WorkOrder;
-        const lastNumber = lastWO.wo_number?.split('-')[1];
+        const lastNumber = lastWO.wo_number?.split("-")[1];
         if (lastNumber) {
           number = parseInt(lastNumber) + 1;
         }
       }
-      
-      return `${prefix}${number.toString().padStart(4, '0')}`;
+
+      return `${prefix}${number.toString().padStart(4, "0")}`;
     } catch (error) {
-      console.error('Error generating WO number:', error);
+      console.error("Error generating WO number:", error);
       return `WO${new Date().getFullYear()}-0001`;
     }
   }
@@ -165,16 +165,18 @@ export class WorkOrderService {
   /**
    * Create new work order with tasks
    */
-  async createWorkOrder(data: CreateWorkOrderData): Promise<{ data: WorkOrder | null; error: any }> {
+  async createWorkOrder(
+    data: CreateWorkOrderData,
+  ): Promise<{ data: WorkOrder | null; error: any }> {
     try {
       // Generate WO number
       const wo_number = await this.generateWorkOrderNumber(data.company_id);
-      
+
       // Prepare work order data
       const workOrderData = {
         ...data,
         wo_number,
-        status: 'pending',
+        status: "pending",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
@@ -184,7 +186,7 @@ export class WorkOrderService {
 
       // Create work order
       const result = await this.workOrdersService.create(woData);
-      
+
       if (result.error || !result.data) {
         return { data: null, error: result.error };
       }
@@ -204,7 +206,7 @@ export class WorkOrderService {
 
       return { data: workOrder, error: null };
     } catch (error) {
-      console.error('Error creating work order:', error);
+      console.error("Error creating work order:", error);
       return { data: null, error };
     }
   }
@@ -212,7 +214,9 @@ export class WorkOrderService {
   /**
    * Get work order with full details
    */
-  async getWorkOrderWithDetails(id: string): Promise<{ data: WorkOrderWithDetails | null; error: any }> {
+  async getWorkOrderWithDetails(
+    id: string,
+  ): Promise<{ data: WorkOrderWithDetails | null; error: any }> {
     try {
       // Get work order
       const woResult = await this.workOrdersService.getById(id);
@@ -224,17 +228,23 @@ export class WorkOrderService {
       const details: WorkOrderWithDetails = { ...workOrder, tasks: [] };
 
       // Get tasks
-      const tasksResult = await this.tasksService.getByField('work_order_id', id, {
-        orderBy: 'step_number',
-        ascending: true
-      });
+      const tasksResult = await this.tasksService.getByField(
+        "work_order_id",
+        id,
+        {
+          orderBy: "step_number",
+          ascending: true,
+        },
+      );
       if (tasksResult.data) {
         details.tasks = tasksResult.data as WorkOrderTask[];
       }
 
       // Get asset details
       if (workOrder.asset_id) {
-        const assetResult = await this.assetsService.getById(workOrder.asset_id);
+        const assetResult = await this.assetsService.getById(
+          workOrder.asset_id,
+        );
         if (assetResult.data) {
           details.asset = assetResult.data as any;
         }
@@ -242,7 +252,9 @@ export class WorkOrderService {
 
       // Get location details
       if (workOrder.location_id) {
-        const locationResult = await this.locationsService.getById(workOrder.location_id);
+        const locationResult = await this.locationsService.getById(
+          workOrder.location_id,
+        );
         if (locationResult.data) {
           details.location = locationResult.data as any;
         }
@@ -250,7 +262,9 @@ export class WorkOrderService {
 
       // Get system details
       if (workOrder.system_id) {
-        const systemResult = await this.systemsService.getById(workOrder.system_id);
+        const systemResult = await this.systemsService.getById(
+          workOrder.system_id,
+        );
         if (systemResult.data) {
           details.system = systemResult.data as any;
         }
@@ -258,7 +272,10 @@ export class WorkOrderService {
 
       // Get assigned user details
       if (workOrder.assigned_to_user_id) {
-        const userResult = await this.userProfilesService.getByField('user_id', workOrder.assigned_to_user_id);
+        const userResult = await this.userProfilesService.getByField(
+          "user_id",
+          workOrder.assigned_to_user_id,
+        );
         if (userResult.data && userResult.data.length > 0) {
           details.assigned_user = userResult.data[0] as any;
         }
@@ -266,7 +283,10 @@ export class WorkOrderService {
 
       // Get requesting user details
       if (workOrder.requested_by_user_id) {
-        const userResult = await this.userProfilesService.getByField('user_id', workOrder.requested_by_user_id);
+        const userResult = await this.userProfilesService.getByField(
+          "user_id",
+          workOrder.requested_by_user_id,
+        );
         if (userResult.data && userResult.data.length > 0) {
           details.requested_user = userResult.data[0] as any;
         }
@@ -274,7 +294,7 @@ export class WorkOrderService {
 
       return { data: details, error: null };
     } catch (error) {
-      console.error('Error getting work order details:', error);
+      console.error("Error getting work order details:", error);
       return { data: null, error };
     }
   }
@@ -282,7 +302,10 @@ export class WorkOrderService {
   /**
    * Update work order
    */
-  async updateWorkOrder(id: string, data: UpdateWorkOrderData): Promise<{ data: WorkOrder | null; error: any }> {
+  async updateWorkOrder(
+    id: string,
+    data: UpdateWorkOrderData,
+  ): Promise<{ data: WorkOrder | null; error: any }> {
     try {
       const updateData = {
         ...data,
@@ -292,7 +315,7 @@ export class WorkOrderService {
       const result = await this.workOrdersService.update(id, updateData);
       return result;
     } catch (error) {
-      console.error('Error updating work order:', error);
+      console.error("Error updating work order:", error);
       return { data: null, error };
     }
   }
@@ -300,7 +323,11 @@ export class WorkOrderService {
   /**
    * Update work order status
    */
-  async updateWorkOrderStatus(id: string, status: string, comment?: string): Promise<{ data: WorkOrder | null; error: any }> {
+  async updateWorkOrderStatus(
+    id: string,
+    status: string,
+    comment?: string,
+  ): Promise<{ data: WorkOrder | null; error: any }> {
     try {
       const updateData: any = {
         status,
@@ -308,12 +335,12 @@ export class WorkOrderService {
       };
 
       // Set completion time if status is completed
-      if (status === 'completed' || status === 'เสร็จสิ้น') {
+      if (status === "completed" || status === "เสร็จสิ้น") {
         updateData.completed_at = new Date().toISOString();
       }
 
       const result = await this.workOrdersService.update(id, updateData);
-      
+
       // TODO: Add status change log/history if needed
       if (comment) {
         // Could add to a work_order_history table
@@ -322,7 +349,7 @@ export class WorkOrderService {
 
       return result;
     } catch (error) {
-      console.error('Error updating work order status:', error);
+      console.error("Error updating work order status:", error);
       return { data: null, error };
     }
   }
@@ -331,9 +358,9 @@ export class WorkOrderService {
    * Complete work order task
    */
   async completeTask(
-    taskId: string, 
-    value: string | number | boolean, 
-    inputType: string = 'text'
+    taskId: string,
+    value: string | number | boolean,
+    inputType: string = "text",
   ): Promise<{ data: WorkOrderTask | null; error: any }> {
     try {
       const updateData: any = {
@@ -342,11 +369,11 @@ export class WorkOrderService {
       };
 
       // Set value based on input type
-      if (inputType === 'number' || inputType === 'measurement') {
+      if (inputType === "number" || inputType === "measurement") {
         updateData.actual_value_numeric = parseFloat(value as string) || 0;
         updateData.actual_value_text = String(value);
-      } else if (inputType === 'checkbox') {
-        updateData.actual_value_text = value ? 'ใช่' : 'ไม่ใช่';
+      } else if (inputType === "checkbox") {
+        updateData.actual_value_text = value ? "ใช่" : "ไม่ใช่";
       } else {
         updateData.actual_value_text = String(value);
       }
@@ -354,7 +381,7 @@ export class WorkOrderService {
       const result = await this.tasksService.update(taskId, updateData);
       return result;
     } catch (error) {
-      console.error('Error completing task:', error);
+      console.error("Error completing task:", error);
       return { data: null, error };
     }
   }
@@ -362,19 +389,21 @@ export class WorkOrderService {
   /**
    * Uncomplete work order task
    */
-  async uncompleteTask(taskId: string): Promise<{ data: WorkOrderTask | null; error: any }> {
+  async uncompleteTask(
+    taskId: string,
+  ): Promise<{ data: WorkOrderTask | null; error: any }> {
     try {
       const updateData = {
         is_completed: false,
         completed_at: null,
-        actual_value_text: '',
+        actual_value_text: "",
         actual_value_numeric: 0,
       };
 
       const result = await this.tasksService.update(taskId, updateData);
       return result;
     } catch (error) {
-      console.error('Error uncompleting task:', error);
+      console.error("Error uncompleting task:", error);
       return { data: null, error };
     }
   }
@@ -399,20 +428,20 @@ export class WorkOrderService {
     pagination?: {
       limit: number;
       offset: number;
-    }
+    },
   ): Promise<{ data: WorkOrder[] | null; error: any; count?: number }> {
     try {
       const queryFilters: any = { company_id: companyId };
-      
+
       // Apply filters
       if (filters) {
-        if (filters.status && filters.status !== 'all') {
+        if (filters.status && filters.status !== "all") {
           queryFilters.status = filters.status;
         }
         if (filters.priority) {
           queryFilters.priority = filters.priority;
         }
-        if (filters.work_type && filters.work_type !== 'all') {
+        if (filters.work_type && filters.work_type !== "all") {
           queryFilters.work_type = filters.work_type;
         }
         if (filters.assigned_to_user_id) {
@@ -432,7 +461,7 @@ export class WorkOrderService {
         options.orderBy = sort.field;
         options.ascending = sort.ascending;
       } else {
-        options.orderBy = 'created_at';
+        options.orderBy = "created_at";
         options.ascending = false;
       }
 
@@ -443,21 +472,22 @@ export class WorkOrderService {
       }
 
       const result = await this.workOrdersService.getAll(options);
-      
+
       // If search is provided, filter in memory (could be improved with full-text search)
       if (result.data && filters?.search) {
         const searchTerm = filters.search.toLowerCase();
-        result.data = result.data.filter((wo: WorkOrder) =>
-          wo.title.toLowerCase().includes(searchTerm) ||
-          wo.description.toLowerCase().includes(searchTerm) ||
-          wo.wo_number.toLowerCase().includes(searchTerm) ||
-          wo.assigned_to?.toLowerCase().includes(searchTerm)
+        result.data = result.data.filter(
+          (wo: WorkOrder) =>
+            wo.title.toLowerCase().includes(searchTerm) ||
+            wo.description.toLowerCase().includes(searchTerm) ||
+            wo.wo_number.toLowerCase().includes(searchTerm) ||
+            wo.assigned_to?.toLowerCase().includes(searchTerm),
         );
       }
 
       return result;
     } catch (error) {
-      console.error('Error getting work orders:', error);
+      console.error("Error getting work orders:", error);
       return { data: null, error };
     }
   }
@@ -465,10 +495,12 @@ export class WorkOrderService {
   /**
    * Get work order statistics for company
    */
-  async getWorkOrderStatistics(companyId: string): Promise<{ data: WorkOrderStatistics | null; error: any }> {
+  async getWorkOrderStatistics(
+    companyId: string,
+  ): Promise<{ data: WorkOrderStatistics | null; error: any }> {
     try {
       const result = await this.workOrdersService.getAll({
-        filters: { company_id: companyId }
+        filters: { company_id: companyId },
       });
 
       if (result.error || !result.data) {
@@ -493,39 +525,43 @@ export class WorkOrderService {
       let totalCompletionTime = 0;
       let completedCount = 0;
 
-      workOrders.forEach(wo => {
+      workOrders.forEach((wo) => {
         // Count by status
         switch (wo.status.toLowerCase()) {
-          case 'pending':
-          case 'รอดำเนินการ':
+          case "pending":
+          case "รอดำเนินการ":
             stats.pending++;
             break;
-          case 'in_progress':
-          case 'กำลังดำเนินการ':
+          case "in_progress":
+          case "กำลังดำเนินการ":
             stats.in_progress++;
             break;
-          case 'completed':
-          case 'เสร็จสิ้น':
+          case "completed":
+          case "เสร็จสิ้น":
             stats.completed++;
             completedCount++;
-            
+
             // Calculate completion time
             if (wo.created_at && wo.completed_at) {
-              const completionTime = new Date(wo.completed_at).getTime() - new Date(wo.created_at).getTime();
+              const completionTime =
+                new Date(wo.completed_at).getTime() -
+                new Date(wo.created_at).getTime();
               totalCompletionTime += completionTime;
             }
             break;
-          case 'cancelled':
-          case 'ยกเลิก':
+          case "cancelled":
+          case "ยกเลิก":
             stats.cancelled++;
             break;
         }
 
         // Count overdue
-        if (wo.scheduled_date && 
-            new Date(wo.scheduled_date) < new Date() && 
-            wo.status !== 'completed' && 
-            wo.status !== 'เสร็จสิ้น') {
+        if (
+          wo.scheduled_date &&
+          new Date(wo.scheduled_date) < new Date() &&
+          wo.status !== "completed" &&
+          wo.status !== "เสร็จสิ้น"
+        ) {
           stats.overdue++;
         }
 
@@ -536,7 +572,8 @@ export class WorkOrderService {
 
         // Count by work type
         if (wo.work_type) {
-          stats.by_work_type[wo.work_type] = (stats.by_work_type[wo.work_type] || 0) + 1;
+          stats.by_work_type[wo.work_type] =
+            (stats.by_work_type[wo.work_type] || 0) + 1;
         }
 
         // Sum total cost
@@ -546,14 +583,18 @@ export class WorkOrderService {
       });
 
       // Calculate completion rate
-      stats.completion_rate = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+      stats.completion_rate =
+        stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
 
       // Calculate average completion time (in hours)
-      stats.avg_completion_time = completedCount > 0 ? totalCompletionTime / completedCount / (1000 * 60 * 60) : 0;
+      stats.avg_completion_time =
+        completedCount > 0
+          ? totalCompletionTime / completedCount / (1000 * 60 * 60)
+          : 0;
 
       return { data: stats, error: null };
     } catch (error) {
-      console.error('Error getting work order statistics:', error);
+      console.error("Error getting work order statistics:", error);
       return { data: null, error };
     }
   }
@@ -564,7 +605,10 @@ export class WorkOrderService {
   async deleteWorkOrder(id: string): Promise<{ error: any }> {
     try {
       // Delete all tasks first
-      const tasksResult = await this.tasksService.getByField('work_order_id', id);
+      const tasksResult = await this.tasksService.getByField(
+        "work_order_id",
+        id,
+      );
       if (tasksResult.data) {
         for (const task of tasksResult.data) {
           await this.tasksService.delete((task as any).id);
@@ -575,7 +619,7 @@ export class WorkOrderService {
       const result = await this.workOrdersService.delete(id);
       return { error: result.error };
     } catch (error) {
-      console.error('Error deleting work order:', error);
+      console.error("Error deleting work order:", error);
       return { error };
     }
   }
@@ -583,18 +627,21 @@ export class WorkOrderService {
   /**
    * Get recent work orders for dashboard
    */
-  async getRecentWorkOrders(companyId: string, limit: number = 5): Promise<{ data: WorkOrder[] | null; error: any }> {
+  async getRecentWorkOrders(
+    companyId: string,
+    limit: number = 5,
+  ): Promise<{ data: WorkOrder[] | null; error: any }> {
     try {
       const result = await this.workOrdersService.getAll({
         filters: { company_id: companyId },
-        orderBy: 'created_at',
+        orderBy: "created_at",
         ascending: false,
-        limit: limit
+        limit: limit,
       });
 
       return result;
     } catch (error) {
-      console.error('Error getting recent work orders:', error);
+      console.error("Error getting recent work orders:", error);
       return { data: null, error };
     }
   }
@@ -602,28 +649,31 @@ export class WorkOrderService {
   /**
    * Get overdue work orders
    */
-  async getOverdueWorkOrders(companyId: string): Promise<{ data: WorkOrder[] | null; error: any }> {
+  async getOverdueWorkOrders(
+    companyId: string,
+  ): Promise<{ data: WorkOrder[] | null; error: any }> {
     try {
       const result = await this.workOrdersService.getAll({
-        filters: { company_id: companyId }
+        filters: { company_id: companyId },
       });
 
       if (result.error || !result.data) {
         return { data: null, error: result.error };
       }
 
-      const overdueWorkOrders = (result.data as WorkOrder[]).filter(wo =>
-        wo.scheduled_date &&
-        new Date(wo.scheduled_date) < new Date() &&
-        wo.status !== 'completed' &&
-        wo.status !== 'เสร็จสิ้น' &&
-        wo.status !== 'cancelled' &&
-        wo.status !== 'ยกเลิก'
+      const overdueWorkOrders = (result.data as WorkOrder[]).filter(
+        (wo) =>
+          wo.scheduled_date &&
+          new Date(wo.scheduled_date) < new Date() &&
+          wo.status !== "completed" &&
+          wo.status !== "เสร็จสิ้น" &&
+          wo.status !== "cancelled" &&
+          wo.status !== "ยกเลิก",
       );
 
       return { data: overdueWorkOrders, error: null };
     } catch (error) {
-      console.error('Error getting overdue work orders:', error);
+      console.error("Error getting overdue work orders:", error);
       return { data: null, error };
     }
   }

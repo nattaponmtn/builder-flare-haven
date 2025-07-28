@@ -47,7 +47,7 @@ import {
   Settings,
   Eye,
   Edit,
-  Trash2
+  Trash2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -119,29 +119,29 @@ export function CreateWorkOrder() {
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
 
   const [formData, setFormData] = useState<WorkOrderForm>({
-    work_type: 'preventive',
-    title: '',
-    description: '',
-    status: 'pending',
+    work_type: "preventive",
+    title: "",
+    description: "",
+    status: "pending",
     priority: 2,
-    asset_id: '',
-    location_id: '',
-    system_id: '',
-    pm_template_id: '',
-    assigned_to_user_id: '',
-    requested_by_user_id: user?.id || '',
-    scheduled_date: new Date().toISOString().split('T')[0],
-    wo_number: '',
+    asset_id: "",
+    location_id: "",
+    system_id: "",
+    pm_template_id: "",
+    assigned_to_user_id: "",
+    requested_by_user_id: user?.id || "",
+    scheduled_date: new Date().toISOString().split("T")[0],
+    wo_number: "",
     estimated_hours: 0,
-    company_id: userProfile?.company_id || '',
+    company_id: userProfile?.company_id || "",
   });
 
   const [tasks, setTasks] = useState<WorkOrderTask[]>([]);
   const [newTask, setNewTask] = useState<WorkOrderTask>({
-    description: '',
+    description: "",
     is_critical: false,
-    expected_input_type: 'text',
-    standard_text_expected: '',
+    expected_input_type: "text",
+    standard_text_expected: "",
     standard_min_value: 0,
     standard_max_value: 0,
   });
@@ -150,15 +150,20 @@ export function CreateWorkOrder() {
   useEffect(() => {
     const loadUsers = async () => {
       if (!userProfile?.company_id) return;
-      
+
       try {
-        const userProfilesService = createTableService('user_profiles');
-        const result = await userProfilesService.getByField('company_id', userProfile.company_id);
+        const userProfilesService = createTableService("user_profiles");
+        const result = await userProfilesService.getByField(
+          "company_id",
+          userProfile.company_id,
+        );
         if (result.data) {
-          setAvailableUsers(result.data.filter((u: User) => u.is_active) as User[]);
+          setAvailableUsers(
+            result.data.filter((u: User) => u.is_active) as User[],
+          );
         }
       } catch (error) {
-        console.error('Error loading users:', error);
+        console.error("Error loading users:", error);
       }
     };
 
@@ -169,25 +174,25 @@ export function CreateWorkOrder() {
   useEffect(() => {
     const loadWorkOrder = async () => {
       if (!isEdit || !id) return;
-      
+
       setLoading(true);
       try {
-        const workOrderService = createTableService('work_orders');
-        const tasksService = createTableService('work_order_tasks');
-        
+        const workOrderService = createTableService("work_orders");
+        const tasksService = createTableService("work_order_tasks");
+
         // Load work order
         const woResult = await workOrderService.getById(id);
         if (woResult.data) {
           setFormData(woResult.data as WorkOrderForm);
         }
-        
+
         // Load tasks
-        const tasksResult = await tasksService.getByField('work_order_id', id);
+        const tasksResult = await tasksService.getByField("work_order_id", id);
         if (tasksResult.data) {
           setTasks(tasksResult.data as WorkOrderTask[]);
         }
       } catch (error) {
-        console.error('Error loading work order:', error);
+        console.error("Error loading work order:", error);
         toast({
           title: "เกิดข้อผิดพลาด",
           description: "ไม่สามารถโหลดข้อมูลใบสั่งงานได้",
@@ -204,29 +209,29 @@ export function CreateWorkOrder() {
   // Generate work order number
   const generateWONumber = async () => {
     try {
-      const workOrderService = createTableService('work_orders');
-      const result = await workOrderService.getAll({ 
+      const workOrderService = createTableService("work_orders");
+      const result = await workOrderService.getAll({
         filters: { company_id: userProfile?.company_id },
-        orderBy: 'created_at',
+        orderBy: "created_at",
         ascending: false,
-        limit: 1
+        limit: 1,
       });
-      
+
       const currentYear = new Date().getFullYear();
       const prefix = `WO${currentYear}-`;
       let number = 1;
-      
+
       if (result.data && result.data.length > 0) {
         const lastWO = result.data[0] as any;
-        const lastNumber = lastWO.wo_number?.split('-')[1];
+        const lastNumber = lastWO.wo_number?.split("-")[1];
         if (lastNumber) {
           number = parseInt(lastNumber) + 1;
         }
       }
-      
-      return `${prefix}${number.toString().padStart(4, '0')}`;
+
+      return `${prefix}${number.toString().padStart(4, "0")}`;
     } catch (error) {
-      console.error('Error generating WO number:', error);
+      console.error("Error generating WO number:", error);
       return `WO${new Date().getFullYear()}-0001`;
     }
   };
@@ -234,32 +239,36 @@ export function CreateWorkOrder() {
   // Load template tasks
   const loadTemplateTasksf = async (templateId: string) => {
     try {
-      const templateDetailsService = createTableService('pm_template_details');
-      const result = await templateDetailsService.getByField('pm_template_id', templateId, {
-        orderBy: 'step_number',
-        ascending: true
-      });
-      
+      const templateDetailsService = createTableService("pm_template_details");
+      const result = await templateDetailsService.getByField(
+        "pm_template_id",
+        templateId,
+        {
+          orderBy: "step_number",
+          ascending: true,
+        },
+      );
+
       if (result.data) {
         const templateTasks = result.data.map((detail: any) => ({
           description: detail.task_description,
           is_critical: detail.is_critical || false,
-          expected_input_type: detail.expected_input_type || 'text',
-          standard_text_expected: detail.standard_text_expected || '',
+          expected_input_type: detail.expected_input_type || "text",
+          standard_text_expected: detail.standard_text_expected || "",
           standard_min_value: detail.standard_min_value || 0,
           standard_max_value: detail.standard_max_value || 0,
         }));
-        
+
         setTasks(templateTasks);
         setShowTemplateDialog(false);
-        
+
         toast({
           title: "สำเร็จ",
           description: `โหลดงานจากเทมเพลต ${templateTasks.length} รายการ`,
         });
       }
     } catch (error) {
-      console.error('Error loading template tasks:', error);
+      console.error("Error loading template tasks:", error);
       toast({
         title: "เกิดข้อผิดพลาด",
         description: "ไม่สามารถโหลดงานจากเทมเพลตได้",
@@ -278,13 +287,13 @@ export function CreateWorkOrder() {
       });
       return;
     }
-    
+
     setTasks([...tasks, { ...newTask }]);
     setNewTask({
-      description: '',
+      description: "",
       is_critical: false,
-      expected_input_type: 'text',
-      standard_text_expected: '',
+      expected_input_type: "text",
+      standard_text_expected: "",
       standard_min_value: 0,
       standard_max_value: 0,
     });
@@ -298,7 +307,7 @@ export function CreateWorkOrder() {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title.trim() || !formData.description.trim()) {
       toast({
         title: "เกิดข้อผิดพลาด",
@@ -309,25 +318,28 @@ export function CreateWorkOrder() {
     }
 
     setSaving(true);
-    
+
     try {
-      const workOrderService = createTableService('work_orders');
-      const tasksService = createTableService('work_order_tasks');
-      
+      const workOrderService = createTableService("work_orders");
+      const tasksService = createTableService("work_order_tasks");
+
       // Generate WO number if creating new
       if (!isEdit && !formData.wo_number) {
         formData.wo_number = await generateWONumber();
       }
-      
+
       let workOrderId = id;
-      
+
       if (isEdit) {
         // Update existing work order
         await workOrderService.update(id!, formData);
-        
+
         // Delete existing tasks and recreate
         // Note: In production, you might want more sophisticated task update logic
-        const existingTasks = await tasksService.getByField('work_order_id', id!);
+        const existingTasks = await tasksService.getByField(
+          "work_order_id",
+          id!,
+        );
         if (existingTasks.data) {
           for (const task of existingTasks.data) {
             await tasksService.delete((task as any).id);
@@ -340,26 +352,27 @@ export function CreateWorkOrder() {
           workOrderId = (result.data as any).id;
         }
       }
-      
+
       // Create tasks
       if (workOrderId && tasks.length > 0) {
         for (const task of tasks) {
           await tasksService.create({
             work_order_id: workOrderId,
-            ...task
+            ...task,
           });
         }
       }
-      
+
       toast({
         title: "สำเร็จ",
-        description: isEdit ? "อัปเดตใบสั่งงานเรียบร้อยแล้ว" : "สร้างใบสั่งงานเรียบร้อยแล้ว",
+        description: isEdit
+          ? "อัปเดตใบสั่งงานเรียบร้อยแล้ว"
+          : "สร้างใบสั่งงานเรียบร้อยแล้ว",
       });
-      
-      navigate('/work-orders');
-      
+
+      navigate("/work-orders");
     } catch (error) {
-      console.error('Error saving work order:', error);
+      console.error("Error saving work order:", error);
       toast({
         title: "เกิดข้อผิดพลาด",
         description: "ไม่สามารถบันทึกใบสั่งงานได้",
@@ -371,24 +384,24 @@ export function CreateWorkOrder() {
   };
 
   const workTypes = [
-    { value: 'preventive', label: 'บำรุงรักษาเชิงป้องกัน', icon: Settings },
-    { value: 'corrective', label: 'แก้ไขเมื่อเสีย', icon: Wrench },
-    { value: 'inspection', label: 'ตรวจสอบ', icon: Eye },
-    { value: 'emergency', label: 'ฉุกเฉิน', icon: AlertTriangle },
+    { value: "preventive", label: "บำรุงรักษาเชิงป้องกัน", icon: Settings },
+    { value: "corrective", label: "แก้ไขเมื่อเสีย", icon: Wrench },
+    { value: "inspection", label: "ตรวจสอบ", icon: Eye },
+    { value: "emergency", label: "ฉุกเฉิน", icon: AlertTriangle },
   ];
 
   const priorities = [
-    { value: 1, label: 'ต่ำ', color: 'bg-green-100 text-green-800' },
-    { value: 2, label: 'ปานกลาง', color: 'bg-yellow-100 text-yellow-800' },
-    { value: 3, label: 'สูง', color: 'bg-orange-100 text-orange-800' },
-    { value: 4, label: 'วิกฤติ', color: 'bg-red-100 text-red-800' },
+    { value: 1, label: "ต่ำ", color: "bg-green-100 text-green-800" },
+    { value: 2, label: "ปานกลาง", color: "bg-yellow-100 text-yellow-800" },
+    { value: 3, label: "สูง", color: "bg-orange-100 text-orange-800" },
+    { value: 4, label: "วิกฤติ", color: "bg-red-100 text-red-800" },
   ];
 
   const inputTypes = [
-    { value: 'text', label: 'ข้อความ' },
-    { value: 'number', label: 'ตัวเลข' },
-    { value: 'checkbox', label: 'เลือก (ใช่/ไม่ใช่)' },
-    { value: 'measurement', label: 'การวัด (มีช่วงค่า)' },
+    { value: "text", label: "ข้อความ" },
+    { value: "number", label: "ตัวเลข" },
+    { value: "checkbox", label: "เลือก (ใช่/ไม่ใช่)" },
+    { value: "measurement", label: "การวัด (มีช่วงค่า)" },
   ];
 
   if (loading) {
@@ -407,28 +420,32 @@ export function CreateWorkOrder() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       <div className="p-4 sm:p-6 pb-20 md:pb-6 space-y-6 max-w-4xl mx-auto">
-        
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="flex items-center gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Button variant="outline" size="icon" onClick={() => navigate('/work-orders')}>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => navigate("/work-orders")}
+          >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-              {isEdit ? 'แก้ไขใบสั่งงาน' : 'สร้างใบสั่งงาน'}
+              {isEdit ? "แก้ไขใบสั่งงาน" : "สร้างใบสั่งงาน"}
             </h1>
             <p className="text-slate-600 mt-1">
-              {isEdit ? 'อัปเดตข้อมูลใบสั่งงาน' : 'สร้างใบสั่งงานบำรุงรักษาใหม่'}
+              {isEdit
+                ? "อัปเดตข้อมูลใบสั่งงาน"
+                : "สร้างใบสั่งงานบำรุงรักษาใหม่"}
             </p>
           </div>
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          
           {/* Basic Information */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -446,7 +463,12 @@ export function CreateWorkOrder() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="work_type">ประเภทงาน</Label>
-                    <Select value={formData.work_type} onValueChange={(value) => setFormData({...formData, work_type: value})}>
+                    <Select
+                      value={formData.work_type}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, work_type: value })
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -465,13 +487,21 @@ export function CreateWorkOrder() {
 
                   <div className="space-y-2">
                     <Label htmlFor="priority">ความสำคัญ</Label>
-                    <Select value={formData.priority.toString()} onValueChange={(value) => setFormData({...formData, priority: parseInt(value)})}>
+                    <Select
+                      value={formData.priority.toString()}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, priority: parseInt(value) })
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         {priorities.map((priority) => (
-                          <SelectItem key={priority.value} value={priority.value.toString()}>
+                          <SelectItem
+                            key={priority.value}
+                            value={priority.value.toString()}
+                          >
                             <Badge className={priority.color} variant="outline">
                               {priority.label}
                             </Badge>
@@ -487,7 +517,9 @@ export function CreateWorkOrder() {
                   <Input
                     id="title"
                     value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     placeholder="ระบุชื่องานบำรุงรักษา"
                     required
                   />
@@ -498,7 +530,9 @@ export function CreateWorkOrder() {
                   <Textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
                     placeholder="อธิบายรายละเอียดงานที่ต้องดำเนินการ"
                     rows={4}
                     required
@@ -512,7 +546,12 @@ export function CreateWorkOrder() {
                       id="scheduled_date"
                       type="date"
                       value={formData.scheduled_date}
-                      onChange={(e) => setFormData({...formData, scheduled_date: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          scheduled_date: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
@@ -522,7 +561,12 @@ export function CreateWorkOrder() {
                       id="estimated_hours"
                       type="number"
                       value={formData.estimated_hours}
-                      onChange={(e) => setFormData({...formData, estimated_hours: parseFloat(e.target.value) || 0})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          estimated_hours: parseFloat(e.target.value) || 0,
+                        })
+                      }
                       placeholder="0"
                       min="0"
                       step="0.5"
@@ -549,7 +593,12 @@ export function CreateWorkOrder() {
               <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="assigned_to_user_id">ผู้รับผิดชอบ</Label>
-                  <Select value={formData.assigned_to_user_id} onValueChange={(value) => setFormData({...formData, assigned_to_user_id: value})}>
+                  <Select
+                    value={formData.assigned_to_user_id}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, assigned_to_user_id: value })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="เลือกผู้รับผิดชอบ" />
                     </SelectTrigger>
@@ -569,7 +618,12 @@ export function CreateWorkOrder() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="asset_id">อุปกรณ์</Label>
-                    <Select value={formData.asset_id} onValueChange={(value) => setFormData({...formData, asset_id: value})}>
+                    <Select
+                      value={formData.asset_id}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, asset_id: value })
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="เลือกอุปกรณ์" />
                       </SelectTrigger>
@@ -588,7 +642,12 @@ export function CreateWorkOrder() {
 
                   <div className="space-y-2">
                     <Label htmlFor="location_id">สถานที่</Label>
-                    <Select value={formData.location_id} onValueChange={(value) => setFormData({...formData, location_id: value})}>
+                    <Select
+                      value={formData.location_id}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, location_id: value })
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="เลือกสถานที่" />
                       </SelectTrigger>
@@ -607,7 +666,12 @@ export function CreateWorkOrder() {
 
                   <div className="space-y-2">
                     <Label htmlFor="system_id">ระบบ</Label>
-                    <Select value={formData.system_id} onValueChange={(value) => setFormData({...formData, system_id: value})}>
+                    <Select
+                      value={formData.system_id}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, system_id: value })
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="เลือกระบบ" />
                       </SelectTrigger>
@@ -642,7 +706,10 @@ export function CreateWorkOrder() {
                     รายการงาน ({tasks.length})
                   </CardTitle>
                   <div className="flex gap-2">
-                    <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+                    <Dialog
+                      open={showTemplateDialog}
+                      onOpenChange={setShowTemplateDialog}
+                    >
                       <DialogTrigger asChild>
                         <Button variant="outline" size="sm">
                           <Sparkles className="h-4 w-4 mr-2" />
@@ -655,14 +722,27 @@ export function CreateWorkOrder() {
                         </DialogHeader>
                         <div className="space-y-4 max-h-96 overflow-y-auto">
                           {pmTemplates?.map((template: any) => (
-                            <Card key={template.id} className="cursor-pointer hover:bg-slate-50 transition-colors"
-                                  onClick={() => loadTemplateTasksf(template.id)}>
+                            <Card
+                              key={template.id}
+                              className="cursor-pointer hover:bg-slate-50 transition-colors"
+                              onClick={() => loadTemplateTasksf(template.id)}
+                            >
                               <CardContent className="p-4">
                                 <h4 className="font-medium">{template.name}</h4>
-                                <p className="text-sm text-slate-600 mt-1">{template.description}</p>
+                                <p className="text-sm text-slate-600 mt-1">
+                                  {template.description}
+                                </p>
                                 <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
-                                  <span>ระยะเวลา: {template.estimated_duration || template.estimated_minutes} นาที</span>
-                                  <span>ความถี่: ทุก {template.frequency_value} {template.frequency_type}</span>
+                                  <span>
+                                    ระยะเวลา:{" "}
+                                    {template.estimated_duration ||
+                                      template.estimated_minutes}{" "}
+                                    นาที
+                                  </span>
+                                  <span>
+                                    ความถี่: ทุก {template.frequency_value}{" "}
+                                    {template.frequency_type}
+                                  </span>
                                 </div>
                               </CardContent>
                             </Card>
@@ -674,16 +754,22 @@ export function CreateWorkOrder() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                
                 {/* Add New Task */}
                 <Card className="border-dashed border-2 border-slate-300">
                   <CardContent className="p-4 space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="new_task_description">รายละเอียดงาน</Label>
+                      <Label htmlFor="new_task_description">
+                        รายละเอียดงาน
+                      </Label>
                       <Textarea
                         id="new_task_description"
                         value={newTask.description}
-                        onChange={(e) => setNewTask({...newTask, description: e.target.value})}
+                        onChange={(e) =>
+                          setNewTask({
+                            ...newTask,
+                            description: e.target.value,
+                          })
+                        }
                         placeholder="อธิบายงานที่ต้องดำเนินการ"
                         rows={2}
                       />
@@ -691,8 +777,18 @@ export function CreateWorkOrder() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="expected_input_type">ประเภทการตอบ</Label>
-                        <Select value={newTask.expected_input_type} onValueChange={(value) => setNewTask({...newTask, expected_input_type: value})}>
+                        <Label htmlFor="expected_input_type">
+                          ประเภทการตอบ
+                        </Label>
+                        <Select
+                          value={newTask.expected_input_type}
+                          onValueChange={(value) =>
+                            setNewTask({
+                              ...newTask,
+                              expected_input_type: value,
+                            })
+                          }
+                        >
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
@@ -710,28 +806,43 @@ export function CreateWorkOrder() {
                         <Checkbox
                           id="is_critical"
                           checked={newTask.is_critical}
-                          onCheckedChange={(checked) => setNewTask({...newTask, is_critical: checked as boolean})}
+                          onCheckedChange={(checked) =>
+                            setNewTask({
+                              ...newTask,
+                              is_critical: checked as boolean,
+                            })
+                          }
                         />
-                        <Label htmlFor="is_critical" className="text-sm font-medium">
+                        <Label
+                          htmlFor="is_critical"
+                          className="text-sm font-medium"
+                        >
                           งานสำคัญ (Critical)
                         </Label>
                       </div>
                     </div>
 
                     {/* Additional fields based on input type */}
-                    {newTask.expected_input_type === 'text' && (
+                    {newTask.expected_input_type === "text" && (
                       <div className="space-y-2">
-                        <Label htmlFor="standard_text_expected">ค่าที่คาดหวัง (ถ้ามี)</Label>
+                        <Label htmlFor="standard_text_expected">
+                          ค่าที่คาดหวัง (ถ้ามี)
+                        </Label>
                         <Input
                           id="standard_text_expected"
                           value={newTask.standard_text_expected}
-                          onChange={(e) => setNewTask({...newTask, standard_text_expected: e.target.value})}
+                          onChange={(e) =>
+                            setNewTask({
+                              ...newTask,
+                              standard_text_expected: e.target.value,
+                            })
+                          }
                           placeholder="เช่น: ปกติ, ผ่าน, OK"
                         />
                       </div>
                     )}
 
-                    {newTask.expected_input_type === 'measurement' && (
+                    {newTask.expected_input_type === "measurement" && (
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="standard_min_value">ค่าต่ำสุด</Label>
@@ -739,7 +850,13 @@ export function CreateWorkOrder() {
                             id="standard_min_value"
                             type="number"
                             value={newTask.standard_min_value}
-                            onChange={(e) => setNewTask({...newTask, standard_min_value: parseFloat(e.target.value) || 0})}
+                            onChange={(e) =>
+                              setNewTask({
+                                ...newTask,
+                                standard_min_value:
+                                  parseFloat(e.target.value) || 0,
+                              })
+                            }
                             placeholder="0"
                             step="0.01"
                           />
@@ -750,7 +867,13 @@ export function CreateWorkOrder() {
                             id="standard_max_value"
                             type="number"
                             value={newTask.standard_max_value}
-                            onChange={(e) => setNewTask({...newTask, standard_max_value: parseFloat(e.target.value) || 0})}
+                            onChange={(e) =>
+                              setNewTask({
+                                ...newTask,
+                                standard_max_value:
+                                  parseFloat(e.target.value) || 0,
+                              })
+                            }
                             placeholder="100"
                             step="0.01"
                           />
@@ -785,22 +908,35 @@ export function CreateWorkOrder() {
                                     งานที่ {index + 1}
                                   </Badge>
                                   {task.is_critical && (
-                                    <Badge variant="destructive" className="text-xs">
+                                    <Badge
+                                      variant="destructive"
+                                      className="text-xs"
+                                    >
                                       <AlertTriangle className="h-3 w-3 mr-1" />
                                       สำคัญ
                                     </Badge>
                                   )}
                                   <Badge variant="outline" className="text-xs">
-                                    {inputTypes.find(t => t.value === task.expected_input_type)?.label}
+                                    {
+                                      inputTypes.find(
+                                        (t) =>
+                                          t.value === task.expected_input_type,
+                                      )?.label
+                                    }
                                   </Badge>
                                 </div>
-                                <p className="text-sm text-slate-900 mb-2">{task.description}</p>
+                                <p className="text-sm text-slate-900 mb-2">
+                                  {task.description}
+                                </p>
                                 {task.standard_text_expected && (
-                                  <p className="text-xs text-slate-500">คาดหวัง: {task.standard_text_expected}</p>
-                                )}
-                                {task.expected_input_type === 'measurement' && (
                                   <p className="text-xs text-slate-500">
-                                    ช่วงค่า: {task.standard_min_value} - {task.standard_max_value}
+                                    คาดหวัง: {task.standard_text_expected}
+                                  </p>
+                                )}
+                                {task.expected_input_type === "measurement" && (
+                                  <p className="text-xs text-slate-500">
+                                    ช่วงค่า: {task.standard_min_value} -{" "}
+                                    {task.standard_max_value}
                                   </p>
                                 )}
                               </div>
@@ -819,13 +955,15 @@ export function CreateWorkOrder() {
                       </motion.div>
                     ))}
                   </AnimatePresence>
-                  
+
                   {tasks.length === 0 && (
                     <Card className="border-dashed border-2 border-slate-300">
                       <CardContent className="p-8 text-center">
                         <CheckCircle className="h-12 w-12 mx-auto text-slate-300 mb-3" />
                         <p className="text-slate-500">ยังไม่มีรายการงาน</p>
-                        <p className="text-sm text-slate-400 mt-1">เพิ่มงานที่ต้องดำเนินการ หรือโหลดจากเทมเพลต</p>
+                        <p className="text-sm text-slate-400 mt-1">
+                          เพิ่มงานที่ต้องดำเนินการ หรือโหลดจากเทมเพลต
+                        </p>
                       </CardContent>
                     </Card>
                   )}
@@ -841,10 +979,18 @@ export function CreateWorkOrder() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Button type="button" variant="outline" onClick={() => navigate('/work-orders')}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate("/work-orders")}
+            >
               ยกเลิก
             </Button>
-            <Button type="submit" disabled={saving} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+            <Button
+              type="submit"
+              disabled={saving}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+            >
               {saving ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -853,7 +999,7 @@ export function CreateWorkOrder() {
               ) : (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  {isEdit ? 'อัปเดต' : 'สร้าง'}ใบสั่งงาน
+                  {isEdit ? "อัปเดต" : "สร้าง"}ใบสั่งงาน
                 </>
               )}
             </Button>

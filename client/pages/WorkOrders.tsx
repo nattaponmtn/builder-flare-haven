@@ -51,7 +51,7 @@ import {
   PlayCircle,
   PauseCircle,
   XCircle,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -123,7 +123,7 @@ export function WorkOrders() {
   const { workOrders, loading, error, refresh } = useSupabaseData();
   const { user, userProfile } = useAuth();
   const { toast } = useToast();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -131,7 +131,9 @@ export function WorkOrders() {
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<string | null>(null);
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<string | null>(
+    null,
+  );
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [workOrderTasks, setWorkOrderTasks] = useState<WorkOrderTask[]>([]);
 
@@ -139,23 +141,23 @@ export function WorkOrders() {
   useEffect(() => {
     const loadWorkOrderTasks = async () => {
       if (!workOrders || workOrders.length === 0) return;
-      
+
       try {
-        const tasksService = createTableService('work_order_tasks');
+        const tasksService = createTableService("work_order_tasks");
         const workOrderIds = workOrders.map((wo: WorkOrder) => wo.id);
-        
+
         // Load tasks for all work orders
         const allTasks: WorkOrderTask[] = [];
         for (const woId of workOrderIds) {
-          const result = await tasksService.getByField('work_order_id', woId);
+          const result = await tasksService.getByField("work_order_id", woId);
           if (result.data) {
             allTasks.push(...(result.data as WorkOrderTask[]));
           }
         }
-        
+
         setWorkOrderTasks(allTasks);
       } catch (error) {
-        console.error('Error loading work order tasks:', error);
+        console.error("Error loading work order tasks:", error);
       }
     };
 
@@ -167,28 +169,38 @@ export function WorkOrders() {
     if (!workOrders) return [];
 
     let filtered = workOrders.filter((wo: WorkOrder) => {
-      const matchesSearch = wo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           wo.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           wo.wo_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           wo.assigned_to?.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesStatus = statusFilter === "all" || wo.status === statusFilter;
-      const matchesPriority = priorityFilter === "all" || wo.priority.toString() === priorityFilter;
-      const matchesWorkType = workTypeFilter === "all" || wo.work_type === workTypeFilter;
-      
-      return matchesSearch && matchesStatus && matchesPriority && matchesWorkType;
+      const matchesSearch =
+        wo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wo.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wo.wo_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wo.assigned_to?.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === "all" || wo.status === statusFilter;
+      const matchesPriority =
+        priorityFilter === "all" || wo.priority.toString() === priorityFilter;
+      const matchesWorkType =
+        workTypeFilter === "all" || wo.work_type === workTypeFilter;
+
+      return (
+        matchesSearch && matchesStatus && matchesPriority && matchesWorkType
+      );
     });
 
     // Sort
     filtered.sort((a: WorkOrder, b: WorkOrder) => {
       let aValue: any = a[sortBy as keyof WorkOrder];
       let bValue: any = b[sortBy as keyof WorkOrder];
-      
-      if (sortBy === "created_at" || sortBy === "scheduled_date" || sortBy === "completed_at") {
-        aValue = new Date(aValue || '').getTime() || 0;
-        bValue = new Date(bValue || '').getTime() || 0;
+
+      if (
+        sortBy === "created_at" ||
+        sortBy === "scheduled_date" ||
+        sortBy === "completed_at"
+      ) {
+        aValue = new Date(aValue || "").getTime() || 0;
+        bValue = new Date(bValue || "").getTime() || 0;
       }
-      
+
       if (sortOrder === "asc") {
         return aValue > bValue ? 1 : -1;
       } else {
@@ -197,51 +209,59 @@ export function WorkOrders() {
     });
 
     return filtered;
-  }, [workOrders, searchTerm, statusFilter, priorityFilter, workTypeFilter, sortBy, sortOrder]);
+  }, [
+    workOrders,
+    searchTerm,
+    statusFilter,
+    priorityFilter,
+    workTypeFilter,
+    sortBy,
+    sortOrder,
+  ]);
 
   // Get status color and thai text
   const getStatusInfo = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'pending':
-      case 'รอดำเนินการ':
-        return { 
-          color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      case "pending":
+      case "รอดำเนินการ":
+        return {
+          color: "bg-yellow-100 text-yellow-800 border-yellow-200",
           icon: Clock,
-          text: 'รอดำเนินการ'
+          text: "รอดำเนินการ",
         };
-      case 'in_progress':
-      case 'กำลังดำเนินการ':
-        return { 
-          color: 'bg-blue-100 text-blue-800 border-blue-200',
+      case "in_progress":
+      case "กำลังดำเนินการ":
+        return {
+          color: "bg-blue-100 text-blue-800 border-blue-200",
           icon: PlayCircle,
-          text: 'กำลังดำเนินการ'
+          text: "กำลังดำเนินการ",
         };
-      case 'completed':
-      case 'เสร็จสิ้น':
-        return { 
-          color: 'bg-green-100 text-green-800 border-green-200',
+      case "completed":
+      case "เสร็จสิ้น":
+        return {
+          color: "bg-green-100 text-green-800 border-green-200",
           icon: CheckCircle,
-          text: 'เสร็จสิ้น'
+          text: "เสร็จสิ้น",
         };
-      case 'cancelled':
-      case 'ยกเลิก':
-        return { 
-          color: 'bg-red-100 text-red-800 border-red-200',
+      case "cancelled":
+      case "ยกเลิก":
+        return {
+          color: "bg-red-100 text-red-800 border-red-200",
           icon: XCircle,
-          text: 'ยกเลิก'
+          text: "ยกเลิก",
         };
-      case 'on_hold':
-      case 'พักงาน':
-        return { 
-          color: 'bg-orange-100 text-orange-800 border-orange-200',
+      case "on_hold":
+      case "พักงาน":
+        return {
+          color: "bg-orange-100 text-orange-800 border-orange-200",
           icon: PauseCircle,
-          text: 'พักงาน'
+          text: "พักงาน",
         };
       default:
-        return { 
-          color: 'bg-gray-100 text-gray-800 border-gray-200',
+        return {
+          color: "bg-gray-100 text-gray-800 border-gray-200",
           icon: FileText,
-          text: status
+          text: status,
         };
     }
   };
@@ -250,34 +270,34 @@ export function WorkOrders() {
   const getPriorityInfo = (priority: number) => {
     switch (priority) {
       case 1:
-        return { 
-          color: 'bg-green-100 text-green-800 border-green-200',
+        return {
+          color: "bg-green-100 text-green-800 border-green-200",
           icon: Zap,
-          text: 'ต่ำ'
+          text: "ต่ำ",
         };
       case 2:
-        return { 
-          color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        return {
+          color: "bg-yellow-100 text-yellow-800 border-yellow-200",
           icon: AlertTriangle,
-          text: 'ปานกลาง'
+          text: "ปานกลาง",
         };
       case 3:
-        return { 
-          color: 'bg-orange-100 text-orange-800 border-orange-200',
+        return {
+          color: "bg-orange-100 text-orange-800 border-orange-200",
           icon: AlertTriangle,
-          text: 'สูง'
+          text: "สูง",
         };
       case 4:
-        return { 
-          color: 'bg-red-100 text-red-800 border-red-200',
+        return {
+          color: "bg-red-100 text-red-800 border-red-200",
           icon: AlertTriangle,
-          text: 'วิกฤติ'
+          text: "วิกฤติ",
         };
       default:
-        return { 
-          color: 'bg-gray-100 text-gray-800 border-gray-200',
+        return {
+          color: "bg-gray-100 text-gray-800 border-gray-200",
           icon: FileText,
-          text: 'ไม่ระบุ'
+          text: "ไม่ระบุ",
         };
     }
   };
@@ -285,62 +305,64 @@ export function WorkOrders() {
   // Get work type info
   const getWorkTypeInfo = (workType: string) => {
     switch (workType.toLowerCase()) {
-      case 'preventive':
-      case 'pm':
-        return { 
-          color: 'bg-blue-100 text-blue-800 border-blue-200',
+      case "preventive":
+      case "pm":
+        return {
+          color: "bg-blue-100 text-blue-800 border-blue-200",
           icon: Settings,
-          text: 'บำรุงรักษาเชิงป้องกัน'
+          text: "บำรุงรักษาเชิงป้องกัน",
         };
-      case 'corrective':
-      case 'repair':
-        return { 
-          color: 'bg-red-100 text-red-800 border-red-200',
+      case "corrective":
+      case "repair":
+        return {
+          color: "bg-red-100 text-red-800 border-red-200",
           icon: Wrench,
-          text: 'แก้ไขเมื่อเสีย'
+          text: "แก้ไขเมื่อเสีย",
         };
-      case 'inspection':
-        return { 
-          color: 'bg-purple-100 text-purple-800 border-purple-200',
+      case "inspection":
+        return {
+          color: "bg-purple-100 text-purple-800 border-purple-200",
           icon: Eye,
-          text: 'ตรวจสอบ'
+          text: "ตรวจสอบ",
         };
-      case 'emergency':
-        return { 
-          color: 'bg-red-100 text-red-800 border-red-200',
+      case "emergency":
+        return {
+          color: "bg-red-100 text-red-800 border-red-200",
           icon: AlertTriangle,
-          text: 'ฉุกเฉิน'
+          text: "ฉุกเฉิน",
         };
       default:
-        return { 
-          color: 'bg-gray-100 text-gray-800 border-gray-200',
+        return {
+          color: "bg-gray-100 text-gray-800 border-gray-200",
           icon: FileText,
-          text: workType || 'ไม่ระบุ'
+          text: workType || "ไม่ระบุ",
         };
     }
   };
 
   // Calculate task completion for work order
   const getTaskCompletion = (workOrderId: string) => {
-    const tasks = workOrderTasks.filter(task => task.work_order_id === workOrderId);
+    const tasks = workOrderTasks.filter(
+      (task) => task.work_order_id === workOrderId,
+    );
     if (tasks.length === 0) return { completed: 0, total: 0, percentage: 0 };
-    
-    const completed = tasks.filter(task => task.is_completed).length;
+
+    const completed = tasks.filter((task) => task.is_completed).length;
     return {
       completed,
       total: tasks.length,
-      percentage: Math.round((completed / tasks.length) * 100)
+      percentage: Math.round((completed / tasks.length) * 100),
     };
   };
 
   // Handle delete work order
   const handleDeleteWorkOrder = async () => {
     if (!selectedWorkOrder) return;
-    
+
     try {
-      const workOrderService = createTableService('work_orders');
+      const workOrderService = createTableService("work_orders");
       await workOrderService.delete(selectedWorkOrder);
-      
+
       toast({
         title: "สำเร็จ",
         description: "ลบใบสั่งงานเรียบร้อยแล้ว",
@@ -359,30 +381,33 @@ export function WorkOrders() {
 
   // Calculate statistics
   const stats = useMemo(() => {
-    if (!workOrders) return { 
-      total: 0, 
-      pending: 0, 
-      inProgress: 0, 
-      completed: 0, 
-      overdue: 0,
-      avgCompletion: 0
-    };
-    
+    if (!workOrders)
+      return {
+        total: 0,
+        pending: 0,
+        inProgress: 0,
+        completed: 0,
+        overdue: 0,
+        avgCompletion: 0,
+      };
+
     const total = workOrders.length;
-    const pending = workOrders.filter((wo: WorkOrder) => 
-      wo.status === 'pending' || wo.status === 'รอดำเนินการ'
+    const pending = workOrders.filter(
+      (wo: WorkOrder) => wo.status === "pending" || wo.status === "รอดำเนินการ",
     ).length;
-    const inProgress = workOrders.filter((wo: WorkOrder) => 
-      wo.status === 'in_progress' || wo.status === 'กำลังดำเนินการ'
+    const inProgress = workOrders.filter(
+      (wo: WorkOrder) =>
+        wo.status === "in_progress" || wo.status === "กำลังดำเนินการ",
     ).length;
-    const completed = workOrders.filter((wo: WorkOrder) => 
-      wo.status === 'completed' || wo.status === 'เสร็จสิ้น'
+    const completed = workOrders.filter(
+      (wo: WorkOrder) => wo.status === "completed" || wo.status === "เสร็จสิ้น",
     ).length;
-    const overdue = workOrders.filter((wo: WorkOrder) => 
-      wo.scheduled_date && 
-      new Date(wo.scheduled_date) < new Date() && 
-      wo.status !== 'completed' && 
-      wo.status !== 'เสร็จสิ้น'
+    const overdue = workOrders.filter(
+      (wo: WorkOrder) =>
+        wo.scheduled_date &&
+        new Date(wo.scheduled_date) < new Date() &&
+        wo.status !== "completed" &&
+        wo.status !== "เสร็จสิ้น",
     ).length;
 
     // Calculate average task completion
@@ -395,8 +420,11 @@ export function WorkOrders() {
         workOrdersWithTasks++;
       }
     });
-    const avgCompletion = workOrdersWithTasks > 0 ? Math.round(totalCompletion / workOrdersWithTasks) : 0;
-    
+    const avgCompletion =
+      workOrdersWithTasks > 0
+        ? Math.round(totalCompletion / workOrdersWithTasks)
+        : 0;
+
     return { total, pending, inProgress, completed, overdue, avgCompletion };
   }, [workOrders, workOrderTasks]);
 
@@ -440,9 +468,8 @@ export function WorkOrders() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       <div className="p-4 sm:p-6 pb-20 md:pb-6 space-y-6 max-w-7xl mx-auto">
-        
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="flex flex-col space-y-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -456,11 +483,11 @@ export function WorkOrders() {
                 จัดการและติดตามงานบำรุงรักษาทั้งหมด
               </p>
             </div>
-            
+
             <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={refresh}
                 className="border-slate-200 hover:border-slate-300"
               >
@@ -478,7 +505,7 @@ export function WorkOrders() {
         </motion.div>
 
         {/* Statistics */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-2 md:grid-cols-6 gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -488,7 +515,9 @@ export function WorkOrders() {
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <FileText className="h-5 w-5 text-slate-600" />
-                <span className="text-2xl font-bold text-slate-900">{stats.total}</span>
+                <span className="text-2xl font-bold text-slate-900">
+                  {stats.total}
+                </span>
               </div>
               <p className="text-sm text-slate-600">ทั้งหมด</p>
             </CardContent>
@@ -498,7 +527,9 @@ export function WorkOrders() {
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Clock className="h-5 w-5 text-yellow-600" />
-                <span className="text-2xl font-bold text-yellow-900">{stats.pending}</span>
+                <span className="text-2xl font-bold text-yellow-900">
+                  {stats.pending}
+                </span>
               </div>
               <p className="text-sm text-slate-600">รออนุมัติ</p>
             </CardContent>
@@ -508,7 +539,9 @@ export function WorkOrders() {
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Activity className="h-5 w-5 text-blue-600" />
-                <span className="text-2xl font-bold text-blue-900">{stats.inProgress}</span>
+                <span className="text-2xl font-bold text-blue-900">
+                  {stats.inProgress}
+                </span>
               </div>
               <p className="text-sm text-slate-600">ดำเนินการ</p>
             </CardContent>
@@ -518,7 +551,9 @@ export function WorkOrders() {
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <CheckCircle className="h-5 w-5 text-green-600" />
-                <span className="text-2xl font-bold text-green-900">{stats.completed}</span>
+                <span className="text-2xl font-bold text-green-900">
+                  {stats.completed}
+                </span>
               </div>
               <p className="text-sm text-slate-600">เสร็จสิ้น</p>
             </CardContent>
@@ -528,7 +563,9 @@ export function WorkOrders() {
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <AlertTriangle className="h-5 w-5 text-red-600" />
-                <span className="text-2xl font-bold text-red-900">{stats.overdue}</span>
+                <span className="text-2xl font-bold text-red-900">
+                  {stats.overdue}
+                </span>
               </div>
               <p className="text-sm text-slate-600">เกินกำหนด</p>
             </CardContent>
@@ -538,7 +575,9 @@ export function WorkOrders() {
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <BarChart3 className="h-5 w-5 text-purple-600" />
-                <span className="text-2xl font-bold text-purple-900">{stats.avgCompletion}%</span>
+                <span className="text-2xl font-bold text-purple-900">
+                  {stats.avgCompletion}%
+                </span>
               </div>
               <p className="text-sm text-slate-600">เฉลี่ยงาน</p>
             </CardContent>
@@ -546,7 +585,7 @@ export function WorkOrders() {
         </motion.div>
 
         {/* Filters and Search */}
-        <motion.div 
+        <motion.div
           className="space-y-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -577,14 +616,19 @@ export function WorkOrders() {
                     <SelectContent>
                       <SelectItem value="all">ทุกสถานะ</SelectItem>
                       <SelectItem value="pending">รอดำเนินการ</SelectItem>
-                      <SelectItem value="in_progress">กำลังดำเนินการ</SelectItem>
+                      <SelectItem value="in_progress">
+                        กำลังดำเนินการ
+                      </SelectItem>
                       <SelectItem value="completed">เสร็จสิ้น</SelectItem>
                       <SelectItem value="cancelled">ยกเลิก</SelectItem>
                       <SelectItem value="on_hold">พักงาน</SelectItem>
                     </SelectContent>
                   </Select>
 
-                  <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                  <Select
+                    value={priorityFilter}
+                    onValueChange={setPriorityFilter}
+                  >
                     <SelectTrigger className="w-40">
                       <SelectValue placeholder="ความสำคัญ" />
                     </SelectTrigger>
@@ -597,7 +641,10 @@ export function WorkOrders() {
                     </SelectContent>
                   </Select>
 
-                  <Select value={workTypeFilter} onValueChange={setWorkTypeFilter}>
+                  <Select
+                    value={workTypeFilter}
+                    onValueChange={setWorkTypeFilter}
+                  >
                     <SelectTrigger className="w-40">
                       <SelectValue placeholder="ประเภทงาน" />
                     </SelectTrigger>
@@ -617,7 +664,9 @@ export function WorkOrders() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="created_at">วันที่สร้าง</SelectItem>
-                      <SelectItem value="scheduled_date">วันที่กำหนด</SelectItem>
+                      <SelectItem value="scheduled_date">
+                        วันที่กำหนด
+                      </SelectItem>
                       <SelectItem value="priority">ความสำคัญ</SelectItem>
                       <SelectItem value="status">สถานะ</SelectItem>
                       <SelectItem value="title">ชื่องาน</SelectItem>
@@ -627,17 +676,29 @@ export function WorkOrders() {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                    onClick={() =>
+                      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                    }
                   >
-                    {sortOrder === "asc" ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
+                    {sortOrder === "asc" ? (
+                      <SortAsc className="h-4 w-4" />
+                    ) : (
+                      <SortDesc className="h-4 w-4" />
+                    )}
                   </Button>
 
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+                    onClick={() =>
+                      setViewMode(viewMode === "grid" ? "list" : "grid")
+                    }
                   >
-                    {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+                    {viewMode === "grid" ? (
+                      <List className="h-4 w-4" />
+                    ) : (
+                      <Grid className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -655,12 +716,16 @@ export function WorkOrders() {
             <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
               <CardContent className="p-12 text-center">
                 <FileText className="h-16 w-16 mx-auto text-slate-300 mb-4" />
-                <h3 className="text-xl font-semibold text-slate-600 mb-2">ไม่พบใบสั่งงาน</h3>
+                <h3 className="text-xl font-semibold text-slate-600 mb-2">
+                  ไม่พบใบสั่งงาน
+                </h3>
                 <p className="text-slate-500 mb-6">
-                  {searchTerm || statusFilter !== "all" || priorityFilter !== "all" || workTypeFilter !== "all"
+                  {searchTerm ||
+                  statusFilter !== "all" ||
+                  priorityFilter !== "all" ||
+                  workTypeFilter !== "all"
                     ? "ลองปรับเปลี่ยนเงื่อนไขการค้นหา"
-                    : "เริ่มต้นสร้างใบสั่งงานแรกของคุณ"
-                  }
+                    : "เริ่มต้นสร้างใบสั่งงานแรกของคุณ"}
                 </p>
                 <Link to="/work-orders/new">
                   <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
@@ -671,17 +736,20 @@ export function WorkOrders() {
               </CardContent>
             </Card>
           ) : (
-            <div className={viewMode === "grid" 
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-              : "space-y-4"
-            }>
+            <div
+              className={
+                viewMode === "grid"
+                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                  : "space-y-4"
+              }
+            >
               <AnimatePresence>
                 {filteredWorkOrders.map((workOrder: WorkOrder, index) => {
                   const statusInfo = getStatusInfo(workOrder.status);
                   const priorityInfo = getPriorityInfo(workOrder.priority);
                   const workTypeInfo = getWorkTypeInfo(workOrder.work_type);
                   const taskInfo = getTaskCompletion(workOrder.id);
-                  
+
                   return (
                     <motion.div
                       key={workOrder.id}
@@ -697,11 +765,17 @@ export function WorkOrders() {
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2">
-                                <Badge variant="outline" className={cn("text-xs", workTypeInfo.color)}>
+                                <Badge
+                                  variant="outline"
+                                  className={cn("text-xs", workTypeInfo.color)}
+                                >
                                   <workTypeInfo.icon className="h-3 w-3 mr-1" />
                                   {workTypeInfo.text}
                                 </Badge>
-                                <Badge variant="outline" className="text-xs text-slate-600">
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs text-slate-600"
+                                >
                                   #{workOrder.wo_number}
                                 </Badge>
                               </div>
@@ -712,15 +786,21 @@ export function WorkOrders() {
                                 {workOrder.description}
                               </p>
                             </div>
-                            
+
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
                                   <MoreVertical className="h-4 w-4" />
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>การด���เนินการ</DropdownMenuLabel>
+                                <DropdownMenuLabel>
+                                  การด���เนินการ
+                                </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem asChild>
                                   <Link to={`/work-orders/${workOrder.id}`}>
@@ -729,13 +809,15 @@ export function WorkOrders() {
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                  <Link to={`/work-orders/${workOrder.id}/edit`}>
+                                  <Link
+                                    to={`/work-orders/${workOrder.id}/edit`}
+                                  >
                                     <Edit className="h-4 w-4 mr-2" />
                                     แก้ไข
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                   className="text-red-600"
                                   onClick={() => {
                                     setSelectedWorkOrder(workOrder.id);
@@ -749,7 +831,7 @@ export function WorkOrders() {
                             </DropdownMenu>
                           </div>
                         </CardHeader>
-                        
+
                         <CardContent className="space-y-4">
                           {/* Status and Priority */}
                           <div className="flex flex-wrap gap-2">
@@ -757,7 +839,9 @@ export function WorkOrders() {
                               <statusInfo.icon className="h-3 w-3 mr-1" />
                               {statusInfo.text}
                             </Badge>
-                            <Badge className={cn("text-xs", priorityInfo.color)}>
+                            <Badge
+                              className={cn("text-xs", priorityInfo.color)}
+                            >
                               <priorityInfo.icon className="h-3 w-3 mr-1" />
                               {priorityInfo.text}
                             </Badge>
@@ -767,13 +851,16 @@ export function WorkOrders() {
                           {taskInfo.total > 0 && (
                             <div className="space-y-2">
                               <div className="flex items-center justify-between text-sm">
-                                <span className="text-slate-600">ความคืบหน้า</span>
+                                <span className="text-slate-600">
+                                  ความคืบหน้า
+                                </span>
                                 <span className="font-medium text-slate-900">
-                                  {taskInfo.completed}/{taskInfo.total} ({taskInfo.percentage}%)
+                                  {taskInfo.completed}/{taskInfo.total} (
+                                  {taskInfo.percentage}%)
                                 </span>
                               </div>
                               <div className="w-full bg-slate-200 rounded-full h-2">
-                                <div 
+                                <div
                                   className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full transition-all duration-300"
                                   style={{ width: `${taskInfo.percentage}%` }}
                                 />
@@ -787,7 +874,9 @@ export function WorkOrders() {
                               {workOrder.assigned_to && (
                                 <div className="flex items-center gap-2 text-slate-600">
                                   <User className="h-4 w-4" />
-                                  <span className="truncate">{workOrder.assigned_to}</span>
+                                  <span className="truncate">
+                                    {workOrder.assigned_to}
+                                  </span>
                                 </div>
                               )}
                               {workOrder.estimated_hours && (
@@ -801,13 +890,17 @@ export function WorkOrders() {
                               <div className="flex items-center gap-2 text-slate-600">
                                 <Calendar className="h-4 w-4" />
                                 <span className="text-xs">
-                                  {new Date(workOrder.created_at).toLocaleDateString('th-TH')}
+                                  {new Date(
+                                    workOrder.created_at,
+                                  ).toLocaleDateString("th-TH")}
                                 </span>
                               </div>
                               {workOrder.total_cost && (
                                 <div className="flex items-center gap-2 text-slate-600">
                                   <DollarSign className="h-4 w-4" />
-                                  <span>฿{workOrder.total_cost.toLocaleString()}</span>
+                                  <span>
+                                    ฿{workOrder.total_cost.toLocaleString()}
+                                  </span>
                                 </div>
                               )}
                             </div>
@@ -815,8 +908,8 @@ export function WorkOrders() {
 
                           {/* Action Button */}
                           <Link to={`/work-orders/${workOrder.id}`}>
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               className="w-full mt-4 group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors"
                             >
                               ดูรายละเอียด
@@ -845,9 +938,9 @@ export function WorkOrders() {
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription className="text-red-800">
                   เกิดข้อผิดพลาด: {error.message}
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={refresh}
                     className="ml-2 text-red-700 hover:text-red-800"
                   >
@@ -865,12 +958,13 @@ export function WorkOrders() {
             <AlertDialogHeader>
               <AlertDialogTitle>ยืนยันการลบใบสั่งงาน</AlertDialogTitle>
               <AlertDialogDescription>
-                การดำเนินการนี้ไม่สามารถยกเลิกได้ ใบสั่งงานและข้อมูลที่เกี่ยวข้องทั้งหมดจะถูกลบอย่างถาวร
+                การดำเนินการนี้ไม่สามารถยกเลิกได้
+                ใบสั่งงานและข้อมูลที่เกี่ยวข้องทั้งหมดจะถูกลบอย่างถาวร
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-              <AlertDialogAction 
+              <AlertDialogAction
                 onClick={handleDeleteWorkOrder}
                 className="bg-red-600 hover:bg-red-700"
               >
