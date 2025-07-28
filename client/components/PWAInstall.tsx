@@ -79,6 +79,7 @@ export function PWAInstall({
     }
   }, [autoShow, installState]);
 
+
   const handleInstall = async () => {
     if (!installState?.canInstall) {
       return;
@@ -89,14 +90,14 @@ export function PWAInstall({
       const installed = await pwaManager.promptInstall();
 
       if (installed) {
-        toast.success("ติดตั้งแอปสำเร็จแล้ว!");
+        toast({ title: "ติดตั้งแอปสำเร็จแล้ว!" });
         setShowInstallDialog(false);
       } else {
-        toast.info("การติดตั้งถูกยกเลิก");
+        toast({ title: "การติดตั้งถูกยกเลิก" });
       }
     } catch (error) {
       console.error("Installation failed:", error);
-      toast.error("เกิดข้อผิดพลาดในการติดตั้ง");
+      toast({ title: "เกิดข้อผิดพลาดในการติดตั้ง" });
     } finally {
       setIsInstalling(false);
     }
@@ -107,13 +108,13 @@ export function PWAInstall({
       const permission = await pwaManager.requestNotificationPermission();
 
       if (permission === "granted") {
-        toast.success("เปิดใช้การแจ้งเตือนแล้ว");
+        toast({ title: "เปิดใช้การแจ้งเตือนแล้ว" });
       } else if (permission === "denied") {
-        toast.error("การแจ้งเตือนถูกปฏิเสธ");
+        toast({ title: "การแจ้งเตือนถูกปฏิเสธ" });
       }
     } catch (error) {
       console.error("Notification permission failed:", error);
-      toast.error("ไม่สามารถขอสิทธิ์การแจ้งเตือนได้");
+      toast({ title: "ไม่สามารถขอสิทธิ์การแจ้งเตือนได้" });
     }
   };
 
