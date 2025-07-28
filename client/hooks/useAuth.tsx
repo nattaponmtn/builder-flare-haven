@@ -101,7 +101,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (event === "SIGNED_OUT") {
           setUserProfile(null);
-          navigate("/");
         }
       },
     );
