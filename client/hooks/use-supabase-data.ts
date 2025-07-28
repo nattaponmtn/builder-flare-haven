@@ -266,7 +266,7 @@ export function useSupabaseData() {
     };
 
     fetchData();
-  }, [refreshTrigger, session]);
+  }, [refreshTrigger, session, userProfile]);
 
   const refresh = () => {
     setRefreshTrigger(prev => prev + 1);
