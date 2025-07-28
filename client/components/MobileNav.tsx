@@ -23,7 +23,9 @@ import { useState, useEffect } from "react";
 import { NotificationSystem } from "./inventory/NotificationSystem";
 import { useSupabaseData } from "@/hooks/use-supabase-data";
 import { useInventory } from "@/hooks/use-inventory";
+import { useAuth } from "@/hooks/useAuth";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { path: "/", label: "หน้าหลัก", icon: LayoutDashboard },
@@ -33,7 +35,7 @@ const navItems = [
   { path: "/assets", label: "อุปกรณ์", icon: Wrench },
   { path: "/parts", label: "คลังอะไหล่", icon: Package },
   { path: "/inventory", label: "จัดการสต็อก", icon: BarChart3 },
-  { path: "/inventory/alerts", label: "แจ้งเตือน���ต็อก", icon: AlertTriangle },
+  { path: "/inventory/alerts", label: "แจ้งเตือนสต็อก", icon: AlertTriangle },
   { path: "/schedule", label: "ตารางงาน", icon: Calendar },
   { path: "/reports", label: "รายงาน", icon: BarChart3 },
   { path: "/notifications", label: "การแจ้งเตือน", icon: Bell },
