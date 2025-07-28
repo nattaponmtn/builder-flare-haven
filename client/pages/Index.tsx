@@ -201,7 +201,7 @@ export default function LoginPage() {
                         <LogIn className="h-10 w-10 text-white" />
                       </div>
                       <CardTitle className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                        เข้าสู่ระ��บ
+                        เข้าสู่ระบบ
                       </CardTitle>
                       <p className="text-gray-500 text-sm mt-2">
                         กรุณาใส่ข้อมูลเพื่อเข้าใช้งานระบบ
