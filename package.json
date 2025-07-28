@@ -92,7 +92,7 @@
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
     "eslint": "^9.32.0",
-    "framer-motion": "^12.6.2",
+    "framer-motion": "^12.23.9",
     "globals": "^15.9.0",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",
