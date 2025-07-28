@@ -17,7 +17,7 @@ import LoginPage from "./pages/Index";
 import { Dashboard } from "./pages/Dashboard";
 import { WorkOrders } from "./pages/WorkOrders";
 import { WorkOrderDetail } from "./pages/WorkOrderDetail";
-import { WorkOrderForm } from "./pages/WorkOrderForm";
+import { CreateWorkOrder } from "./pages/CreateWorkOrder";
 import { QRScanner } from "./pages/QRScanner";
 import { CreateWorkOrderFromQR } from "./pages/CreateWorkOrderFromQR";
 import { Assets } from "./pages/Assets";
