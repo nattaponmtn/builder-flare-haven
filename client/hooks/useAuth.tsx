@@ -7,7 +7,7 @@ import {
 } from "react";
 import { supabase } from "../../shared/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
-import { useNavigate } from "react-router-dom";
+
 import { createTableService } from "../../shared/supabase/database-service";
 
 interface UserProfile {
