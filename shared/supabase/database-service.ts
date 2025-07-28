@@ -74,6 +74,34 @@ export class DatabaseService<T extends DatabaseRecord = DatabaseRecord> implemen
   }
 
   /**
+   * Get records by field value
+   */
+  async getByField(field: string, value: any, options: QueryOptions = {}): Promise<DatabaseResponse<T>> {
+    try {
+      let query = supabase
+        .from(this.tableName)
+        .select(options.select || '*')
+        .eq(field, value);
+
+      // Apply ordering
+      if (options.orderBy) {
+        query = query.order(options.orderBy, { ascending: options.ascending ?? true });
+      }
+
+      // Apply pagination
+      if (options.limit) {
+        query = query.limit(options.limit);
+      }
+
+      const { data, error } = await query;
+      return { data: data as T[], error };
+    } catch (error) {
+      console.error(`Error in getByField for ${this.tableName}:`, error);
+      return { data: null, error };
+    }
+  }
+
+  /**
    * Create new record
    */
   async create(data: Partial<T>): Promise<{ data: T | null; error: any }> {
