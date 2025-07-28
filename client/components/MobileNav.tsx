@@ -101,7 +101,10 @@ export function MobileNav() {
             className="p-2 hover:bg-primary/10 rounded-lg transition-all duration-200 active:scale-95 relative"
           >
             {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            {(notificationCounts.workOrders + notificationCounts.assets + notificationCounts.parts) > 0 && (
+            {notificationCounts.workOrders +
+              notificationCounts.assets +
+              notificationCounts.parts >
+              0 && (
               <span className="absolute -top-1 -right-1 h-2 w-2 bg-destructive rounded-full animate-pulse" />
             )}
           </button>
@@ -135,7 +138,9 @@ export function MobileNav() {
               <h2 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                 CMMS Mobile Pro
               </h2>
-              <p className="text-xs text-muted-foreground">Maintenance System</p>
+              <p className="text-xs text-muted-foreground">
+                Maintenance System
+              </p>
             </div>
           </div>
           <div className="space-y-2">
@@ -200,7 +205,9 @@ export function MobileNav() {
                 <h2 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                   CMMS Pro
                 </h2>
-                <p className="text-xs text-muted-foreground">Maintenance System</p>
+                <p className="text-xs text-muted-foreground">
+                  Maintenance System
+                </p>
               </div>
             </div>
             <NotificationSystem />
@@ -227,7 +234,9 @@ export function MobileNav() {
                         variant="destructive"
                         className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs"
                       >
-                        {getNotificationCount(item.path) > 9 ? '9+' : getNotificationCount(item.path)}
+                        {getNotificationCount(item.path) > 9
+                          ? "9+"
+                          : getNotificationCount(item.path)}
                       </Badge>
                     )}
                   </div>
@@ -258,7 +267,7 @@ export function MobileNav() {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             const notificationCount = getNotificationCount(item.path);
-            
+
             return (
               <Link
                 key={item.path}
@@ -277,7 +286,7 @@ export function MobileNav() {
                       variant="destructive"
                       className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]"
                     >
-                      {notificationCount > 9 ? '9+' : notificationCount}
+                      {notificationCount > 9 ? "9+" : notificationCount}
                     </Badge>
                   )}
                 </div>

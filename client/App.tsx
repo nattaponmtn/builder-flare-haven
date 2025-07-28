@@ -5,7 +5,13 @@ import { createRoot } from "react-dom/client";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import LoginPage from "./pages/Index";
 import { Dashboard } from "./pages/Dashboard";
@@ -72,7 +78,7 @@ const AppRoutes = () => {
     <div className="min-h-screen bg-background">
       {session && <MobileNav />}
       {session && <PWAInstall showBanner={true} autoShow={false} />}
-      
+
       <main className={session ? "md:ml-64" : ""}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
@@ -80,33 +86,39 @@ const AppRoutes = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/work-orders" element={<WorkOrders />} />
             <Route path="/work-orders/new" element={<WorkOrderForm />} />
-              <Route path="/work-orders/edit/:id" element={<WorkOrderForm />} />
-              <Route path="/work-orders/:id" element={<WorkOrderDetail />} />
-              <Route path="/qr-scanner" element={<QRScanner />} />
-              <Route path="/pm-qr-scanner" element={<PMQRScanner />} />
-              <Route
-                path="/create-work-order"
-                element={<CreateWorkOrderFromQR />}
-              />
-              <Route path="/assets" element={<Assets />} />
-              <Route path="/assets/:id" element={<AssetDetail />} />
-              
-              <Route path="/preventive-maintenance" element={<PreventiveMaintenance />} />
-              <Route path="/pm-execution/:templateId" element={<PMExecution />} />
+            <Route path="/work-orders/edit/:id" element={<WorkOrderForm />} />
+            <Route path="/work-orders/:id" element={<WorkOrderDetail />} />
+            <Route path="/qr-scanner" element={<QRScanner />} />
+            <Route path="/pm-qr-scanner" element={<PMQRScanner />} />
+            <Route
+              path="/create-work-order"
+              element={<CreateWorkOrderFromQR />}
+            />
+            <Route path="/assets" element={<Assets />} />
+            <Route path="/assets/:id" element={<AssetDetail />} />
 
-              <Route path="/schedule" element={<Schedule />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/parts" element={<Parts />} />
-              <Route path="/parts/:id" element={<PartDetail />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/data-transfer" element={<DataTransfer />} />
-              <Route path="/inventory" element={<InventoryDashboard />} />
-              <Route path="/inventory/alerts" element={<InventoryAlerts />} />
-              <Route path="/inventory/dashboard" element={<InventoryDashboard />} />
-              <Route path="/supabase-test" element={<SupabaseTest />} />
-              <Route path="*" element={<NotFound />} />
+            <Route
+              path="/preventive-maintenance"
+              element={<PreventiveMaintenance />}
+            />
+            <Route path="/pm-execution/:templateId" element={<PMExecution />} />
+
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/parts" element={<Parts />} />
+            <Route path="/parts/:id" element={<PartDetail />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/data-transfer" element={<DataTransfer />} />
+            <Route path="/inventory" element={<InventoryDashboard />} />
+            <Route path="/inventory/alerts" element={<InventoryAlerts />} />
+            <Route
+              path="/inventory/dashboard"
+              element={<InventoryDashboard />}
+            />
+            <Route path="/supabase-test" element={<SupabaseTest />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </main>
@@ -116,7 +128,9 @@ const AppRoutes = () => {
 
 // Prevent duplicate root creation during HMR
 const container = document.getElementById("root")!;
-const containerWithRoot = container as HTMLElement & { _reactRootContainer?: any };
+const containerWithRoot = container as HTMLElement & {
+  _reactRootContainer?: any;
+};
 
 if (!containerWithRoot._reactRootContainer) {
   const root = createRoot(container);
