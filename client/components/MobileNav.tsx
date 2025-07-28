@@ -21,6 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { NotificationSystem } from "./inventory/NotificationSystem";
+import { NotificationBell } from "./NotificationBell";
 import { useSupabaseData } from "@/hooks/use-supabase-data";
 import { useInventory } from "@/hooks/use-inventory";
 import { useAuth } from "@/hooks/useAuth";
