@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   Cog,
   Shield,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -32,7 +33,7 @@ const navItems = [
   { path: "/assets", label: "อุปกรณ์", icon: Wrench },
   { path: "/parts", label: "คลังอะไหล่", icon: Package },
   { path: "/inventory", label: "จัดการสต็อก", icon: BarChart3 },
-  { path: "/inventory/alerts", label: "แจ้งเตือนสต็อก", icon: AlertTriangle },
+  { path: "/inventory/alerts", label: "แจ้งเตือน���ต็อก", icon: AlertTriangle },
   { path: "/schedule", label: "ตารางงาน", icon: Calendar },
   { path: "/reports", label: "รายงาน", icon: BarChart3 },
   { path: "/notifications", label: "การแจ้งเตือน", icon: Bell },
