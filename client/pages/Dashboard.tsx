@@ -69,6 +69,7 @@ export function Dashboard() {
     metrics,
     recentWorkOrders,
     criticalAlerts,
+    unreadNotificationsCount,
     loading,
     error,
     refresh
@@ -80,7 +81,7 @@ export function Dashboard() {
     dashboardData
   } = useInventory();
 
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
@@ -127,12 +128,12 @@ export function Dashboard() {
     },
     {
       title: "คลังอะไหล่",
-      value: criticalAlertsCount || 0,
-      change: partsNeedingReorder ? `${partsNeedingReorder.length} ต้องสั่งซื้อ` : "สต็อกเพียงพอ",
-      trend: criticalAlertsCount > 0 ? "down" : "stable",
+      value: metrics.lowStockParts || 0,
+      change: metrics.outOfStockParts > 0 ? `${metrics.outOfStockParts} หมดสต็อก` : "สต็อกเพียงพอ",
+      trend: metrics.lowStockParts > 0 ? "down" : "stable",
       icon: Package,
       color: "from-orange-500 to-orange-600",
-      percentage: 85, // Mock percentage
+      percentage: metrics.totalParts > 0 ? Math.round(((metrics.totalParts - metrics.lowStockParts) / metrics.totalParts) * 100) : 100,
       description: "รายการเตือนสต็อก"
     },
     {
@@ -151,7 +152,7 @@ export function Dashboard() {
   const quickActions: QuickAction[] = [
     {
       title: "สร้างใบสั่งงาน",
-      description: "เพิ่มง���นบำรุงรักษาใหม่",
+      description: "เพิ่มงานบำรุงรักษาใหม่",
       icon: Plus,
       color: "bg-gradient-to-br from-blue-500 to-blue-600",
       href: "/work-orders/new",
@@ -213,8 +214,13 @@ export function Dashboard() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                สวัสดี, {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'ผู้ใช้งาน'}! 👋
+                สวัสดี, {userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'ผู้ใช้งาน'}! 👋
               </h1>
+              {userProfile && (
+                <p className="text-sm text-slate-500 mt-1">
+                  {userProfile.role} | {userProfile.department} | {userProfile.employee_code}
+                </p>
+              )}
               <p className="text-slate-600 mt-2 flex items-center gap-2">
                 วันนี้ {currentTime.toLocaleDateString('th-TH', { 
                   weekday: 'long', 
@@ -252,9 +258,9 @@ export function Dashboard() {
               <Link to="/notifications">
                 <Button variant="outline" size="sm" className="relative">
                   <Bell className="h-4 w-4" />
-                  {(criticalAlertsCount > 0) && (
+                  {(unreadNotificationsCount > 0) && (
                     <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                      {criticalAlertsCount}
+                      {unreadNotificationsCount}
                     </Badge>
                   )}
                 </Button>
@@ -277,7 +283,7 @@ export function Dashboard() {
                 )}
                 <AlertDescription className={isOnline ? 'text-green-800' : 'text-red-800'}>
                   {isOnline 
-                    ? 'ระบบทำงานปกติ - ��้อมูลซิงค์แบบเรียลไทม์' 
+                    ? 'ระบบทำงานปกติ - ข้อมูลซิงค์แบบเรียลไทม์' 
                     : 'ทำงานในโหมดออฟไลน์ - ข้อมูลจะซิงค์เมื่อกลับมาออนไลน์'
                   }
                 </AlertDescription>
