@@ -42,7 +42,16 @@ import {
   SortAsc,
   SortDesc,
   Grid,
-  List
+  List,
+  Building,
+  CircuitBoard,
+  Package,
+  Timer,
+  DollarSign,
+  PlayCircle,
+  PauseCircle,
+  XCircle,
+  Sparkles
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -67,36 +76,91 @@ import { useSupabaseData } from "@/hooks/use-supabase-data";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { createTableService } from "../../shared/supabase/database-service";
+import { useAuth } from "@/hooks/useAuth";
 
+// Real database interface based on actual schema
 interface WorkOrder {
   id: string;
+  work_type: string;
   title: string;
   description: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  assigned_to?: string;
+  status: string;
+  priority: number;
+  asset_id: string;
+  location_id: string;
+  system_id: string;
+  pm_template_id: string;
+  assigned_to_user_id: string;
+  requested_by_user_id: string;
   created_at: string;
-  due_date?: string;
-  asset_id?: string;
-  asset_name?: string;
-  location?: string;
-  estimated_hours?: number;
-  actual_hours?: number;
-  cost?: number;
+  scheduled_date: string;
+  completed_at: string;
+  wo_number: string;
+  estimated_hours: number;
+  assigned_to: string;
+  requested_by: string;
+  total_cost: number;
+  labor_cost: number;
+  parts_cost: number;
+  actual_hours: number;
+  updated_at: string;
+  company_id: string;
+}
+
+interface WorkOrderTask {
+  id: string;
+  work_order_id: string;
+  description: string;
+  is_completed: boolean;
+  actual_value_text: string;
+  actual_value_numeric: number;
+  completed_at: string;
+  is_critical: boolean;
 }
 
 export function WorkOrders() {
   const { workOrders, loading, error, refresh } = useSupabaseData();
+  const { user, userProfile } = useAuth();
   const { toast } = useToast();
   
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
+  const [workTypeFilter, setWorkTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [workOrderTasks, setWorkOrderTasks] = useState<WorkOrderTask[]>([]);
+
+  // Load work order tasks
+  useEffect(() => {
+    const loadWorkOrderTasks = async () => {
+      if (!workOrders || workOrders.length === 0) return;
+      
+      try {
+        const tasksService = createTableService('work_order_tasks');
+        const workOrderIds = workOrders.map((wo: WorkOrder) => wo.id);
+        
+        // Load tasks for all work orders
+        const allTasks: WorkOrderTask[] = [];
+        for (const woId of workOrderIds) {
+          const result = await tasksService.getByField('work_order_id', woId);
+          if (result.data) {
+            allTasks.push(...(result.data as WorkOrderTask[]));
+          }
+        }
+        
+        setWorkOrderTasks(allTasks);
+      } catch (error) {
+        console.error('Error loading work order tasks:', error);
+      }
+    };
+
+    loadWorkOrderTasks();
+  }, [workOrders]);
 
   // Filter and sort work orders
   const filteredWorkOrders = useMemo(() => {
@@ -105,22 +169,24 @@ export function WorkOrders() {
     let filtered = workOrders.filter((wo: WorkOrder) => {
       const matchesSearch = wo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            wo.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           wo.asset_name?.toLowerCase().includes(searchTerm.toLowerCase());
+                           wo.wo_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           wo.assigned_to?.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesStatus = statusFilter === "all" || wo.status === statusFilter;
-      const matchesPriority = priorityFilter === "all" || wo.priority === priorityFilter;
+      const matchesPriority = priorityFilter === "all" || wo.priority.toString() === priorityFilter;
+      const matchesWorkType = workTypeFilter === "all" || wo.work_type === workTypeFilter;
       
-      return matchesSearch && matchesStatus && matchesPriority;
+      return matchesSearch && matchesStatus && matchesPriority && matchesWorkType;
     });
 
     // Sort
     filtered.sort((a: WorkOrder, b: WorkOrder) => {
-      let aValue = a[sortBy as keyof WorkOrder];
-      let bValue = b[sortBy as keyof WorkOrder];
+      let aValue: any = a[sortBy as keyof WorkOrder];
+      let bValue: any = b[sortBy as keyof WorkOrder];
       
-      if (sortBy === "created_at" || sortBy === "due_date") {
-        aValue = new Date(aValue as string).getTime();
-        bValue = new Date(bValue as string).getTime();
+      if (sortBy === "created_at" || sortBy === "scheduled_date" || sortBy === "completed_at") {
+        aValue = new Date(aValue || '').getTime() || 0;
+        bValue = new Date(bValue || '').getTime() || 0;
       }
       
       if (sortOrder === "asc") {
@@ -131,50 +197,140 @@ export function WorkOrders() {
     });
 
     return filtered;
-  }, [workOrders, searchTerm, statusFilter, priorityFilter, sortBy, sortOrder]);
+  }, [workOrders, searchTerm, statusFilter, priorityFilter, workTypeFilter, sortBy, sortOrder]);
 
-  // Get status color
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'in_progress': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'completed': return 'bg-green-100 text-green-800 border-green-200';
-      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+  // Get status color and thai text
+  const getStatusInfo = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'pending':
+      case 'รอดำเนินการ':
+        return { 
+          color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+          icon: Clock,
+          text: 'รอดำเนินการ'
+        };
+      case 'in_progress':
+      case 'กำลังดำเนินการ':
+        return { 
+          color: 'bg-blue-100 text-blue-800 border-blue-200',
+          icon: PlayCircle,
+          text: 'กำลังดำเนินการ'
+        };
+      case 'completed':
+      case 'เสร็จสิ้น':
+        return { 
+          color: 'bg-green-100 text-green-800 border-green-200',
+          icon: CheckCircle,
+          text: 'เสร็จสิ้น'
+        };
+      case 'cancelled':
+      case 'ยกเลิก':
+        return { 
+          color: 'bg-red-100 text-red-800 border-red-200',
+          icon: XCircle,
+          text: 'ยกเลิก'
+        };
+      case 'on_hold':
+      case 'พักงาน':
+        return { 
+          color: 'bg-orange-100 text-orange-800 border-orange-200',
+          icon: PauseCircle,
+          text: 'พักงาน'
+        };
+      default:
+        return { 
+          color: 'bg-gray-100 text-gray-800 border-gray-200',
+          icon: FileText,
+          text: status
+        };
     }
   };
 
-  // Get priority color
-  const getPriorityColor = (priority: string) => {
+  // Get priority color and text
+  const getPriorityInfo = (priority: number) => {
     switch (priority) {
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 1:
+        return { 
+          color: 'bg-green-100 text-green-800 border-green-200',
+          icon: Zap,
+          text: 'ต่ำ'
+        };
+      case 2:
+        return { 
+          color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+          icon: AlertTriangle,
+          text: 'ปานกลาง'
+        };
+      case 3:
+        return { 
+          color: 'bg-orange-100 text-orange-800 border-orange-200',
+          icon: AlertTriangle,
+          text: 'สูง'
+        };
+      case 4:
+        return { 
+          color: 'bg-red-100 text-red-800 border-red-200',
+          icon: AlertTriangle,
+          text: 'วิกฤติ'
+        };
+      default:
+        return { 
+          color: 'bg-gray-100 text-gray-800 border-gray-200',
+          icon: FileText,
+          text: 'ไม่ระบุ'
+        };
     }
   };
 
-  // Get status icon
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'pending': return Clock;
-      case 'in_progress': return Activity;
-      case 'completed': return CheckCircle;
-      case 'cancelled': return AlertCircle;
-      default: return FileText;
+  // Get work type info
+  const getWorkTypeInfo = (workType: string) => {
+    switch (workType.toLowerCase()) {
+      case 'preventive':
+      case 'pm':
+        return { 
+          color: 'bg-blue-100 text-blue-800 border-blue-200',
+          icon: Settings,
+          text: 'บำรุงรักษาเชิงป้องกัน'
+        };
+      case 'corrective':
+      case 'repair':
+        return { 
+          color: 'bg-red-100 text-red-800 border-red-200',
+          icon: Wrench,
+          text: 'แก้ไขเมื่อเสีย'
+        };
+      case 'inspection':
+        return { 
+          color: 'bg-purple-100 text-purple-800 border-purple-200',
+          icon: Eye,
+          text: 'ตรวจสอบ'
+        };
+      case 'emergency':
+        return { 
+          color: 'bg-red-100 text-red-800 border-red-200',
+          icon: AlertTriangle,
+          text: 'ฉุกเฉิน'
+        };
+      default:
+        return { 
+          color: 'bg-gray-100 text-gray-800 border-gray-200',
+          icon: FileText,
+          text: workType || 'ไม่ระบุ'
+        };
     }
   };
 
-  // Get priority icon
-  const getPriorityIcon = (priority: string) => {
-    switch (priority) {
-      case 'low': return Zap;
-      case 'medium': return AlertTriangle;
-      case 'high': return AlertTriangle;
-      case 'critical': return AlertTriangle;
-      default: return FileText;
-    }
+  // Calculate task completion for work order
+  const getTaskCompletion = (workOrderId: string) => {
+    const tasks = workOrderTasks.filter(task => task.work_order_id === workOrderId);
+    if (tasks.length === 0) return { completed: 0, total: 0, percentage: 0 };
+    
+    const completed = tasks.filter(task => task.is_completed).length;
+    return {
+      completed,
+      total: tasks.length,
+      percentage: Math.round((completed / tasks.length) * 100)
+    };
   };
 
   // Handle delete work order
@@ -182,29 +338,73 @@ export function WorkOrders() {
     if (!selectedWorkOrder) return;
     
     try {
-      // Delete work order logic here
-      toast.success("ลบใบสั่งงานเรียบร้อยแล้ว");
+      const workOrderService = createTableService('work_orders');
+      await workOrderService.delete(selectedWorkOrder);
+      
+      toast({
+        title: "สำเร็จ",
+        description: "ลบใบสั่งงานเรียบร้อยแล้ว",
+      });
       setShowDeleteDialog(false);
       setSelectedWorkOrder(null);
       refresh();
     } catch (error) {
-      toast.error("เกิดข้อผิดพลาดในการลบใบสั่งงาน");
+      toast({
+        title: "เกิดข้อผิดพลาด",
+        description: "ไม่สามารถลบใบสั่งงานได้",
+        variant: "destructive",
+      });
     }
   };
 
   // Calculate statistics
   const stats = useMemo(() => {
-    if (!workOrders) return { total: 0, pending: 0, inProgress: 0, completed: 0, overdue: 0 };
+    if (!workOrders) return { 
+      total: 0, 
+      pending: 0, 
+      inProgress: 0, 
+      completed: 0, 
+      overdue: 0,
+      avgCompletion: 0
+    };
     
     const total = workOrders.length;
-    const pending = workOrders.filter((wo: WorkOrder) => wo.status === 'pending').length;
-    const inProgress = workOrders.filter((wo: WorkOrder) => wo.status === 'in_progress').length;
-    const completed = workOrders.filter((wo: WorkOrder) => wo.status === 'completed').length;
-    const overdue = workOrders.filter((wo: WorkOrder) => 
-      wo.due_date && new Date(wo.due_date) < new Date() && wo.status !== 'completed'
+    const pending = workOrders.filter((wo: WorkOrder) => 
+      wo.status === 'pending' || wo.status === 'รอดำเนินการ'
     ).length;
+    const inProgress = workOrders.filter((wo: WorkOrder) => 
+      wo.status === 'in_progress' || wo.status === 'กำลังดำเนินการ'
+    ).length;
+    const completed = workOrders.filter((wo: WorkOrder) => 
+      wo.status === 'completed' || wo.status === 'เสร็จสิ้น'
+    ).length;
+    const overdue = workOrders.filter((wo: WorkOrder) => 
+      wo.scheduled_date && 
+      new Date(wo.scheduled_date) < new Date() && 
+      wo.status !== 'completed' && 
+      wo.status !== 'เสร็จสิ้น'
+    ).length;
+
+    // Calculate average task completion
+    let totalCompletion = 0;
+    let workOrdersWithTasks = 0;
+    workOrders.forEach((wo: WorkOrder) => {
+      const taskInfo = getTaskCompletion(wo.id);
+      if (taskInfo.total > 0) {
+        totalCompletion += taskInfo.percentage;
+        workOrdersWithTasks++;
+      }
+    });
+    const avgCompletion = workOrdersWithTasks > 0 ? Math.round(totalCompletion / workOrdersWithTasks) : 0;
     
-    return { total, pending, inProgress, completed, overdue };
+    return { total, pending, inProgress, completed, overdue, avgCompletion };
+  }, [workOrders, workOrderTasks]);
+
+  // Get unique work types for filter
+  const workTypes = useMemo(() => {
+    if (!workOrders) return [];
+    const types = [...new Set(workOrders.map((wo: WorkOrder) => wo.work_type))];
+    return types.filter(Boolean);
   }, [workOrders]);
 
   if (loading) {
@@ -217,6 +417,17 @@ export function WorkOrders() {
                 <CardContent className="p-6">
                   <Skeleton className="h-8 w-3/4 mb-2" />
                   <Skeleton className="h-4 w-1/2" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <CardContent className="p-6">
+                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-full mb-2" />
+                  <Skeleton className="h-4 w-2/3" />
                 </CardContent>
               </Card>
             ))}
@@ -254,7 +465,7 @@ export function WorkOrders() {
                 className="border-slate-200 hover:border-slate-300"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
-                รีเฟรช
+                ���ีเฟรช
               </Button>
               <Link to="/work-orders/new">
                 <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg">
@@ -268,7 +479,7 @@ export function WorkOrders() {
 
         {/* Statistics */}
         <motion.div 
-          className="grid grid-cols-2 md:grid-cols-5 gap-4"
+          className="grid grid-cols-2 md:grid-cols-6 gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -299,7 +510,7 @@ export function WorkOrders() {
                 <Activity className="h-5 w-5 text-blue-600" />
                 <span className="text-2xl font-bold text-blue-900">{stats.inProgress}</span>
               </div>
-              <p className="text-sm text-slate-600">กำลังทำ</p>
+              <p className="text-sm text-slate-600">ดำเนินการ</p>
             </CardContent>
           </Card>
 
@@ -309,7 +520,7 @@ export function WorkOrders() {
                 <CheckCircle className="h-5 w-5 text-green-600" />
                 <span className="text-2xl font-bold text-green-900">{stats.completed}</span>
               </div>
-              <p className="text-sm text-slate-600">เสร็จแล้ว</p>
+              <p className="text-sm text-slate-600">เสร็จสิ้น</p>
             </CardContent>
           </Card>
 
@@ -322,40 +533,54 @@ export function WorkOrders() {
               <p className="text-sm text-slate-600">เกินกำหนด</p>
             </CardContent>
           </Card>
+
+          <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
+            <CardContent className="p-4 text-center">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <BarChart3 className="h-5 w-5 text-purple-600" />
+                <span className="text-2xl font-bold text-purple-900">{stats.avgCompletion}%</span>
+              </div>
+              <p className="text-sm text-slate-600">เฉลี่ยงาน</p>
+            </CardContent>
+          </Card>
         </motion.div>
 
         {/* Filters and Search */}
-        <motion.div
+        <motion.div 
+          className="space-y-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
           <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
             <CardContent className="p-6">
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col lg:flex-row gap-4">
                 {/* Search */}
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input
-                    placeholder="ค้นหาใบสั่งงาน..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 border-slate-200 focus:border-blue-500"
-                  />
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                    <Input
+                      placeholder="ค้นหาใบสั่งงาน, หมายเลขงาน, ผู้รับผิดชอบ..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 border-slate-200 focus:border-blue-300"
+                    />
+                  </div>
                 </div>
-                
+
                 {/* Filters */}
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger className="w-40">
                       <SelectValue placeholder="สถานะ" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">สถานะทั้งหมด</SelectItem>
-                      <SelectItem value="pending">รออนุมัติ</SelectItem>
+                      <SelectItem value="all">ทุกสถานะ</SelectItem>
+                      <SelectItem value="pending">รอดำเนินการ</SelectItem>
                       <SelectItem value="in_progress">กำลังดำเนินการ</SelectItem>
                       <SelectItem value="completed">เสร็จสิ้น</SelectItem>
                       <SelectItem value="cancelled">ยกเลิก</SelectItem>
+                      <SelectItem value="on_hold">พักงาน</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -364,56 +589,56 @@ export function WorkOrders() {
                       <SelectValue placeholder="ความสำคัญ" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">ความสำคัญทั้งหมด</SelectItem>
-                      <SelectItem value="low">ต่ำ</SelectItem>
-                      <SelectItem value="medium">กลาง</SelectItem>
-                      <SelectItem value="high">สูง</SelectItem>
-                      <SelectItem value="critical">วิกฤต</SelectItem>
+                      <SelectItem value="all">ทุกระดับ</SelectItem>
+                      <SelectItem value="1">ต่ำ</SelectItem>
+                      <SelectItem value="2">ปานกลาง</SelectItem>
+                      <SelectItem value="3">สูง</SelectItem>
+                      <SelectItem value="4">วิกฤติ</SelectItem>
                     </SelectContent>
                   </Select>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        {sortOrder === "asc" ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>เรียงตาม</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => setSortBy("created_at")}>
-                        วันที่สร้าง
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSortBy("due_date")}>
-                        วันครบกำหนด
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSortBy("priority")}>
-                        ความสำคัญ
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}>
-                        {sortOrder === "asc" ? "มากไปน้อย" : "น้อยไปมาก"}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Select value={workTypeFilter} onValueChange={setWorkTypeFilter}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="ประเภทงาน" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">ทุกประเภท</SelectItem>
+                      {workTypes.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {getWorkTypeInfo(type).text}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                  <div className="flex border border-slate-200 rounded-lg p-1 bg-slate-50">
-                    <Button
-                      variant={viewMode === "grid" ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setViewMode("grid")}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Grid className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={viewMode === "list" ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setViewMode("list")}
-                      className="h-8 w-8 p-0"
-                    >
-                      <List className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="เรียงตาม" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="created_at">วันที่สร้าง</SelectItem>
+                      <SelectItem value="scheduled_date">วันที่กำหนด</SelectItem>
+                      <SelectItem value="priority">ความสำคัญ</SelectItem>
+                      <SelectItem value="status">สถานะ</SelectItem>
+                      <SelectItem value="title">ชื่องาน</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                  >
+                    {sortOrder === "asc" ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+                  >
+                    {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -426,66 +651,77 @@ export function WorkOrders() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          {filteredWorkOrders.length > 0 ? (
-            <div className={cn(
-              "grid gap-4",
-              viewMode === "grid" 
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
-                : "grid-cols-1"
-            )}>
+          {filteredWorkOrders.length === 0 ? (
+            <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
+              <CardContent className="p-12 text-center">
+                <FileText className="h-16 w-16 mx-auto text-slate-300 mb-4" />
+                <h3 className="text-xl font-semibold text-slate-600 mb-2">ไม่พบใบสั่งงาน</h3>
+                <p className="text-slate-500 mb-6">
+                  {searchTerm || statusFilter !== "all" || priorityFilter !== "all" || workTypeFilter !== "all"
+                    ? "ลองปรับเปลี่ยนเงื่อนไขการค้นหา"
+                    : "เริ่มต้นสร้างใบสั่งงานแรกของคุณ"
+                  }
+                </p>
+                <Link to="/work-orders/new">
+                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                    <Plus className="h-4 w-4 mr-2" />
+                    สร้างใบสั่งงาน
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className={viewMode === "grid" 
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              : "space-y-4"
+            }>
               <AnimatePresence>
-                {filteredWorkOrders.map((workOrder: WorkOrder, index: number) => {
-                  const StatusIcon = getStatusIcon(workOrder.status);
-                  const PriorityIcon = getPriorityIcon(workOrder.priority);
+                {filteredWorkOrders.map((workOrder: WorkOrder, index) => {
+                  const statusInfo = getStatusInfo(workOrder.status);
+                  const priorityInfo = getPriorityInfo(workOrder.priority);
+                  const workTypeInfo = getWorkTypeInfo(workOrder.work_type);
+                  const taskInfo = getTaskCompletion(workOrder.id);
                   
                   return (
                     <motion.div
                       key={workOrder.id}
-                      layout
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.2, delay: index * 0.05 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
                       whileHover={{ y: -4 }}
                       className="group"
                     >
                       <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                         <CardHeader className="pb-3">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2">
-                                <StatusIcon className="h-4 w-4 text-slate-600" />
-                                <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">
-                                  {workOrder.title}
-                                </h3>
+                                <Badge variant="outline" className={cn("text-xs", workTypeInfo.color)}>
+                                  <workTypeInfo.icon className="h-3 w-3 mr-1" />
+                                  {workTypeInfo.text}
+                                </Badge>
+                                <Badge variant="outline" className="text-xs text-slate-600">
+                                  #{workOrder.wo_number}
+                                </Badge>
                               </div>
-                              <p className="text-sm text-slate-600 line-clamp-2 mb-3">
+                              <h3 className="font-semibold text-slate-900 truncate group-hover:text-blue-600 transition-colors">
+                                {workOrder.title}
+                              </h3>
+                              <p className="text-sm text-slate-600 line-clamp-2 mt-1">
                                 {workOrder.description}
                               </p>
-                              <div className="flex flex-wrap gap-2 mb-3">
-                                <Badge className={`text-xs border ${getStatusColor(workOrder.status)}`}>
-                                  {workOrder.status === 'pending' && 'รออนุมัติ'}
-                                  {workOrder.status === 'in_progress' && 'กำลังทำ'}
-                                  {workOrder.status === 'completed' && 'เสร็จแล้ว'}
-                                  {workOrder.status === 'cancelled' && 'ยกเลิก'}
-                                </Badge>
-                                <Badge className={`text-xs border ${getPriorityColor(workOrder.priority)}`}>
-                                  <PriorityIcon className="h-3 w-3 mr-1" />
-                                  {workOrder.priority === 'low' && 'ต่ำ'}
-                                  {workOrder.priority === 'medium' && 'กลาง'}
-                                  {workOrder.priority === 'high' && 'สูง'}
-                                  {workOrder.priority === 'critical' && 'วิกฤต'}
-                                </Badge>
-                              </div>
                             </div>
                             
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
                                   <MoreVertical className="h-4 w-4" />
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>การด���เนินการ</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem asChild>
                                   <Link to={`/work-orders/${workOrder.id}`}>
                                     <Eye className="h-4 w-4 mr-2" />
@@ -493,7 +729,7 @@ export function WorkOrders() {
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                  <Link to={`/work-orders/edit/${workOrder.id}`}>
+                                  <Link to={`/work-orders/${workOrder.id}/edit`}>
                                     <Edit className="h-4 w-4 mr-2" />
                                     แก้ไข
                                   </Link>
@@ -513,53 +749,80 @@ export function WorkOrders() {
                             </DropdownMenu>
                           </div>
                         </CardHeader>
+                        
+                        <CardContent className="space-y-4">
+                          {/* Status and Priority */}
+                          <div className="flex flex-wrap gap-2">
+                            <Badge className={cn("text-xs", statusInfo.color)}>
+                              <statusInfo.icon className="h-3 w-3 mr-1" />
+                              {statusInfo.text}
+                            </Badge>
+                            <Badge className={cn("text-xs", priorityInfo.color)}>
+                              <priorityInfo.icon className="h-3 w-3 mr-1" />
+                              {priorityInfo.text}
+                            </Badge>
+                          </div>
 
-                        <CardContent className="pt-0">
-                          <div className="space-y-3">
-                            {workOrder.asset_name && (
-                              <div className="flex items-center gap-2 text-sm text-slate-600">
-                                <Wrench className="h-4 w-4" />
-                                <span>{workOrder.asset_name}</span>
-                              </div>
-                            )}
-                            
-                            {workOrder.assigned_to && (
-                              <div className="flex items-center gap-2 text-sm text-slate-600">
-                                <User className="h-4 w-4" />
-                                <span>{workOrder.assigned_to}</span>
-                              </div>
-                            )}
-                            
-                            {workOrder.location && (
-                              <div className="flex items-center gap-2 text-sm text-slate-600">
-                                <MapPin className="h-4 w-4" />
-                                <span>{workOrder.location}</span>
-                              </div>
-                            )}
-                            
-                            <div className="flex items-center justify-between text-sm text-slate-500">
-                              <span>สร้างเมื่อ: {new Date(workOrder.created_at).toLocaleDateString('th-TH')}</span>
-                              {workOrder.due_date && (
-                                <span className={cn(
-                                  "font-medium",
-                                  new Date(workOrder.due_date) < new Date() && workOrder.status !== 'completed'
-                                    ? "text-red-600"
-                                    : "text-slate-600"
-                                )}>
-                                  ครบกำหนด: {new Date(workOrder.due_date).toLocaleDateString('th-TH')}
+                          {/* Task Progress */}
+                          {taskInfo.total > 0 && (
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="text-slate-600">ความคืบหน้า</span>
+                                <span className="font-medium text-slate-900">
+                                  {taskInfo.completed}/{taskInfo.total} ({taskInfo.percentage}%)
                                 </span>
+                              </div>
+                              <div className="w-full bg-slate-200 rounded-full h-2">
+                                <div 
+                                  className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${taskInfo.percentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Details */}
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div className="space-y-2">
+                              {workOrder.assigned_to && (
+                                <div className="flex items-center gap-2 text-slate-600">
+                                  <User className="h-4 w-4" />
+                                  <span className="truncate">{workOrder.assigned_to}</span>
+                                </div>
+                              )}
+                              {workOrder.estimated_hours && (
+                                <div className="flex items-center gap-2 text-slate-600">
+                                  <Timer className="h-4 w-4" />
+                                  <span>{workOrder.estimated_hours} ชม.</span>
+                                </div>
                               )}
                             </div>
-                            
-                            <div className="pt-3 border-t border-slate-200">
-                              <Link to={`/work-orders/${workOrder.id}`}>
-                                <Button variant="ghost" className="w-full group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                                  ดูรายละเอียด
-                                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                                </Button>
-                              </Link>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2 text-slate-600">
+                                <Calendar className="h-4 w-4" />
+                                <span className="text-xs">
+                                  {new Date(workOrder.created_at).toLocaleDateString('th-TH')}
+                                </span>
+                              </div>
+                              {workOrder.total_cost && (
+                                <div className="flex items-center gap-2 text-slate-600">
+                                  <DollarSign className="h-4 w-4" />
+                                  <span>฿{workOrder.total_cost.toLocaleString()}</span>
+                                </div>
+                              )}
                             </div>
                           </div>
+
+                          {/* Action Button */}
+                          <Link to={`/work-orders/${workOrder.id}`}>
+                            <Button 
+                              variant="outline" 
+                              className="w-full mt-4 group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors"
+                            >
+                              ดูรายละเอียด
+                              <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                          </Link>
                         </CardContent>
                       </Card>
                     </motion.div>
@@ -567,29 +830,10 @@ export function WorkOrders() {
                 })}
               </AnimatePresence>
             </div>
-          ) : (
-            <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
-              <CardContent className="p-12 text-center">
-                <FileText className="h-16 w-16 mx-auto text-slate-300 mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">ไม่พบใบสั่งงาน</h3>
-                <p className="text-slate-600 mb-6">
-                  {searchTerm || statusFilter !== "all" || priorityFilter !== "all"
-                    ? "ลองปรับเปลี่ยนเงื่อนไขการค้นหา"
-                    : "เริ่มต้นด้วยการสร้างใบสั่งงานแรกของคุณ"
-                  }
-                </p>
-                <Link to="/work-orders/new">
-                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
-                    <Plus className="h-4 w-4 mr-2" />
-                    สร้างใบสั่งงานใหม่
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
           )}
         </motion.div>
 
-        {/* Error State */}
+        {/* Error Display */}
         <AnimatePresence>
           {error && (
             <motion.div
@@ -600,7 +844,7 @@ export function WorkOrders() {
               <Alert variant="destructive" className="border-red-200 bg-red-50">
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription className="text-red-800">
-                  เกิดข้อผิดพลาดในการโหลดข้อมูล: {error.message}
+                  เกิดข้อผิดพลาด: {error.message}
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -621,12 +865,15 @@ export function WorkOrders() {
             <AlertDialogHeader>
               <AlertDialogTitle>ยืนยันการลบใบสั่งงาน</AlertDialogTitle>
               <AlertDialogDescription>
-                คุณต้องการลบใบสั่งงานนี้ใช่หรือไม่? การกระทำนี้ไม่สามารถยกเลิกได้
+                การดำเนินการนี้ไม่สามารถยกเลิกได้ ใบสั่งงานและข้อมูลที่เกี่ยวข้องทั้งหมดจะถูกลบอย่างถาวร
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteWorkOrder} className="bg-red-600 hover:bg-red-700">
+              <AlertDialogAction 
+                onClick={handleDeleteWorkOrder}
+                className="bg-red-600 hover:bg-red-700"
+              >
                 ลบใบสั่งงาน
               </AlertDialogAction>
             </AlertDialogFooter>
