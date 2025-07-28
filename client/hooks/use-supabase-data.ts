@@ -135,7 +135,7 @@ interface DashboardData {
 }
 
 export function useSupabaseData() {
-  const { session } = useAuth();
+  const { session, userProfile } = useAuth();
   const [data, setData] = useState<DashboardData>({
     assets: [],
     workOrders: [],
