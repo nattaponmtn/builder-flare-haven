@@ -85,8 +85,8 @@ const AppRoutes = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/work-orders" element={<WorkOrders />} />
-            <Route path="/work-orders/new" element={<WorkOrderForm />} />
-            <Route path="/work-orders/edit/:id" element={<WorkOrderForm />} />
+            <Route path="/work-orders/new" element={<CreateWorkOrder />} />
+            <Route path="/work-orders/:id/edit" element={<CreateWorkOrder />} />
             <Route path="/work-orders/:id" element={<WorkOrderDetail />} />
             <Route path="/qr-scanner" element={<QRScanner />} />
             <Route path="/pm-qr-scanner" element={<PMQRScanner />} />
